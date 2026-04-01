@@ -4,7 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>RepairO - Premium Network</title>
+    
     <script src="https://cdn.tailwindcss.com"></script>
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
@@ -21,9 +23,11 @@
             -webkit-tap-highlight-color: transparent;
         }
 
+        /* Scrollbar Hide */
         .hide-scrollbar::-webkit-scrollbar { display: none; }
         .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
+        /* Custom Cards */
         .luxury-card {
             background: #FFFFFF;
             border-radius: 24px;
@@ -32,6 +36,7 @@
             transition: all 0.3s ease;
         }
 
+        /* Custom Vibrant Buttons */
         .btn-vibrant {
             background: linear-gradient(135deg, #4318FF 0%, #0075FF 100%);
             color: #FFFFFF;
@@ -43,12 +48,14 @@
             box-shadow: 0 5px 10px rgba(67, 24, 255, 0.2); 
         }
 
+        /* Text Gradient */
         .text-gradient {
             background: linear-gradient(135deg, #4318FF 0%, #0075FF 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
+        /* Navigation Items */
         .nav-item { 
             color: #A3AED0; 
             transition: all 0.3s; 
@@ -61,6 +68,7 @@
             filter: drop-shadow(0 4px 6px rgba(67, 24, 255, 0.3)); 
         }
 
+        /* View Sections (Tabs) */
         .view-section { display: none !important; }
         .view-section.active { 
             display: block !important; 
@@ -72,6 +80,7 @@
             to { opacity: 1; transform: translateY(0) scale(1); }
         }
 
+        /* Custom Inputs */
         .input-vibrant {
             background: #F4F7FE;
             border: 2px solid transparent;
@@ -84,7 +93,8 @@
         }
     </style>
 </head>
-<body class="h-screen w-full overflow-hidden bg-[#0B1437]">
+
+<body class="h-[100dvh] w-full overflow-hidden bg-[#0B1437]">
 
     <div id="contact-modal" class="fixed inset-0 z-[100] hidden flex-col justify-end bg-[#0B1437]/40 backdrop-blur-sm transition-all duration-300 opacity-0">
         <div class="bg-white w-full max-w-md mx-auto rounded-t-[30px] p-6 shadow-[0_-10px_40px_rgba(0,0,0,0.15)] transform translate-y-full transition-transform duration-300" id="contact-sheet">
@@ -94,6 +104,7 @@
                     <i class="fa-solid fa-xmark"></i>
                 </button>
             </div>
+            
             <div class="grid grid-cols-4 gap-y-6 gap-x-2 mb-4">
                 <a href="https://wa.me/916296111043" target="_blank" class="flex flex-col items-center gap-2 group">
                     <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#25D366] to-[#128C7E] text-white flex items-center justify-center text-3xl shadow-[0_8px_15px_rgba(37,211,102,0.3)] transition"><i class="fa-brands fa-whatsapp"></i></div>
@@ -115,7 +126,8 @@
         </div>
     </div>
 
-    <div id="main-app" class="flex h-screen flex-col w-full max-w-md mx-auto bg-[#F4F7FE] relative shadow-2xl overflow-hidden">
+    <div id="main-app" class="flex h-[100dvh] flex-col w-full max-w-md mx-auto bg-[#F4F7FE] relative shadow-2xl overflow-hidden">
+        
         <main class="flex-1 overflow-y-auto w-full pb-28">
             
             <div id="view-home" class="view-section active">
@@ -165,6 +177,7 @@
                     <button onclick="switchTVTab('long')" id="tab-long" class="flex-1 btn-vibrant py-2 rounded-xl text-xs font-bold shadow-lg">Long Videos</button>
                     <button onclick="switchTVTab('short')" id="tab-short" class="flex-1 bg-white text-[#4318FF] border border-[#E9EDF7] py-2 rounded-xl text-xs font-bold shadow-sm">Shorts</button>
                 </div>
+                
                 <div id="tv-long-container" class="space-y-4"></div>
                 <div id="tv-short-container" class="grid grid-cols-2 gap-3 hidden"></div>
             </div>
@@ -229,6 +242,7 @@
                 <div id="account-profile-section" class="hidden">
                     <h2 class="text-3xl font-extrabold text-[#1B2559] mb-6">My <span class="text-gradient">Account</span></h2>
                     <div class="luxury-card p-6 mb-6">
+                        
                         <div class="flex items-center gap-5 mb-6 pb-6 border-b border-[#F4F7FE]">
                             <div class="w-20 h-20 bg-gradient-to-br from-[#4318FF] to-[#0075FF] rounded-full flex items-center justify-center text-white text-3xl font-bold shadow-[0_8px_20px_rgba(67,24,255,0.3)] shrink-0" id="user-initial">U</div>
                             <div class="overflow-hidden">
@@ -247,6 +261,7 @@
                             <button onclick="saveProfile()" class="w-full btn-vibrant font-bold py-4 rounded-xl text-sm">Save Profile Details</button>
                         </div>
                     </div>
+
                     <button onclick="logout()" class="w-full bg-white text-[#FF3B30] font-bold py-4 rounded-2xl flex justify-center items-center gap-3 shadow-[0_10px_30px_rgba(255,59,48,0.08)] mb-4 hover:bg-red-50 transition">
                         <i class="fa-solid fa-power-off"></i> Secure Logout
                     </button>
@@ -401,7 +416,9 @@
     </div>
 
     <script>
-        // Initialize Firebase Connection
+        // ==========================================
+        // 1. FIREBASE INITIALIZATION & CONFIGURATION
+        // ==========================================
         const firebaseConfig = {
             apiKey: "AIzaSyA8PL-upMZGRhKtz9Ha1c9otjpl9Riw3bg",
             authDomain: "repairo-d359a.firebaseapp.com",
@@ -414,28 +431,51 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
         const auth = firebase.auth(); 
+        
         console.log("Firebase Auth & Realtime Database Active!");
 
+        // Global State Variables
         let currentUser = null;
         let currentCategory = 'All';
 
-        // Data Handlers
-        const getData = (key) => JSON.parse(localStorage.getItem(key)) || [];
+        // ==========================================
+        // 2. DATA HANDLERS & REALTIME SYNC
+        // ==========================================
+        
+        // Fetch data from local storage (Cache)
+        const getData = (key) => {
+            return JSON.parse(localStorage.getItem(key)) || [];
+        };
+        
+        // Save data to local storage and push to Firebase Firestore
         const setData = (key, data) => {
             localStorage.setItem(key, JSON.stringify(data)); 
-            db.collection('repairo_database').doc(key).set({ items: data }).catch(e => console.error("FB Error:", e));
+            db.collection('repairo_database').doc(key).set({ items: data })
+              .catch(e => console.error("FB Error:", e));
         };
 
-        // SETUP REAL-TIME LISTENERS
+        // Realtime Listener Setup - Auto updates UI when DB changes
         function setupRealtimeListeners() {
             const tables = ['ro_users', 'ro_categories', 'ro_technicians', 'ro_services', 'ro_bookings', 'ro_videos'];
             tables.forEach(key => {
                 db.collection('repairo_database').doc(key).onSnapshot(doc => {
                     if (doc.exists) {
                         localStorage.setItem(key, JSON.stringify(doc.data().items));
-                        if(key === 'ro_categories' || key === 'ro_services') { renderCategories(); renderServices(); }
-                        if(key === 'ro_bookings') { renderBookings(); if(currentUser && currentUser.role === 'admin') updateAdminStats(); }
-                        if(key === 'ro_videos') renderUserVideos();
+                        
+                        // Update UI components dynamically
+                        if(key === 'ro_categories' || key === 'ro_services') { 
+                            renderCategories(); 
+                            renderServices(); 
+                        }
+                        if(key === 'ro_bookings') { 
+                            renderBookings(); 
+                            if(currentUser && currentUser.role === 'admin') updateAdminStats(); 
+                        }
+                        if(key === 'ro_videos') {
+                            renderUserVideos();
+                        }
+                        
+                        // Admin only updates
                         if(currentUser && currentUser.role === 'admin') {
                             if(key === 'ro_users') renderAdminUsers();
                             if(key === 'ro_technicians') renderAdminTechs();
@@ -447,27 +487,84 @@
             });
         }
 
-        // Initialize Defaults if DB is empty
+        // Initialize defaults if database is completely empty
         async function checkAndInitDB() {
             try {
                 const doc = await db.collection('repairo_database').doc('ro_services').get();
                 if(!doc.exists) {
                     setData('ro_users', []);
-                    setData('ro_categories', [{id:1, name:'AC Repair', available:true}, {id:2, name:'Plumber', available:true}]);
+                    setData('ro_categories', [
+                        {id:1, name:'AC Repair', available:true}, 
+                        {id:2, name:'Plumber', available:true}
+                    ]);
                     setData('ro_technicians', []);
-                    setData('ro_services', [{ id: 1, name: 'Premium AC Service', category: 'AC Repair', price: 1499, bookingCharge: 49, discount: 10, image: 'https://images.unsplash.com/photo-1621905251189-08b45d6a269e?w=500&q=80', available:true }]);
-                    setData('ro_bookings', []); setData('ro_videos', []);
+                    setData('ro_services', [
+                        { id: 1, name: 'Premium AC Service', category: 'AC Repair', price: 1499, bookingCharge: 49, discount: 10, image: 'https://images.unsplash.com/photo-1621905251189-08b45d6a269e?w=500&q=80', available:true }
+                    ]);
+                    setData('ro_bookings', []); 
+                    setData('ro_videos', []);
                 }
+                // Start listening for live changes
                 setupRealtimeListeners();
             } catch(e) {
                 console.log("Database Init Error:", e);
             }
         }
-        checkAndInitDB();
 
-        // Listen for Firebase Auth State (Auto-Login)
+        // Run sync on load
+        async function syncWithFirebase() {
+            try {
+                const tables = ['ro_users', 'ro_categories', 'ro_technicians', 'ro_services', 'ro_bookings', 'ro_videos'];
+                let isNewApp = true;
+                
+                for (let key of tables) {
+                    const doc = await db.collection('repairo_database').doc(key).get();
+                    if (doc.exists && doc.data().items) {
+                        localStorage.setItem(key, JSON.stringify(doc.data().items));
+                        isNewApp = false;
+                    } 
+                }
+                
+                if(isNewApp) {
+                    checkAndInitDB();
+                }
+
+                // Restore session from local memory
+                const savedEmail = localStorage.getItem('ro_remembered_email');
+                if(savedEmail) {
+                    let users = getData('ro_users');
+                    let user = users.find(u => u.email === savedEmail);
+                    if(user && !user.banned) {
+                        currentUser = user;
+                        updateAuthUI();
+                    }
+                }
+
+                // Render public views
+                renderCategories(); 
+                renderServices(); 
+                renderUserVideos(); 
+                renderBookings();
+                
+                if(currentUser && currentUser.role === 'admin') { 
+                    renderAdminUsers(); 
+                    renderAdminTechs(); 
+                    renderAdminServices(); 
+                    renderAdminVideos(); 
+                    updateAdminStats(); 
+                }
+                
+            } catch (error) { 
+                console.log("Sync failed.", error); 
+            }
+        }
+        
+        syncWithFirebase();
+
+        // Listen for Firebase Auth State Changes
         auth.onAuthStateChanged(firebaseUser => {
             if(firebaseUser) {
+                // Short delay to ensure custom data from firestore is pulled
                 setTimeout(() => {
                     let users = getData('ro_users');
                     currentUser = users.find(u => u.email === firebaseUser.email);
@@ -477,22 +574,33 @@
                         auth.signOut(); 
                         alert("Your account is restricted by Admin!");
                     }
-                }, 1000); // 1 second delay to ensure local sync
+                }, 1000); 
             }
         });
 
-        // Helpers
+        // ==========================================
+        // 3. HELPER FUNCTIONS
+        // ==========================================
         const fileToBase64 = file => new Promise((resolve, reject) => { 
-            const reader = new FileReader(); reader.readAsDataURL(file); 
-            reader.onload = () => resolve(reader.result); reader.onerror = e => reject(e); 
+            const reader = new FileReader(); 
+            reader.readAsDataURL(file); 
+            reader.onload = () => resolve(reader.result); 
+            reader.onerror = e => reject(e); 
         });
+
         const getYTId = url => { 
             let id = url.split('v=')[1] || url.split('youtu.be/')[1] || url.split('shorts/')[1]; 
-            if(id) { const amp = id.indexOf('&'); if(amp !== -1) id = id.substring(0, amp); } 
+            if(id) { 
+                const amp = id.indexOf('&'); 
+                if(amp !== -1) id = id.substring(0, amp); 
+            } 
             return id; 
         };
 
-        // --- AUTHENTICATION LOGIC ---
+        // ==========================================
+        // 4. AUTHENTICATION (LOGIN/SIGNUP) LOGIC
+        // ==========================================
+        
         window.onload = () => {
             const savedEmail = localStorage.getItem('ro_remembered_email');
             if(savedEmail) {
@@ -506,12 +614,14 @@
             if(mode === 'login') {
                 document.getElementById('tab-login').className = "flex-1 py-2.5 rounded-xl text-sm font-bold bg-white text-[#4318FF] shadow-sm transition-all";
                 document.getElementById('tab-signup').className = "flex-1 py-2.5 rounded-xl text-sm font-bold text-[#A3AED0] hover:text-[#1B2559] transition-all";
+                
                 document.getElementById('signup-fields').classList.add('hidden');
                 document.getElementById('extra-options').classList.remove('hidden');
                 document.getElementById('auth-btn-text').innerHTML = 'Sign In <i class="fa-solid fa-arrow-right ml-2"></i>';
             } else {
                 document.getElementById('tab-login').className = "flex-1 py-2.5 rounded-xl text-sm font-bold text-[#A3AED0] hover:text-[#1B2559] transition-all";
                 document.getElementById('tab-signup').className = "flex-1 py-2.5 rounded-xl text-sm font-bold bg-white text-[#4318FF] shadow-sm transition-all";
+                
                 document.getElementById('signup-fields').classList.remove('hidden');
                 document.getElementById('extra-options').classList.add('hidden');
                 document.getElementById('auth-btn-text').innerHTML = 'Create Account <i class="fa-solid fa-user-plus ml-2"></i>';
@@ -519,11 +629,17 @@
         }
 
         function togglePassword() { 
-            const pwdInput = document.getElementById('password'); const icon = document.getElementById('eye-icon'); 
+            const pwdInput = document.getElementById('password'); 
+            const icon = document.getElementById('eye-icon'); 
+            
             if(pwdInput.type === 'password') { 
-                pwdInput.type = 'text'; icon.classList.replace('fa-eye', 'fa-eye-slash'); 
+                pwdInput.type = 'text'; 
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash'); 
             } else { 
-                pwdInput.type = 'password'; icon.classList.replace('fa-eye-slash', 'fa-eye'); 
+                pwdInput.type = 'password'; 
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye'); 
             } 
         }
 
@@ -531,13 +647,18 @@
             const email = prompt("Enter your registered email to reset password:");
             if(email) {
                 auth.sendPasswordResetEmail(email)
-                .then(() => { alert("Password reset link sent to your email!"); })
-                .catch((error) => { alert(error.message); });
+                .then(() => { 
+                    alert("Password reset link sent to your email!"); 
+                })
+                .catch((error) => { 
+                    alert(error.message); 
+                });
             }
         }
 
         document.getElementById('auth-form').addEventListener('submit', async (e) => {
             e.preventDefault();
+            
             const mode = document.getElementById('auth-mode').value;
             const email = document.getElementById('email').value.trim().toLowerCase();
             const pass = document.getElementById('password').value.trim();
@@ -545,10 +666,11 @@
             const phone = document.getElementById('auth-phone').value.trim();
             const rememberMe = document.getElementById('remember-me').checked;
 
-            // Admin Logic Check
+            // Master Admin Logic Check
             let isAdminCredentials = (email === 'umsm@gmail.com' && (pass === 'repairo umsm' || pass === 'Repairo umsm'));
 
             try {
+                // Show loading spinner
                 document.getElementById('auth-btn-text').innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Processing...';
                 
                 if (mode === 'signup') {
@@ -557,27 +679,34 @@
                         return alert('Please provide your Name and Phone Number.'); 
                     }
                     
+                    // Create user in Firebase Secure Auth
                     const userCred = await auth.createUserWithEmailAndPassword(email, pass);
                     
                     let role = isAdminCredentials ? 'admin' : 'customer';
                     let users = getData('ro_users');
+                    
+                    // Create object for our database
                     let newUser = { 
                         uid: userCred.user.uid, 
                         email: email, 
                         role: role, 
                         name: name, 
                         phone: phone, 
-                        locality: '', address: '', pincode: '', banned: false 
+                        locality: '', 
+                        address: '', 
+                        pincode: '', 
+                        banned: false 
                     };
+                    
                     users.push(newUser); 
                     setData('ro_users', users); 
                     
                     alert('Account created successfully!');
                 } else {
-                    // Login
+                    // Try to Login via Firebase Auth
                     await auth.signInWithEmailAndPassword(email, pass);
                     
-                    // Force Admin Role Update if credentials match
+                    // Force Admin Role Update if credentials match (in case it was set as customer)
                     let users = getData('ro_users');
                     let userIndex = users.findIndex(u => u.email === email);
                     if(userIndex !== -1 && isAdminCredentials && users[userIndex].role !== 'admin') {
@@ -586,6 +715,7 @@
                     }
                 }
 
+                // Handle Remember Me memory
                 if(rememberMe && mode === 'login') {
                     localStorage.setItem('ro_remembered_email', email);
                 } else {
@@ -593,66 +723,112 @@
                 }
 
             } catch(error) {
+                // Handle Errors from Firebase
                 alert(error.message);
-                if(mode === 'login') document.getElementById('auth-btn-text').innerHTML = 'Sign In <i class="fa-solid fa-arrow-right ml-2"></i>';
-                else document.getElementById('auth-btn-text').innerHTML = 'Create Account <i class="fa-solid fa-user-plus ml-2"></i>';
+                
+                // Reset Button Text
+                if(mode === 'login') {
+                    document.getElementById('auth-btn-text').innerHTML = 'Sign In <i class="fa-solid fa-arrow-right ml-2"></i>';
+                } else {
+                    document.getElementById('auth-btn-text').innerHTML = 'Create Account <i class="fa-solid fa-user-plus ml-2"></i>';
+                }
             }
         });
 
         function updateAuthUI() {
+            // Hide Auth form, Show Profile
             document.getElementById('account-auth-section').classList.add('hidden');
             document.getElementById('account-profile-section').classList.remove('hidden');
             
+            // Show Admin Nav if user is admin
             if (currentUser.role === 'admin') { 
                 document.getElementById('nav-admin').classList.remove('hidden'); 
                 document.getElementById('nav-admin').classList.add('flex'); 
                 updateAdminStats(); 
             }
             
+            // Update UI with User Details
             document.getElementById('user-display-name').innerText = currentUser.name || 'User';
             document.getElementById('home-user-name').innerText = (currentUser.name || 'User').split(' ')[0];
             document.getElementById('user-display-email').innerText = currentUser.email;
             document.getElementById('user-initial').innerText = (currentUser.name || 'U').charAt(0).toUpperCase();
             
+            // Pre-fill profile inputs
             document.getElementById('prof-name').value = currentUser.name || ''; 
             document.getElementById('prof-phone').value = currentUser.phone || '';
             document.getElementById('prof-locality').value = currentUser.locality || ''; 
             document.getElementById('prof-address').value = currentUser.address || ''; 
             document.getElementById('prof-pincode').value = currentUser.pincode || '';
             
+            // Re-render components that depend on login state
             renderBookings(); 
         }
 
         function logout() { 
             if(!confirm("Are you sure you want to securely logout?")) return;
+            
             auth.signOut().then(() => {
                 currentUser = null; 
+                localStorage.removeItem('ro_remembered_email');
+                
+                // Hide Profile, Show Auth form
                 document.getElementById('account-auth-section').classList.remove('hidden'); 
                 document.getElementById('account-profile-section').classList.add('hidden');
+                
+                // Hide Admin
                 document.getElementById('nav-admin').classList.add('hidden'); 
                 document.getElementById('nav-admin').classList.remove('flex'); 
                 
+                // Reset public UI
                 document.getElementById('home-user-name').innerText = "Guest"; 
                 document.getElementById('email').value = ''; 
                 document.getElementById('password').value = '';
                 document.getElementById('auth-btn-text').innerHTML = 'Sign In <i class="fa-solid fa-arrow-right ml-2"></i>';
                 
+                // Go to home and reset bookings view
                 switchTab('home'); 
                 renderBookings();
             });
         }
 
-        // Tab & Modals
+        function saveProfile() {
+            currentUser.name = document.getElementById('prof-name').value; 
+            currentUser.phone = document.getElementById('prof-phone').value;
+            currentUser.locality = document.getElementById('prof-locality').value; 
+            currentUser.address = document.getElementById('prof-address').value; 
+            currentUser.pincode = document.getElementById('prof-pincode').value;
+            
+            let users = getData('ro_users'); 
+            let idx = users.findIndex(u => u.email === currentUser.email);
+            
+            if(idx !== -1) {
+                users[idx] = currentUser; 
+                setData('ro_users', users); 
+                updateAuthUI(); 
+                alert("Profile Successfully Updated!");
+            }
+        }
+
+        // ==========================================
+        // 5. NAVIGATION & UI HELPERS
+        // ==========================================
+        
         function switchTab(tabName) {
+            // Stop video playing in background when switching away from TV
             if(tabName !== 'tv') {
                 document.querySelectorAll('#view-tv iframe').forEach(iframe => { iframe.src = iframe.src; });
             }
+            
+            // Hide all views, show target view
             document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active')); 
             document.getElementById('view-' + tabName).classList.add('active');
             
+            // Manage Active states for Bottom Navigation icons
             document.querySelectorAll('.nav-item').forEach(el => { 
                 el.classList.remove('active'); 
-                if(el.getAttribute('onclick').includes(tabName)) el.classList.add('active'); 
+                if(el.getAttribute('onclick').includes(tabName)) {
+                    el.classList.add('active'); 
+                }
             });
         }
 
@@ -691,28 +867,14 @@
             renderServices(query); 
         }
 
-        function saveProfile() {
-            currentUser.name = document.getElementById('prof-name').value; 
-            currentUser.phone = document.getElementById('prof-phone').value;
-            currentUser.locality = document.getElementById('prof-locality').value; 
-            currentUser.address = document.getElementById('prof-address').value; 
-            currentUser.pincode = document.getElementById('prof-pincode').value;
-            
-            let users = getData('ro_users'); 
-            let idx = users.findIndex(u => u.email === currentUser.email);
-            
-            if(idx !== -1) {
-                users[idx] = currentUser; 
-                setData('ro_users', users); 
-                updateAuthUI(); 
-                alert("Profile Successfully Updated!");
-            }
-        }
-
-        // Categories
+        // ==========================================
+        // 6. CATEGORIES LOGIC
+        // ==========================================
+        
         function renderCategories() {
             let cats = getData('ro_categories');
             
+            // Data Migration (String to Objects if needed)
             if(cats.length > 0 && typeof cats[0] === 'string') { 
                 cats = cats.map(c => ({ id: Date.now() + Math.random(), name: c, available: true })); 
                 setData('ro_categories', cats); 
@@ -723,38 +885,53 @@
             const adminList = document.getElementById('admin-cats-list');
             const activeCats = cats.filter(c => c.available !== false);
 
+            // User View (Top Strip)
             if(strip) {
-                strip.innerHTML = `<button onclick="filterCategory('All')" class="cat-btn px-6 py-2.5 rounded-2xl bg-gradient-to-r from-[#4318FF] to-[#0075FF] text-white text-xs font-bold whitespace-nowrap shadow-[0_5px_15px_rgba(67,24,255,0.3)] transition-all">All</button>` + 
-                activeCats.map(c => `<button onclick="filterCategory('${c.name}')" class="cat-btn px-6 py-2.5 rounded-2xl bg-white text-[#4318FF] text-xs font-bold whitespace-nowrap shadow-sm border border-[#E9EDF7] hover:bg-blue-50 transition-all">${c.name}</button>`).join('');
+                let allBtnHTML = `<button onclick="filterCategory('All')" class="cat-btn px-6 py-2.5 rounded-2xl bg-gradient-to-r from-[#4318FF] to-[#0075FF] text-white text-xs font-bold whitespace-nowrap shadow-[0_5px_15px_rgba(67,24,255,0.3)] transition-all">All</button>`;
+                let otherBtnsHTML = activeCats.map(c => {
+                    return `<button onclick="filterCategory('${c.name}')" class="cat-btn px-6 py-2.5 rounded-2xl bg-white text-[#4318FF] text-xs font-bold whitespace-nowrap shadow-sm border border-[#E9EDF7] hover:bg-blue-50 transition-all">${c.name}</button>`;
+                }).join('');
+                strip.innerHTML = allBtnHTML + otherBtnsHTML;
             }
             
+            // Admin Dropdown Form
             if(select) {
                 select.innerHTML = activeCats.map(c => `<option value="${c.name}">${c.name}</option>`).join('');
             }
             
+            // Admin Manage Categories List
             if(adminList) {
-                adminList.innerHTML = cats.map(c => `
-                <div class="bg-white p-4 rounded-xl border border-gray-100 flex justify-between items-center shadow-sm">
-                    <span class="font-bold text-[#1B2559] text-sm ${!c.available ? 'line-through text-gray-400' : ''}">${c.name}</span>
-                    <div class="flex gap-2">
-                        <button onclick="toggleCatStatus(${c.id})" class="text-[10px] font-bold px-3 py-1.5 rounded-lg ${c.available ? 'bg-green-100 text-green-600' : 'bg-orange-100 text-orange-600'}">${c.available ? 'AVAILABLE' : 'HIDDEN'}</button>
-                        <button onclick="deleteCat(${c.id})" class="bg-red-50 text-red-500 w-8 h-8 rounded-lg flex items-center justify-center"><i class="fa-solid fa-trash"></i></button>
-                    </div>
-                </div>`).join('');
+                adminList.innerHTML = cats.map(c => {
+                    let availableStatusClass = c.available ? 'bg-green-100 text-green-600' : 'bg-orange-100 text-orange-600';
+                    let availableStatusText = c.available ? 'AVAILABLE' : 'HIDDEN';
+                    let nameClass = !c.available ? 'line-through text-gray-400' : '';
+                    
+                    return `
+                    <div class="bg-white p-4 rounded-xl border border-gray-100 flex justify-between items-center shadow-sm">
+                        <span class="font-bold text-[#1B2559] text-sm ${nameClass}">${c.name}</span>
+                        <div class="flex gap-2">
+                            <button onclick="toggleCatStatus(${c.id})" class="text-[10px] font-bold px-3 py-1.5 rounded-lg ${availableStatusClass}">${availableStatusText}</button>
+                            <button onclick="deleteCat(${c.id})" class="bg-red-50 text-red-500 w-8 h-8 rounded-lg flex items-center justify-center">
+                                <i class="fa-solid fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>`;
+                }).join('');
             }
         }
 
         function addCategory() {
             const name = document.getElementById('new-cat-name').value.trim(); 
             if(!name) return alert("Enter category name!");
+            
             let cats = getData('ro_categories');
             if(!cats.find(c => c.name.toLowerCase() === name.toLowerCase())) { 
                 cats.push({ id: Date.now(), name: name, available: true }); 
                 setData('ro_categories', cats); 
                 document.getElementById('new-cat-name').value = ''; 
-                alert('Added!'); 
+                alert('Category Added!'); 
             } else {
-                alert('Exists!');
+                alert('Category Exists!');
             }
         }
 
@@ -787,7 +964,10 @@
             renderServices(); 
         }
 
-        // Services
+        // ==========================================
+        // 7. SERVICES LOGIC
+        // ==========================================
+        
         async function addService() {
             const editId = document.getElementById('srv-edit-id').value; 
             const name = document.getElementById('srv-name').value;
@@ -797,12 +977,12 @@
             const discount = document.getElementById('srv-discount').value || 0;
             const fileInput = document.getElementById('srv-imgs');
             
-            if(!name || !price) return alert('Name and Price required'); 
-            if(fileInput.files.length > 2) return alert('Max 2 photos allowed!');
+            if(!name || !price) return alert('Name and Price are required fields.'); 
+            if(fileInput.files.length > 2) return alert('Max 2 photos allowed per service!');
 
             let images = [];
             if(fileInput.files.length > 0) { 
-                for(let i=0; i<fileInput.files.length; i++) {
+                for(let i = 0; i < fileInput.files.length; i++) {
                     images.push(await fileToBase64(fileInput.files[i])); 
                 }
             }
@@ -810,6 +990,7 @@
             let services = getData('ro_services');
             
             if(editId) {
+                // Edit existing service
                 let idx = services.findIndex(s => s.id == editId);
                 if(idx !== -1) {
                     services[idx].name = name; 
@@ -818,15 +999,16 @@
                     services[idx].bookingCharge = Number(charge); 
                     services[idx].discount = Number(discount);
                     if(images.length > 0) services[idx].images = images; 
-                    alert('Updated!'); 
+                    alert('Service Updated!'); 
                 }
             } else {
+                // Add new service
                 if(images.length === 0) {
                     images.push('https://images.unsplash.com/photo-1581092921461-7031e4bf0e5d?w=500&q=80');
                 }
                 services.push({ 
                     id: Date.now(), 
-                    name, 
+                    name: name, 
                     category: cat, 
                     price: Number(price), 
                     bookingCharge: Number(charge), 
@@ -834,11 +1016,12 @@
                     images: images, 
                     available: true 
                 }); 
-                alert('Published!'); 
+                alert('Service Published Successfully!'); 
             }
             
             setData('ro_services', services);
             
+            // Clear Form
             document.getElementById('srv-edit-id').value = ''; 
             document.getElementById('srv-name').value = ''; 
             document.getElementById('srv-price').value = ''; 
@@ -863,18 +1046,29 @@
                 container.innerHTML = services.map(s => {
                     const finalPrice = s.discount > 0 ? s.price - (s.price * (s.discount/100)) : s.price; 
                     const imgSource = s.images ? s.images[0] : s.image;
+                    
+                    let discountTag = '';
+                    if(s.discount > 0) {
+                        discountTag = `<div class="absolute top-2 right-2 bg-red-500 text-white px-2 py-1 rounded-lg text-[9px] font-bold shadow-sm">${s.discount}% OFF</div>`;
+                    }
+
+                    let crossedPriceTag = '';
+                    if(s.discount > 0) {
+                        crossedPriceTag = `<span class="text-xs text-gray-400 line-through ml-1">₹${s.price}</span>`;
+                    }
+
                     return `
-                    <div class="luxury-card overflow-hidden flex flex-col p-2 group cursor-pointer">
+                    <div class="luxury-card overflow-hidden flex flex-col p-2 group cursor-pointer hover:-translate-y-1 transition-all">
                         <div class="relative rounded-[18px] overflow-hidden mb-3">
                             <img src="${imgSource}" class="h-32 w-full object-cover">
-                            ${s.discount > 0 ? `<div class="absolute top-2 right-2 bg-red-500 text-white px-2 py-1 rounded-lg text-[9px] font-bold shadow-sm">${s.discount}% OFF</div>` : ''}
+                            ${discountTag}
                         </div>
                         <div class="px-2 pb-2 flex flex-col flex-1">
                             <h3 class="font-bold text-[#1B2559] text-xs leading-snug mb-2">${s.name}</h3>
                             <div class="flex justify-between items-end mb-3">
                                 <div>
                                     <p class="text-[10px] text-[#A3AED0] font-medium leading-none mb-1">Fee ₹${s.bookingCharge || 0}</p>
-                                    <p class="text-lg text-[#4318FF] font-extrabold leading-none">₹${finalPrice.toFixed(0)} ${s.discount>0 ? `<span class="text-xs text-gray-400 line-through">₹${s.price}</span>` : ''}</p>
+                                    <p class="text-lg text-[#4318FF] font-extrabold leading-none">₹${finalPrice.toFixed(0)} ${crossedPriceTag}</p>
                                 </div>
                             </div>
                             <button onclick="bookNow(${s.id})" class="mt-auto w-full btn-vibrant py-2.5 rounded-xl text-[10px] font-bold uppercase tracking-widest">Book Now</button>
@@ -885,7 +1079,7 @@
                 container.innerHTML = `
                 <div class="col-span-2 text-center py-10">
                     <i class="fa-solid fa-box-open text-4xl text-[#A3AED0] mb-3"></i>
-                    <p class="text-[#A3AED0] text-sm font-medium">No services found.</p>
+                    <p class="text-[#A3AED0] text-sm font-medium">No services available.</p>
                 </div>`;
             }
         }
@@ -898,24 +1092,35 @@
             if(services.length) {
                 container.innerHTML = services.map(s => {
                     const imgSource = s.images ? s.images[0] : s.image;
+                    let opacityClass = s.available === false ? 'opacity-60' : '';
+                    let lineThroughClass = s.available === false ? 'line-through text-gray-400' : '';
+                    let statusBtnClass = s.available !== false ? 'bg-green-100 text-green-600' : 'bg-orange-100 text-orange-600';
+                    let statusBtnText = s.available !== false ? 'AVAILABLE' : 'HIDDEN';
+
                     return `
-                    <div class="bg-white p-4 rounded-xl border border-gray-100 shadow-sm flex items-center gap-3 ${s.available === false ? 'opacity-60' : ''}">
+                    <div class="bg-white p-4 rounded-xl border border-gray-100 shadow-sm flex items-center gap-3 ${opacityClass}">
                         <img src="${imgSource}" class="w-14 h-14 rounded-lg object-cover bg-gray-50 shrink-0">
                         <div class="flex-1 overflow-hidden">
-                            <h4 class="font-bold text-[#1B2559] text-sm truncate ${s.available === false ? 'line-through' : ''}">${s.name}</h4>
+                            <h4 class="font-bold text-[#1B2559] text-sm truncate ${lineThroughClass}">${s.name}</h4>
                             <p class="text-[10px] font-bold text-[#4318FF] uppercase">${s.category} • ₹${s.price}</p>
                         </div>
                         <div class="flex flex-col gap-1 shrink-0">
-                            <button onclick="toggleServiceStatus(${s.id})" class="text-[9px] font-bold px-2 py-1 rounded ${s.available !== false ? 'bg-green-100 text-green-600' : 'bg-orange-100 text-orange-600'}">${s.available !== false ? 'AVAILABLE' : 'HIDDEN'}</button>
+                            <button onclick="toggleServiceStatus(${s.id})" class="text-[9px] font-bold px-2 py-1 rounded ${statusBtnClass}">
+                                ${statusBtnText}
+                            </button>
                             <div class="flex gap-1">
-                                <button onclick="editService(${s.id})" class="bg-blue-50 text-blue-500 flex-1 py-1 rounded"><i class="fa-solid fa-pen"></i></button>
-                                <button onclick="deleteService(${s.id})" class="bg-red-50 text-red-500 flex-1 py-1 rounded"><i class="fa-solid fa-trash"></i></button>
+                                <button onclick="editService(${s.id})" class="bg-blue-50 text-blue-500 flex-1 py-1 rounded">
+                                    <i class="fa-solid fa-pen"></i>
+                                </button>
+                                <button onclick="deleteService(${s.id})" class="bg-red-50 text-red-500 flex-1 py-1 rounded">
+                                    <i class="fa-solid fa-trash"></i>
+                                </button>
                             </div>
                         </div>
                     </div>`;
                 }).join('');
             } else {
-                container.innerHTML = '<p class="text-xs text-gray-400 italic">No services published.</p>';
+                container.innerHTML = '<p class="text-xs text-gray-400 italic">No services published yet.</p>';
             }
         }
 
@@ -929,7 +1134,7 @@
         }
 
         function deleteService(id) { 
-            if(confirm("Delete this service?")) { 
+            if(confirm("Delete this service? This action cannot be undone.")) { 
                 let services = getData('ro_services').filter(s => s.id !== id); 
                 setData('ro_services', services); 
             } 
@@ -938,6 +1143,7 @@
         function editService(id) { 
             const s = getData('ro_services').find(x => x.id === id); 
             if(!s) return; 
+            
             document.getElementById('srv-edit-id').value = s.id; 
             document.getElementById('srv-name').value = s.name; 
             document.getElementById('srv-cat').value = s.category; 
@@ -945,16 +1151,23 @@
             document.getElementById('srv-charge').value = s.bookingCharge || 0; 
             document.getElementById('srv-discount').value = s.discount || 0; 
             document.getElementById('srv-save-btn').innerText = "Update Service"; 
+            
             window.scrollTo(0,0); 
         }
 
-        // Booking
+        // ==========================================
+        // 8. BOOKING LOGIC
+        // ==========================================
+        
         function bookNow(id) {
+            // Check if Guest
             if(!currentUser) { 
-                alert("Please login to your account to book a service."); 
+                alert("Please login or sign up to book a service."); 
                 switchTab('account'); 
                 return; 
             }
+            
+            // Check if Profile Incomplete
             if(!currentUser.phone || !currentUser.address) { 
                 alert("Please complete your profile details (Mobile, Address) in the Account tab to proceed."); 
                 switchTab('account'); 
@@ -965,6 +1178,7 @@
             const bookings = getData('ro_bookings'); 
             const totalAmount = service.price + (service.bookingCharge || 0);
             
+            // Current Date generator
             const today = new Date(); 
             const formattedDate = String(today.getDate()).padStart(2, '0') + '/' + String(today.getMonth() + 1).padStart(2, '0') + '/' + today.getFullYear();
             
@@ -991,6 +1205,7 @@
             const myContainer = document.getElementById('bookings-container'); 
             const loginPrompt = document.getElementById('bookings-login-prompt');
             
+            // Handle Customer View
             if(!currentUser) { 
                 myContainer.classList.add('hidden'); 
                 loginPrompt.classList.remove('hidden'); 
@@ -998,12 +1213,20 @@
                 myContainer.classList.remove('hidden'); 
                 loginPrompt.classList.add('hidden');
                 
+                // Filter bookings by logged-in user
                 const myBookings = bookings.filter(b => b.userEmail === currentUser.email);
                 
                 if(myBookings.length) {
                     myContainer.innerHTML = myBookings.map(b => {
                         let statusColor = b.status === 'Work Done' ? 'text-green-500' : (b.status === 'Cancel' ? 'text-red-500' : 'text-[#4318FF]'); 
                         let barColor = b.status === 'Work Done' ? 'bg-[#05CD99]' : (b.status === 'Cancel' ? 'bg-red-500' : 'bg-gradient-to-b from-[#4318FF] to-[#0075FF]');
+                        
+                        let scheduledInfo = b.scheduledDate ? 
+                            `<p class="text-[10px] text-[#4318FF] font-extrabold uppercase tracking-wider mt-1"><i class="fa-solid fa-clock mr-1"></i> Sch: ${b.scheduledDate}</p>` : 
+                            `<p class="text-[10px] text-orange-500 font-bold uppercase mt-1">Waiting for Schedule</p>`;
+
+                        let pulseDot = b.status !== 'Work Done' && b.status !== 'Cancel' ? '<span class="w-2.5 h-2.5 rounded-full bg-[#4318FF] animate-pulse"></span>' : '';
+
                         return `
                         <div class="luxury-card p-5 relative overflow-hidden mb-4">
                             <div class="absolute left-0 top-0 bottom-0 w-2 ${barColor}"></div>
@@ -1011,12 +1234,12 @@
                                 <div>
                                     <h4 class="font-extrabold text-[#1B2559] text-sm mb-1">${b.serviceName}</h4>
                                     <p class="text-[10px] text-[#A3AED0] font-bold uppercase tracking-wider"><i class="fa-regular fa-calendar mr-1"></i> Ordered: ${b.date}</p>
-                                    ${b.scheduledDate ? `<p class="text-[10px] text-[#4318FF] font-extrabold uppercase tracking-wider mt-1"><i class="fa-solid fa-clock mr-1"></i> Sch: ${b.scheduledDate}</p>` : `<p class="text-[10px] text-orange-500 font-bold uppercase mt-1">Waiting for Schedule</p>`}
+                                    ${scheduledInfo}
                                 </div>
                                 <span class="font-extrabold text-[#4318FF] text-base bg-blue-50 px-3 py-1 rounded-xl">₹${b.price}</span>
                             </div>
                             <div class="flex items-center gap-2 pl-2">
-                                ${b.status !== 'Work Done' && b.status !== 'Cancel' ? '<span class="w-2.5 h-2.5 rounded-full bg-[#4318FF] animate-pulse"></span>' : ''}
+                                ${pulseDot}
                                 <span class="text-[11px] font-bold ${statusColor} uppercase">${b.status}</span>
                             </div>
                         </div>`;
@@ -1032,14 +1255,22 @@
                 }
             }
 
+            // Handle Admin View logic for Orders Management Tab
             if(currentUser && currentUser.role === 'admin') {
-                const adminList = document.getElementById('admin-bookings-list');
+                const adminBookingsList = document.getElementById('admin-bookings-list');
                 if(bookings.length) {
-                    adminList.innerHTML = bookings.map(b => {
+                    adminBookingsList.innerHTML = bookings.map(b => {
                         const cUser = users.find(u => u.email === b.userEmail) || {};
+                        let barColor = b.status === 'Work Done' ? 'bg-[#05CD99]' : 'bg-[#FFB547]';
+                        
+                        let callBtn = b.userPhone ? 
+                            `<a href="tel:${b.userPhone}" class="bg-green-500 text-white px-3 py-1 rounded-lg text-[10px] font-bold shadow-md hover:bg-green-600"><i class="fa-solid fa-phone"></i> CALL</a>` : '';
+                        
+                        let addressString = `${cUser.address || 'No Address'}, ${cUser.locality || ''} ${cUser.pincode ? `(${cUser.pincode})` : ''}`;
+
                         return `
                         <div class="luxury-card p-5 relative overflow-hidden mb-4 border border-blue-50">
-                            <div class="absolute left-0 top-0 bottom-0 w-2 ${b.status === 'Work Done' ? 'bg-[#05CD99]' : 'bg-[#FFB547]'}"></div>
+                            <div class="absolute left-0 top-0 bottom-0 w-2 ${barColor}"></div>
                             <div class="pl-2">
                                 <div class="flex justify-between items-start mb-3 border-b border-gray-100 pb-3">
                                     <div>
@@ -1051,11 +1282,11 @@
                                 <div class="bg-[#F4F7FE] p-3 rounded-xl mb-4">
                                     <div class="flex justify-between items-center mb-1">
                                         <p class="text-xs font-extrabold text-[#1B2559]"><i class="fa-solid fa-user text-[#4318FF] mr-1"></i> ${cUser.name || b.userName}</p>
-                                        ${b.userPhone ? `<a href="tel:${b.userPhone}" class="bg-green-500 text-white px-3 py-1 rounded-lg text-[10px] font-bold shadow-md hover:bg-green-600"><i class="fa-solid fa-phone"></i> CALL</a>` : ''}
+                                        ${callBtn}
                                     </div>
                                     <p class="text-[11px] text-[#1B2559] font-medium leading-tight">
                                         ${b.userPhone ? `Ph: ${b.userPhone}<br>` : ''}
-                                        ${cUser.address || 'No Address'}, ${cUser.locality || ''} ${cUser.pincode ? `(${cUser.pincode})` : ''}
+                                        ${addressString}
                                     </p>
                                 </div>
                                 <div class="space-y-3">
@@ -1079,28 +1310,34 @@
                         </div>`;
                     }).join('');
                 } else {
-                    adminList.innerHTML = '<p class="text-sm text-[#A3AED0] font-medium text-center py-5">No orders yet.</p>';
+                    adminBookingsList.innerHTML = '<p class="text-sm text-[#A3AED0] font-medium text-center py-5">No orders yet.</p>';
                 }
             }
         }
 
         function updateOrderDetails(id) { 
-            const b = getData('ro_bookings'); 
-            const target = b.find(x => x.id === id); 
+            const bookings = getData('ro_bookings'); 
+            const target = bookings.find(x => x.id === id); 
             if(target) { 
                 target.status = document.getElementById(`sch-status-${id}`).value; 
                 target.scheduledDate = document.getElementById(`sch-date-${id}`).value; 
-                setData('ro_bookings', b); 
-                alert('Updated!'); 
+                setData('ro_bookings', bookings); 
+                alert('Order Status Updated Successfully!'); 
             } 
         }
 
-        // TV Logic
+        // ==========================================
+        // 9. REPAIRO TV (VIDEO) LOGIC
+        // ==========================================
+        
         function switchTVTab(tab) {
             document.getElementById('tab-long').className = tab === 'long' ? "flex-1 btn-vibrant py-2 rounded-xl text-xs font-bold shadow-lg" : "flex-1 bg-white text-[#4318FF] border border-[#E9EDF7] py-2 rounded-xl text-xs font-bold shadow-sm"; 
             document.getElementById('tab-short').className = tab === 'short' ? "flex-1 btn-vibrant py-2 rounded-xl text-xs font-bold shadow-lg" : "flex-1 bg-white text-[#4318FF] border border-[#E9EDF7] py-2 rounded-xl text-xs font-bold shadow-sm";
+            
             document.getElementById('tv-long-container').style.display = tab === 'long' ? 'block' : 'none'; 
             document.getElementById('tv-short-container').style.display = tab === 'short' ? 'grid' : 'none'; 
+            
+            // Pause playing videos
             document.querySelectorAll('#view-tv iframe').forEach(iframe => { iframe.src = iframe.src; });
         }
 
@@ -1110,20 +1347,22 @@
             const format = document.getElementById('tv-format').value; 
             const ytId = getYTId(link); 
             
-            if(!title || !ytId) return alert('Valid Title and Link required!'); 
+            if(!title || !ytId) return alert('Valid YouTube Link and Title are required!'); 
             
             const vids = getData('ro_videos'); 
-            vids.push({ id: Date.now(), title, ytId, format }); 
+            vids.push({ id: Date.now(), title: title, ytId: ytId, format: format }); 
             setData('ro_videos', vids); 
-            alert('Added to TV!'); 
             
-            document.getElementById('tv-title').value=''; 
-            document.getElementById('tv-link').value=''; 
+            alert('Video Added to RepairO TV!'); 
+            document.getElementById('tv-title').value = ''; 
+            document.getElementById('tv-link').value = ''; 
         }
 
         function removeVideo(id) { 
-            let vids = getData('ro_videos').filter(v => v.id !== id); 
-            setData('ro_videos', vids); 
+            if(confirm("Delete this video?")) {
+                let vids = getData('ro_videos').filter(v => v.id !== id); 
+                setData('ro_videos', vids); 
+            }
         }
 
         function renderAdminVideos() { 
@@ -1131,15 +1370,17 @@
             const container = document.getElementById('admin-tv-list');
             if(vids.length) {
                 container.innerHTML = vids.map(v => `
-                <div class="bg-white p-3 rounded-xl border border-gray-200 flex justify-between items-center">
+                <div class="bg-white p-3 rounded-xl border border-gray-200 flex justify-between items-center shadow-sm mb-2">
                     <div class="truncate">
                         <p class="font-bold text-[#1B2559] text-xs truncate">${v.title}</p>
-                        <p class="text-[9px] text-[#A3AED0] uppercase">${v.format}</p>
+                        <p class="text-[9px] text-[#A3AED0] uppercase font-bold mt-0.5">${v.format} Video</p>
                     </div>
-                    <button onclick="removeVideo(${v.id})" class="text-red-500 ml-2"><i class="fa-solid fa-trash"></i></button>
+                    <button onclick="removeVideo(${v.id})" class="text-red-500 w-8 h-8 rounded-lg bg-red-50 flex items-center justify-center shrink-0 ml-2">
+                        <i class="fa-solid fa-trash"></i>
+                    </button>
                 </div>`).join(''); 
             } else {
-                container.innerHTML = '';
+                container.innerHTML = '<p class="text-xs text-gray-400 italic">No videos added yet.</p>';
             }
         }
 
@@ -1151,21 +1392,38 @@
             longCont.innerHTML = ''; 
             shortCont.innerHTML = ''; 
             
+            if(vids.length === 0) {
+                longCont.innerHTML = '<p class="text-center text-sm text-[#A3AED0] py-10">No videos available right now.</p>';
+                return;
+            }
+
             vids.forEach(v => { 
+                let aspectClass = v.format === 'short' ? 'aspect-[9/16]' : 'aspect-video';
                 const html = `
                 <div class="luxury-card overflow-hidden">
-                    <iframe class="w-full ${v.format === 'short' ? 'aspect-[9/16]' : 'aspect-video'}" src="https://www.youtube.com/embed/${v.ytId}" frameborder="0" allowfullscreen></iframe>
-                    <div class="p-3"><h3 class="font-bold text-[#1B2559] text-sm">${v.title}</h3></div>
+                    <iframe class="w-full ${aspectClass}" src="https://www.youtube.com/embed/${v.ytId}" frameborder="0" allowfullscreen></iframe>
+                    <div class="p-3">
+                        <h3 class="font-bold text-[#1B2559] text-sm leading-snug">${v.title}</h3>
+                    </div>
                 </div>`; 
-                if(v.format === 'short') shortCont.innerHTML += html; 
-                else longCont.innerHTML += html; 
+                
+                if(v.format === 'short') {
+                    shortCont.innerHTML += html; 
+                } else {
+                    longCont.innerHTML += html; 
+                }
             }); 
         }
 
-        // Admin General
+        // ==========================================
+        // 10. ADMIN DASHBOARD & MANAGEMENT
+        // ==========================================
+        
         function updateAdminStats() { 
-            document.getElementById('stat-users').innerText = getData('ro_users').length; 
-            document.getElementById('stat-orders').innerText = getData('ro_bookings').length; 
+            const usersCount = getData('ro_users').length;
+            const ordersCount = getData('ro_bookings').length;
+            document.getElementById('stat-users').innerText = usersCount; 
+            document.getElementById('stat-orders').innerText = ordersCount; 
         }
 
         function openAdminSec(secId) { 
@@ -1191,34 +1449,61 @@
             updateAdminStats(); 
         }
 
-        // User Management
+        // User Management System
         function renderAdminUsers() {
             const users = getData('ro_users'); 
             const container = document.getElementById('admin-users-list');
             
             if(users.length) {
-                container.innerHTML = users.map(u => `
-                <div class="luxury-card p-4 border-l-4 ${u.banned ? 'border-red-500 opacity-70' : (u.role === 'admin' ? 'border-purple-500' : 'border-[#4318FF]')}">
-                    <div class="flex items-center gap-3 mb-3">
-                        <div class="w-12 h-12 rounded-full ${u.role === 'admin' ? 'bg-purple-100 text-purple-600' : 'bg-blue-100 text-[#4318FF]'} flex items-center justify-center font-bold text-xl shrink-0">${(u.name || u.email).charAt(0).toUpperCase()}</div>
-                        <div class="overflow-hidden flex-1">
-                            <h4 class="font-extrabold text-[#1B2559] text-sm truncate">${u.name || 'New User'} ${u.banned ? '<span class="text-red-500">(BANNED)</span>' : ''}</h4>
-                            <p class="text-[11px] text-[#A3AED0] truncate">${u.email}</p>
+                container.innerHTML = users.map(u => {
+                    let borderClass = u.banned ? 'border-red-500 opacity-70' : (u.role === 'admin' ? 'border-purple-500' : 'border-[#4318FF]');
+                    let avatarClass = u.role === 'admin' ? 'bg-purple-100 text-purple-600' : 'bg-blue-100 text-[#4318FF]';
+                    let initial = (u.name || u.email || 'U').charAt(0).toUpperCase();
+                    let nameDisplay = u.name || 'New User';
+                    let banBadge = u.banned ? '<span class="text-red-500 text-[10px] ml-1">(BANNED)</span>' : '';
+                    let emailDisplay = u.email ? `<i class="fa-solid fa-envelope text-[#4318FF] mr-1"></i> ${u.email}<br>` : '';
+                    let addressDisplay = `${u.address || 'No Address'}, ${u.locality || ''} <br> ${u.pincode ? `PIN: ${u.pincode}` : ''}`;
+                    
+                    let callAction = u.phone ? `<a href="tel:${u.phone}" class="flex-1 text-center bg-green-100 text-green-700 py-2 rounded-lg text-[10px] font-bold"><i class="fa-solid fa-phone"></i> CALL</a>` : '';
+                    
+                    // Admin Toggle Action
+                    let roleAction = '';
+                    if(u.email !== 'umsm@gmail.com') { // Master admin cannot be downgraded here
+                        let roleBtnColor = u.role === 'admin' ? 'bg-purple-100 text-purple-700' : 'bg-gray-200 text-gray-700';
+                        let roleBtnText = u.role === 'admin' ? 'RM ADMIN' : 'MAKE ADMIN';
+                        roleAction = `<button onclick="toggleAdminRole('${u.email}')" class="flex-1 text-[10px] font-bold py-2 rounded-lg ${roleBtnColor}">${roleBtnText}</button>`;
+                    }
+
+                    // Ban Toggle Action
+                    let banAction = '';
+                    if(u.email !== 'umsm@gmail.com') {
+                        let banBtnColor = u.banned ? 'bg-blue-100 text-blue-700' : 'bg-red-100 text-red-700';
+                        let banBtnText = u.banned ? 'UNBAN' : 'BAN USER';
+                        banAction = `<button onclick="toggleBan('${u.email}')" class="flex-1 py-2 rounded-lg text-[10px] font-bold ${banBtnColor}">${banBtnText}</button>`;
+                    }
+
+                    return `
+                    <div class="luxury-card p-4 border-l-4 ${borderClass}">
+                        <div class="flex items-center gap-3 mb-3">
+                            <div class="w-12 h-12 rounded-full ${avatarClass} flex items-center justify-center font-bold text-xl shrink-0">${initial}</div>
+                            <div class="overflow-hidden flex-1">
+                                <h4 class="font-extrabold text-[#1B2559] text-sm truncate">${nameDisplay} ${banBadge}</h4>
+                                <p class="text-[11px] text-[#A3AED0] truncate">${u.email}</p>
+                            </div>
                         </div>
-                    </div>
-                    <div class="bg-[#F4F7FE] p-3 rounded-xl mb-3">
-                        <p class="text-xs text-[#1B2559] font-medium leading-relaxed">
-                            ${u.phone ? `<i class="fa-solid fa-phone text-[#4318FF] mr-1"></i> ${u.phone}<br>` : ''}
-                            ${u.address || 'No Address'}, ${u.locality || ''}<br>
-                            ${u.pincode ? `PIN: ${u.pincode}` : ''}
-                        </p>
-                    </div>
-                    <div class="flex justify-between items-center gap-2">
-                        ${u.phone ? `<a href="tel:${u.phone}" class="flex-1 text-center bg-green-100 text-green-700 py-1.5 rounded-lg text-[10px] font-bold"><i class="fa-solid fa-phone"></i> CALL</a>` : ''} 
-                        ${u.email !== 'umsm@gmail.com' ? `<button onclick="toggleAdminRole('${u.email}')" class="flex-1 text-[10px] font-bold py-1.5 rounded-lg ${u.role === 'admin' ? 'bg-purple-100 text-purple-700' : 'bg-gray-200 text-gray-700'}">${u.role === 'admin' ? 'RM ADMIN' : 'MAKE ADMIN'}</button>` : ''} 
-                        ${u.email !== 'umsm@gmail.com' ? `<button onclick="toggleBan('${u.email}')" class="flex-1 py-1.5 rounded-lg text-[10px] font-bold ${u.banned ? 'bg-blue-100 text-blue-700' : 'bg-red-100 text-red-700'}">${u.banned ? 'UNBAN' : 'BAN'}</button>` : ''}
-                    </div>
-                </div>`).join('');
+                        <div class="bg-[#F4F7FE] p-3 rounded-xl mb-4">
+                            <p class="text-xs text-[#1B2559] font-medium leading-relaxed">
+                                ${emailDisplay}
+                                ${addressDisplay}
+                            </p>
+                        </div>
+                        <div class="flex justify-between items-center gap-2">
+                            ${callAction}
+                            ${roleAction}
+                            ${banAction}
+                        </div>
+                    </div>`;
+                }).join('');
             } else {
                 container.innerHTML = '<p class="text-center text-gray-400 text-sm py-5">No users found.</p>';
             }
@@ -1239,11 +1524,11 @@
             if(idx !== -1) { 
                 users[idx].role = users[idx].role === 'admin' ? 'customer' : 'admin'; 
                 setData('ro_users', users); 
-                alert('Role Updated!'); 
+                alert('User Role Updated Successfully!'); 
             } 
         }
 
-        // Tech Management
+        // Technician Management System
         async function addTechnician() {
             const name = document.getElementById('tech-name').value;
             const prof = document.getElementById('tech-prof').value;
@@ -1251,20 +1536,32 @@
             const exp = document.getElementById('tech-exp').value;
             const fileInput = document.getElementById('tech-img');
             
-            if(!name || !phone || !prof) return alert('Name, Profession & Phone required!');
+            if(!name || !phone || !prof) return alert('Name, Profession & Phone are required fields!');
             
             let imgBase64 = 'https://via.placeholder.com/150'; 
-            if(fileInput.files.length > 0) imgBase64 = await fileToBase64(fileInput.files[0]);
+            if(fileInput.files.length > 0) {
+                imgBase64 = await fileToBase64(fileInput.files[0]);
+            }
             
             const techs = getData('ro_technicians'); 
-            techs.push({ id: Date.now(), name, prof, phone, exp, image: imgBase64 }); 
+            techs.push({ 
+                id: Date.now(), 
+                name: name, 
+                prof: prof, 
+                phone: phone, 
+                exp: exp, 
+                image: imgBase64,
+                available: true,
+                banned: false
+            }); 
+            
             setData('ro_technicians', techs); 
             
             document.getElementById('tech-name').value = ''; 
             document.getElementById('tech-prof').value = ''; 
             document.getElementById('tech-phone').value = ''; 
             document.getElementById('tech-exp').value = ''; 
-            alert('Added!'); 
+            alert('Technician Added Successfully!'); 
         }
 
         function renderAdminTechs() {
@@ -1273,23 +1570,35 @@
             if(!container) return;
             
             if(techs.length) {
-                container.innerHTML = techs.map(t => `
-                <div class="bg-white p-4 rounded-2xl border border-gray-100 shadow-sm flex items-center gap-4 ${t.banned || t.available === false ? 'opacity-60' : ''}">
-                    <img src="${t.image}" class="w-16 h-16 rounded-xl object-cover bg-gray-50 shrink-0">
-                    <div class="overflow-hidden flex-1">
-                        <span class="text-[9px] bg-purple-100 text-purple-700 font-bold px-2 py-1 rounded uppercase tracking-wider">${t.prof || 'Expert'}</span>
-                        <h4 class="font-extrabold text-[#1B2559] text-sm mt-1 truncate ${t.banned ? 'text-red-500' : ''}">${t.name} ${t.banned ? '(BANNED)' : ''}</h4>
-                        <p class="text-[11px] text-[#A3AED0] mt-1"><i class="fa-solid fa-phone mr-1 text-[#4318FF]"></i> ${t.phone}</p>
-                        <p class="text-[10px] text-gray-500 font-medium mb-2">Exp: ${t.exp || 'N/A'}</p>
-                        <div class="flex gap-2">
-                            <button onclick="toggleTechStatus(${t.id}, 'avail')" class="text-[9px] font-bold px-2 py-1 rounded ${t.available !== false ? 'bg-green-100 text-green-600' : 'bg-orange-100 text-orange-600'}">${t.available !== false ? 'AVAILABLE' : 'OFF DUTY'}</button>
-                            <button onclick="toggleTechStatus(${t.id}, 'ban')" class="text-[9px] font-bold px-2 py-1 rounded ${t.banned ? 'bg-blue-100 text-blue-600' : 'bg-red-100 text-red-600'}">${t.banned ? 'UNBAN' : 'BAN'}</button>
-                            <button onclick="deleteTech(${t.id})" class="bg-red-50 text-red-500 w-6 h-6 rounded flex items-center justify-center"><i class="fa-solid fa-trash text-[10px]"></i></button>
+                container.innerHTML = techs.map(t => {
+                    let opacityClass = (t.banned || t.available === false) ? 'opacity-60' : '';
+                    let banClass = t.banned ? 'text-red-500' : '';
+                    let banText = t.banned ? '(BANNED)' : '';
+                    
+                    let availBtnClass = t.available !== false ? 'bg-green-100 text-green-600' : 'bg-orange-100 text-orange-600';
+                    let availBtnText = t.available !== false ? 'AVAILABLE' : 'OFF DUTY';
+                    
+                    let banBtnClass = t.banned ? 'bg-blue-100 text-blue-600' : 'bg-red-100 text-red-600';
+                    let banBtnText = t.banned ? 'UNBAN' : 'BAN';
+
+                    return `
+                    <div class="bg-white p-4 rounded-2xl border border-gray-100 shadow-sm flex items-center gap-4 ${opacityClass}">
+                        <img src="${t.image}" class="w-16 h-16 rounded-xl object-cover bg-gray-50 shrink-0">
+                        <div class="overflow-hidden flex-1">
+                            <span class="text-[9px] bg-purple-100 text-purple-700 font-bold px-2 py-1 rounded uppercase tracking-wider">${t.prof || 'Expert'}</span>
+                            <h4 class="font-extrabold text-[#1B2559] text-sm mt-1 truncate ${banClass}">${t.name} ${banText}</h4>
+                            <p class="text-[11px] text-[#A3AED0] mt-1"><i class="fa-solid fa-phone mr-1 text-[#4318FF]"></i> ${t.phone}</p>
+                            <p class="text-[10px] text-gray-500 font-medium mb-3">Exp: ${t.exp || 'N/A'}</p>
+                            <div class="flex gap-2">
+                                <button onclick="toggleTechStatus(${t.id}, 'avail')" class="flex-1 text-[9px] font-bold py-2 rounded ${availBtnClass}">${availBtnText}</button>
+                                <button onclick="toggleTechStatus(${t.id}, 'ban')" class="flex-1 text-[9px] font-bold py-2 rounded ${banBtnClass}">${banBtnText}</button>
+                                <button onclick="deleteTech(${t.id})" class="bg-red-50 text-red-500 w-8 rounded flex items-center justify-center shrink-0"><i class="fa-solid fa-trash text-[10px]"></i></button>
+                            </div>
                         </div>
-                    </div>
-                </div>`).join('');
+                    </div>`;
+                }).join('');
             } else {
-                container.innerHTML = '<p class="text-xs text-gray-400 italic">No technicians added.</p>';
+                container.innerHTML = '<p class="text-xs text-gray-400 italic">No technicians added yet.</p>';
             }
         }
 
@@ -1297,14 +1606,18 @@
             let techs = getData('ro_technicians'); 
             let idx = techs.findIndex(t => t.id === id); 
             if(idx !== -1) { 
-                if(type === 'ban') techs[idx].banned = !techs[idx].banned; 
-                if(type === 'avail') techs[idx].available = techs[idx].available === false ? true : false; 
+                if(type === 'ban') {
+                    techs[idx].banned = !techs[idx].banned; 
+                }
+                if(type === 'avail') {
+                    techs[idx].available = techs[idx].available === false ? true : false; 
+                }
                 setData('ro_technicians', techs); 
             } 
         }
 
         function deleteTech(id) { 
-            if(confirm("Remove technician?")) { 
+            if(confirm("Remove this technician permanently?")) { 
                 let techs = getData('ro_technicians').filter(t => t.id !== id); 
                 setData('ro_technicians', techs); 
             } 
