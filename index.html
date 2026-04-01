@@ -1,0 +1,1315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>RepairO - Premium Network</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #F4F7FE;
+            color: #1E293B;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        .luxury-card {
+            background: #FFFFFF;
+            border-radius: 24px;
+            box-shadow: 0 10px 40px rgba(112, 144, 176, 0.12);
+            border: none;
+            transition: all 0.3s ease;
+        }
+
+        .btn-vibrant {
+            background: linear-gradient(135deg, #4318FF 0%, #0075FF 100%);
+            color: #FFFFFF;
+            box-shadow: 0 10px 20px rgba(67, 24, 255, 0.25);
+            transition: all 0.3s;
+        }
+        .btn-vibrant:active { 
+            transform: scale(0.96); 
+            box-shadow: 0 5px 10px rgba(67, 24, 255, 0.2); 
+        }
+
+        .text-gradient {
+            background: linear-gradient(135deg, #4318FF 0%, #0075FF 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-item { 
+            color: #A3AED0; 
+            transition: all 0.3s; 
+        }
+        .nav-item.active { 
+            color: #4318FF; 
+            transform: translateY(-3px); 
+        }
+        .nav-item.active i { 
+            filter: drop-shadow(0 4px 6px rgba(67, 24, 255, 0.3)); 
+        }
+
+        .view-section { display: none !important; }
+        .view-section.active { 
+            display: block !important; 
+            animation: fadeInScale 0.4s ease; 
+        }
+
+        @keyframes fadeInScale {
+            from { opacity: 0; transform: translateY(15px) scale(0.98); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        .input-vibrant {
+            background: #F4F7FE;
+            border: 2px solid transparent;
+            transition: all 0.3s;
+        }
+        .input-vibrant:focus {
+            background: #FFFFFF;
+            border-color: #4318FF;
+            box-shadow: 0 0 0 4px rgba(67, 24, 255, 0.1);
+        }
+    </style>
+</head>
+<body class="h-screen w-full overflow-hidden bg-[#0B1437]">
+
+    <div id="contact-modal" class="fixed inset-0 z-[100] hidden flex-col justify-end bg-[#0B1437]/40 backdrop-blur-sm transition-all duration-300 opacity-0">
+        <div class="bg-white w-full max-w-md mx-auto rounded-t-[30px] p-6 shadow-[0_-10px_40px_rgba(0,0,0,0.15)] transform translate-y-full transition-transform duration-300" id="contact-sheet">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-extrabold text-[#1B2559]">Get in <span class="text-gradient">Touch</span></h2>
+                <button onclick="closeContactMenu()" class="w-8 h-8 bg-[#F4F7FE] rounded-full flex items-center justify-center text-[#1B2559] hover:bg-gray-200 transition">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <div class="grid grid-cols-4 gap-y-6 gap-x-2 mb-4">
+                <a href="https://wa.me/916296111043" target="_blank" class="flex flex-col items-center gap-2 group">
+                    <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#25D366] to-[#128C7E] text-white flex items-center justify-center text-3xl shadow-[0_8px_15px_rgba(37,211,102,0.3)] transition"><i class="fa-brands fa-whatsapp"></i></div>
+                    <span class="text-[9px] font-extrabold text-[#1B2559] text-center">WA 1</span>
+                </a>
+                <a href="https://wa.me/918016477445" target="_blank" class="flex flex-col items-center gap-2 group">
+                    <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#25D366] to-[#128C7E] text-white flex items-center justify-center text-3xl shadow-[0_8px_15px_rgba(37,211,102,0.3)] transition"><i class="fa-brands fa-whatsapp"></i></div>
+                    <span class="text-[9px] font-extrabold text-[#1B2559] text-center">WA 2</span>
+                </a>
+                <a href="tel:+916296111043" class="flex flex-col items-center gap-2 group">
+                    <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#0075FF] to-[#4318FF] text-white flex items-center justify-center text-2xl shadow-[0_8px_15px_rgba(67,24,255,0.3)] transition"><i class="fa-solid fa-phone"></i></div>
+                    <span class="text-[9px] font-extrabold text-[#1B2559] text-center">Call 1</span>
+                </a>
+                <a href="tel:+918016477445" class="flex flex-col items-center gap-2 group">
+                    <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#0075FF] to-[#4318FF] text-white flex items-center justify-center text-2xl shadow-[0_8px_15px_rgba(67,24,255,0.3)] transition"><i class="fa-solid fa-phone"></i></div>
+                    <span class="text-[9px] font-extrabold text-[#1B2559] text-center">Call 2</span>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div id="main-app" class="flex h-screen flex-col w-full max-w-md mx-auto bg-[#F4F7FE] relative shadow-2xl overflow-hidden">
+        <main class="flex-1 overflow-y-auto w-full pb-28">
+            
+            <div id="view-home" class="view-section active">
+                <header class="sticky top-0 z-50 bg-[#F4F7FE]/95 backdrop-blur-md px-5 py-4 flex items-center justify-between gap-4 shrink-0 mb-2">
+                    <div onclick="openContactMenu()" class="w-10 h-10 rounded-full bg-white flex items-center justify-center text-[#4318FF] cursor-pointer shadow-[0_5px_15px_rgba(112,144,176,0.15)] hover:scale-105 transition">
+                        <i class="fa-solid fa-headset text-lg"></i>
+                    </div>
+                    <div class="flex-1 relative">
+                        <input type="text" id="search-bar" oninput="searchServices()" placeholder="Find services..." class="w-full bg-white rounded-full py-3 px-5 text-sm outline-none font-medium text-[#1B2559] focus:ring-2 focus:ring-[#4318FF] transition-all shadow-[0_5px_15px_rgba(112,144,176,0.08)]">
+                        <i class="fa-solid fa-magnifying-glass absolute right-5 top-3.5 text-[#4318FF] text-sm"></i>
+                    </div>
+                    <div onclick="getLocation()" class="w-10 h-10 btn-vibrant rounded-full flex items-center justify-center cursor-pointer shadow-lg">
+                        <i class="fa-solid fa-location-dot text-sm"></i>
+                    </div>
+                </header>
+
+                <div class="px-5 mb-2 mt-2">
+                    <h2 class="text-2xl font-extrabold text-[#1B2559]">Hello, <span class="text-gradient" id="home-user-name">Guest</span>! 👋</h2>
+                    <p class="text-sm text-[#A3AED0] font-medium">What needs fixing today?</p>
+                </div>
+                
+                <div class="flex overflow-x-auto hide-scrollbar gap-3 px-5 py-4" id="category-strip"></div>
+                <div class="px-5 pb-5">
+                    <div id="services-container" class="grid grid-cols-2 gap-4"></div>
+                </div>
+            </div>
+
+            <div id="view-bookings" class="view-section p-5">
+                <h2 class="text-3xl font-extrabold text-[#1B2559] mb-6">Service <span class="text-gradient">History</span></h2>
+                
+                <div id="bookings-login-prompt" class="text-center py-12">
+                    <div class="w-20 h-20 bg-blue-50 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fa-solid fa-receipt text-3xl text-[#4318FF]"></i>
+                    </div>
+                    <p class="text-[#A3AED0] text-sm font-medium mb-4">Login to view your booking history.</p>
+                    <button onclick="switchTab('account')" class="btn-vibrant px-6 py-2 rounded-xl text-xs font-bold">Go to Login</button>
+                </div>
+                
+                <div id="bookings-container" class="space-y-4 hidden"></div>
+            </div>
+
+            <div id="view-tv" class="view-section p-5">
+                <h2 class="text-3xl font-extrabold text-[#1B2559] mb-1">RepairO <span class="text-gradient">TV</span></h2>
+                <p class="text-xs text-[#A3AED0] font-bold uppercase mb-4 tracking-[0.2em]">Video Tutorials</p>
+                
+                <div class="flex gap-2 mb-6">
+                    <button onclick="switchTVTab('long')" id="tab-long" class="flex-1 btn-vibrant py-2 rounded-xl text-xs font-bold shadow-lg">Long Videos</button>
+                    <button onclick="switchTVTab('short')" id="tab-short" class="flex-1 bg-white text-[#4318FF] border border-[#E9EDF7] py-2 rounded-xl text-xs font-bold shadow-sm">Shorts</button>
+                </div>
+                <div id="tv-long-container" class="space-y-4"></div>
+                <div id="tv-short-container" class="grid grid-cols-2 gap-3 hidden"></div>
+            </div>
+
+            <div id="view-account" class="view-section p-5">
+                
+                <div id="account-auth-section">
+                    <div class="text-center mb-8 mt-4">
+                        <div class="w-16 h-16 bg-gradient-to-tr from-[#4318FF] to-[#0075FF] rounded-2xl mx-auto flex items-center justify-center mb-4 shadow-lg transform rotate-3">
+                            <i class="fa-solid fa-user-shield text-white text-3xl -rotate-3"></i>
+                        </div>
+                        <h2 class="text-3xl font-extrabold text-[#1B2559]">Welcome <span class="text-gradient">Back</span></h2>
+                        <p class="text-xs text-[#A3AED0] font-medium mt-2">Login or sign up to manage your account</p>
+                    </div>
+
+                    <div class="luxury-card p-6">
+                        <div class="flex bg-[#F4F7FE] rounded-2xl p-1 mb-6">
+                            <button type="button" onclick="setAuthMode('login')" id="tab-login" class="flex-1 py-2.5 rounded-xl text-sm font-bold bg-white text-[#4318FF] shadow-sm transition-all">Login</button>
+                            <button type="button" onclick="setAuthMode('signup')" id="tab-signup" class="flex-1 py-2.5 rounded-xl text-sm font-bold text-[#A3AED0] hover:text-[#1B2559] transition-all">Sign Up</button>
+                        </div>
+                        
+                        <form id="auth-form" class="space-y-4">
+                            <input type="hidden" id="auth-mode" value="login">
+                            
+                            <div id="signup-fields" class="hidden space-y-4">
+                                <div class="relative">
+                                    <i class="fa-solid fa-user absolute left-5 top-4 text-[#A3AED0]"></i>
+                                    <input type="text" id="auth-name" class="w-full input-vibrant rounded-2xl pl-12 pr-5 py-3.5 outline-none font-medium text-[#1B2559] text-sm" placeholder="Full Name">
+                                </div>
+                                <div class="relative">
+                                    <i class="fa-solid fa-phone absolute left-5 top-4 text-[#A3AED0]"></i>
+                                    <input type="tel" id="auth-phone" maxlength="10" class="w-full input-vibrant rounded-2xl pl-12 pr-5 py-3.5 outline-none font-medium text-[#1B2559] text-sm" placeholder="Mobile Number">
+                                </div>
+                            </div>
+
+                            <div class="relative">
+                                <i class="fa-solid fa-envelope absolute left-5 top-4 text-[#A3AED0]"></i>
+                                <input type="email" id="email" class="w-full input-vibrant rounded-2xl pl-12 pr-5 py-3.5 outline-none font-medium text-[#1B2559] text-sm" required placeholder="Email Address">
+                            </div>
+                            
+                            <div class="relative">
+                                <i class="fa-solid fa-lock absolute left-5 top-4 text-[#A3AED0]"></i>
+                                <input type="password" id="password" class="w-full input-vibrant rounded-2xl pl-12 pr-12 py-3.5 outline-none font-medium text-[#1B2559] text-sm" required placeholder="Password">
+                                <button type="button" onclick="togglePassword()" class="absolute right-5 top-4 text-[#A3AED0] hover:text-[#4318FF] transition-colors">
+                                    <i id="eye-icon" class="fa-solid fa-eye"></i>
+                                </button>
+                            </div>
+
+                            <div class="flex justify-between items-center px-1 pt-1" id="extra-options">
+                                <label class="flex items-center gap-2 cursor-pointer group">
+                                    <input type="checkbox" id="remember-me" class="w-4 h-4 text-[#4318FF] rounded border-gray-300 focus:ring-[#4318FF] cursor-pointer">
+                                    <span class="text-[11px] font-bold text-[#A3AED0] group-hover:text-[#4318FF] transition-colors">Remember me</span>
+                                </label>
+                                <a href="#" onclick="forgotPasswordAlert()" class="text-[11px] font-bold text-[#4318FF] hover:underline">Forgot Password?</a>
+                            </div>
+
+                            <button type="submit" id="auth-btn-text" class="w-full btn-vibrant font-bold rounded-2xl py-4 mt-2 text-sm shadow-lg">Sign In <i class="fa-solid fa-arrow-right ml-2"></i></button>
+                        </form>
+                    </div>
+                </div>
+
+                <div id="account-profile-section" class="hidden">
+                    <h2 class="text-3xl font-extrabold text-[#1B2559] mb-6">My <span class="text-gradient">Account</span></h2>
+                    <div class="luxury-card p-6 mb-6">
+                        <div class="flex items-center gap-5 mb-6 pb-6 border-b border-[#F4F7FE]">
+                            <div class="w-20 h-20 bg-gradient-to-br from-[#4318FF] to-[#0075FF] rounded-full flex items-center justify-center text-white text-3xl font-bold shadow-[0_8px_20px_rgba(67,24,255,0.3)] shrink-0" id="user-initial">U</div>
+                            <div class="overflow-hidden">
+                                <h3 class="text-xl font-bold text-[#1B2559] truncate" id="user-display-name">User Name</h3>
+                                <p class="text-sm text-[#A3AED0] font-medium truncate" id="user-display-email">email@example.com</p>
+                            </div>
+                        </div>
+                        
+                        <div class="space-y-4">
+                            <p class="text-[10px] font-bold text-[#A3AED0] uppercase tracking-wider mb-2 border-b pb-1">Personal Details</p>
+                            <input type="text" id="prof-name" placeholder="Full Name" class="w-full input-vibrant rounded-xl p-4 text-sm font-medium text-[#1B2559]">
+                            <input type="tel" id="prof-phone" placeholder="Mobile Number" class="w-full input-vibrant rounded-xl p-4 text-sm font-medium text-[#1B2559]">
+                            <input type="text" id="prof-locality" placeholder="Colony / Locality Name" class="w-full input-vibrant rounded-xl p-4 text-sm font-medium text-[#1B2559]">
+                            <textarea id="prof-address" placeholder="Full Address (House, Street)" class="w-full input-vibrant rounded-xl p-4 text-sm font-medium text-[#1B2559]" rows="2"></textarea>
+                            <input type="number" id="prof-pincode" placeholder="PIN Code" class="w-full input-vibrant rounded-xl p-4 text-sm font-medium text-[#1B2559]">
+                            <button onclick="saveProfile()" class="w-full btn-vibrant font-bold py-4 rounded-xl text-sm">Save Profile Details</button>
+                        </div>
+                    </div>
+                    <button onclick="logout()" class="w-full bg-white text-[#FF3B30] font-bold py-4 rounded-2xl flex justify-center items-center gap-3 shadow-[0_10px_30px_rgba(255,59,48,0.08)] mb-4 hover:bg-red-50 transition">
+                        <i class="fa-solid fa-power-off"></i> Secure Logout
+                    </button>
+                </div>
+            </div>
+
+            <div id="view-admin" class="view-section p-5">
+                <h2 class="text-3xl font-extrabold text-[#1B2559] mb-4 uppercase tracking-widest text-center border-b border-[#E9EDF7] pb-4"><span class="text-gradient">Admin</span> Panel</h2>
+                
+                <div id="admin-home">
+                    <div class="grid grid-cols-2 gap-3 mb-6">
+                        <div class="luxury-card p-4 text-center border border-blue-50">
+                            <p class="text-[10px] font-bold text-[#A3AED0] uppercase">Total Users</p>
+                            <h3 class="text-2xl font-extrabold text-[#4318FF]" id="stat-users">0</h3>
+                        </div>
+                        <div class="luxury-card p-4 text-center border border-blue-50">
+                            <p class="text-[10px] font-bold text-[#A3AED0] uppercase">Total Orders</p>
+                            <h3 class="text-2xl font-extrabold text-[#05CD99]" id="stat-orders">0</h3>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-3 gap-4 mb-6">
+                        <div onclick="openAdminSec('users')" class="luxury-card p-4 flex flex-col items-center justify-center gap-2 cursor-pointer hover:-translate-y-1">
+                            <div class="w-12 h-12 rounded-full bg-blue-50 text-[#4318FF] flex items-center justify-center text-xl shadow-inner"><i class="fa-solid fa-users"></i></div>
+                            <span class="text-[10px] font-bold text-[#1B2559] text-center">Users</span>
+                        </div>
+                        <div onclick="openAdminSec('techs')" class="luxury-card p-4 flex flex-col items-center justify-center gap-2 cursor-pointer hover:-translate-y-1">
+                            <div class="w-12 h-12 rounded-full bg-purple-50 text-purple-600 flex items-center justify-center text-xl shadow-inner"><i class="fa-solid fa-user-gear"></i></div>
+                            <span class="text-[10px] font-bold text-[#1B2559] text-center">Techs</span>
+                        </div>
+                        <div onclick="openAdminSec('services')" class="luxury-card p-4 flex flex-col items-center justify-center gap-2 cursor-pointer hover:-translate-y-1">
+                            <div class="w-12 h-12 rounded-full bg-orange-50 text-orange-500 flex items-center justify-center text-xl shadow-inner"><i class="fa-solid fa-box-open"></i></div>
+                            <span class="text-[10px] font-bold text-[#1B2559] text-center">Services</span>
+                        </div>
+                        <div onclick="openAdminSec('cats')" class="luxury-card p-4 flex flex-col items-center justify-center gap-2 cursor-pointer hover:-translate-y-1">
+                            <div class="w-12 h-12 rounded-full bg-green-50 text-green-500 flex items-center justify-center text-xl shadow-inner"><i class="fa-solid fa-tags"></i></div>
+                            <span class="text-[10px] font-bold text-[#1B2559] text-center">Category</span>
+                        </div>
+                        <div onclick="openAdminSec('orders')" class="luxury-card p-4 flex flex-col items-center justify-center gap-2 cursor-pointer hover:-translate-y-1">
+                            <div class="w-12 h-12 rounded-full bg-red-50 text-red-500 flex items-center justify-center text-xl shadow-inner"><i class="fa-solid fa-file-invoice"></i></div>
+                            <span class="text-[10px] font-bold text-[#1B2559] text-center">Orders</span>
+                        </div>
+                        <div onclick="openAdminSec('tv')" class="luxury-card p-4 flex flex-col items-center justify-center gap-2 cursor-pointer hover:-translate-y-1">
+                            <div class="w-12 h-12 rounded-full bg-indigo-50 text-indigo-500 flex items-center justify-center text-xl shadow-inner"><i class="fa-solid fa-tv"></i></div>
+                            <span class="text-[10px] font-bold text-[#1B2559] text-center">Manage TV</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="admin-content" class="hidden flex-col w-full pb-10">
+                    <button onclick="closeAdminSec()" class="mb-6 text-[#4318FF] font-bold text-sm flex items-center gap-2 bg-white px-5 py-3 rounded-2xl shadow-sm w-fit shrink-0">
+                        <i class="fa-solid fa-arrow-left"></i> Back to Grid
+                    </button>
+
+                    <div id="sec-users" class="admin-sec hidden space-y-4">
+                        <h3 class="font-extrabold text-[#1B2559] mb-4 text-xl"><i class="fa-solid fa-users text-[#4318FF] mr-2"></i>User Management</h3>
+                        <div id="admin-users-list" class="space-y-4"></div>
+                    </div>
+
+                    <div id="sec-techs" class="admin-sec hidden space-y-4">
+                        <h3 class="font-extrabold text-[#1B2559] mb-4 text-xl"><i class="fa-solid fa-user-gear text-purple-600 mr-2"></i>Technicians</h3>
+                        <div class="luxury-card p-6">
+                            <div class="space-y-4">
+                                <input type="text" id="tech-name" placeholder="Full Name" class="w-full input-vibrant rounded-xl p-4 text-sm font-medium">
+                                <input type="text" id="tech-prof" placeholder="Profession (e.g. AC Mechanic)" class="w-full input-vibrant rounded-xl p-4 text-sm font-medium">
+                                <input type="text" id="tech-phone" placeholder="Phone Number" class="w-full input-vibrant rounded-xl p-4 text-sm font-medium">
+                                <input type="text" id="tech-exp" placeholder="Experience" class="w-full input-vibrant rounded-xl p-4 text-sm font-medium">
+                                <label class="block text-[10px] font-bold text-[#A3AED0] uppercase">Upload Photo</label>
+                                <input type="file" id="tech-img" accept="image/*" class="w-full input-vibrant rounded-xl p-3 text-sm font-medium bg-white">
+                                <button onclick="addTechnician()" class="w-full btn-vibrant font-bold py-4 rounded-xl text-sm shadow-lg">Save Technician</button>
+                            </div>
+                        </div>
+                        <h4 class="font-extrabold text-[#1B2559] mt-6 mb-2">Technician List</h4>
+                        <div id="admin-tech-list" class="space-y-4 pb-4"></div>
+                    </div>
+
+                    <div id="sec-cats" class="admin-sec hidden space-y-4">
+                        <h3 class="font-extrabold text-[#1B2559] mb-4 text-xl"><i class="fa-solid fa-tags text-green-500 mr-2"></i>Categories</h3>
+                        <div class="luxury-card p-6 mb-4">
+                            <input type="text" id="new-cat-name" placeholder="E.g. Carpentry" class="w-full input-vibrant rounded-xl p-4 text-sm mb-4 font-medium">
+                            <button onclick="addCategory()" class="w-full btn-vibrant py-4 rounded-xl font-bold text-sm">Add Category</button>
+                        </div>
+                        <h4 class="font-extrabold text-[#1B2559] mt-6 mb-2">Category List</h4>
+                        <div id="admin-cats-list" class="space-y-3 pb-4"></div>
+                    </div>
+
+                    <div id="sec-services" class="admin-sec hidden space-y-4">
+                        <h3 class="font-extrabold text-[#1B2559] mb-4 text-xl"><i class="fa-solid fa-box-open text-orange-500 mr-2"></i>Services</h3>
+                        <div class="luxury-card p-6 mb-4">
+                            <div class="space-y-4">
+                                <input type="hidden" id="srv-edit-id" value="">
+                                <input type="text" id="srv-name" placeholder="Service Name" class="w-full input-vibrant rounded-xl p-4 text-sm font-medium">
+                                <div class="flex gap-2">
+                                    <select id="srv-cat" class="flex-1 input-vibrant rounded-xl p-4 text-sm font-medium"></select>
+                                    <input type="number" id="srv-discount" placeholder="Discount %" class="w-1/3 input-vibrant rounded-xl p-4 text-sm font-medium">
+                                </div>
+                                <div class="flex gap-4">
+                                    <input type="number" id="srv-price" placeholder="Price (₹)" class="w-1/2 input-vibrant rounded-xl p-4 text-sm font-medium">
+                                    <input type="number" id="srv-charge" placeholder="Fee (₹)" class="w-1/2 input-vibrant rounded-xl p-4 text-sm font-medium">
+                                </div>
+                                <label class="block text-[10px] font-bold text-[#A3AED0] uppercase">Upload Photos (Max 2)</label>
+                                <input type="file" id="srv-imgs" accept="image/*" multiple class="w-full input-vibrant rounded-xl p-3 text-sm font-medium bg-white">
+                                <button onclick="addService()" id="srv-save-btn" class="w-full btn-vibrant font-bold py-4 rounded-xl text-sm">Publish Service</button>
+                            </div>
+                        </div>
+                        <h4 class="font-extrabold text-[#1B2559] mt-6 mb-2">Service List</h4>
+                        <div id="admin-services-list" class="space-y-4 pb-4"></div>
+                    </div>
+
+                    <div id="sec-tv" class="admin-sec hidden space-y-4">
+                        <h3 class="font-extrabold text-[#1B2559] mb-4 text-xl"><i class="fa-solid fa-tv text-indigo-500 mr-2"></i>Manage TV</h3>
+                        <div class="luxury-card p-6 mb-4">
+                            <div class="space-y-4">
+                                <input type="text" id="tv-title" placeholder="Video Title" class="w-full input-vibrant rounded-xl p-4 text-sm font-medium">
+                                <input type="text" id="tv-link" placeholder="YouTube Link" class="w-full input-vibrant rounded-xl p-4 text-sm font-medium">
+                                <select id="tv-format" class="w-full input-vibrant rounded-xl p-4 text-sm font-medium">
+                                    <option value="long">Long Video (16:9)</option>
+                                    <option value="short">Shorts (9:16)</option>
+                                </select>
+                                <button onclick="addVideo()" class="w-full btn-vibrant font-bold py-4 rounded-xl text-sm">Add Video</button>
+                            </div>
+                        </div>
+                        <div id="admin-tv-list" class="space-y-3"></div>
+                    </div>
+
+                    <div id="sec-orders" class="admin-sec hidden space-y-4">
+                        <h3 class="font-extrabold text-[#1B2559] mb-4 text-xl"><i class="fa-solid fa-file-invoice text-red-500 mr-2"></i>Manage Orders</h3>
+                        <div id="admin-bookings-list" class="space-y-4"></div>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+
+        <nav class="bg-white rounded-t-[30px] flex justify-around items-center py-3 pb-safe z-50 absolute bottom-0 left-0 right-0 w-full shadow-[0_-15px_40px_rgba(112,144,176,0.15)] px-2">
+            <button onclick="switchTab('home')" class="nav-item active flex flex-col items-center w-1/4 py-2">
+                <i class="fa-solid fa-house text-xl mb-1.5"></i><span class="text-[9px] font-bold tracking-wide">HOME</span>
+            </button>
+            <button onclick="switchTab('bookings')" class="nav-item flex flex-col items-center w-1/4 py-2">
+                <i class="fa-solid fa-receipt text-xl mb-1.5"></i><span class="text-[9px] font-bold tracking-wide">HISTORY</span>
+            </button>
+            <button onclick="switchTab('tv')" class="nav-item flex flex-col items-center w-1/4 py-2">
+                <i class="fa-solid fa-circle-play text-xl mb-1.5"></i><span class="text-[9px] font-bold tracking-wide">WATCH</span>
+            </button>
+            <button onclick="switchTab('account')" class="nav-item flex flex-col items-center w-1/4 py-2">
+                <i class="fa-solid fa-user text-xl mb-1.5"></i><span class="text-[9px] font-bold tracking-wide">ACCOUNT</span>
+            </button>
+            <button id="nav-admin" onclick="switchTab('admin')" class="hidden nav-item flex flex-col items-center w-1/4 py-2">
+                <i class="fa-solid fa-shield-halved text-xl mb-1.5"></i><span class="text-[9px] font-bold tracking-wide">ADMIN</span>
+            </button>
+        </nav>
+    </div>
+
+    <script>
+        // Initialize Firebase Connection
+        const firebaseConfig = {
+            apiKey: "AIzaSyA8PL-upMZGRhKtz9Ha1c9otjpl9Riw3bg",
+            authDomain: "repairo-d359a.firebaseapp.com",
+            projectId: "repairo-d359a",
+            storageBucket: "repairo-d359a.firebasestorage.app",
+            messagingSenderId: "815733882723",
+            appId: "1:815733882723:web:cd1a033d900e8220549d56"
+        };
+        
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+        const auth = firebase.auth(); 
+        console.log("Firebase Auth & Realtime Database Active!");
+
+        let currentUser = null;
+        let currentCategory = 'All';
+
+        // Data Handlers
+        const getData = (key) => JSON.parse(localStorage.getItem(key)) || [];
+        const setData = (key, data) => {
+            localStorage.setItem(key, JSON.stringify(data)); 
+            db.collection('repairo_database').doc(key).set({ items: data }).catch(e => console.error("FB Error:", e));
+        };
+
+        // SETUP REAL-TIME LISTENERS
+        function setupRealtimeListeners() {
+            const tables = ['ro_users', 'ro_categories', 'ro_technicians', 'ro_services', 'ro_bookings', 'ro_videos'];
+            tables.forEach(key => {
+                db.collection('repairo_database').doc(key).onSnapshot(doc => {
+                    if (doc.exists) {
+                        localStorage.setItem(key, JSON.stringify(doc.data().items));
+                        if(key === 'ro_categories' || key === 'ro_services') { renderCategories(); renderServices(); }
+                        if(key === 'ro_bookings') { renderBookings(); if(currentUser && currentUser.role === 'admin') updateAdminStats(); }
+                        if(key === 'ro_videos') renderUserVideos();
+                        if(currentUser && currentUser.role === 'admin') {
+                            if(key === 'ro_users') renderAdminUsers();
+                            if(key === 'ro_technicians') renderAdminTechs();
+                            if(key === 'ro_services') renderAdminServices();
+                            if(key === 'ro_videos') renderAdminVideos();
+                        }
+                    }
+                });
+            });
+        }
+
+        // Initialize Defaults if DB is empty
+        async function checkAndInitDB() {
+            try {
+                const doc = await db.collection('repairo_database').doc('ro_services').get();
+                if(!doc.exists) {
+                    setData('ro_users', []);
+                    setData('ro_categories', [{id:1, name:'AC Repair', available:true}, {id:2, name:'Plumber', available:true}]);
+                    setData('ro_technicians', []);
+                    setData('ro_services', [{ id: 1, name: 'Premium AC Service', category: 'AC Repair', price: 1499, bookingCharge: 49, discount: 10, image: 'https://images.unsplash.com/photo-1621905251189-08b45d6a269e?w=500&q=80', available:true }]);
+                    setData('ro_bookings', []); setData('ro_videos', []);
+                }
+                setupRealtimeListeners();
+            } catch(e) {
+                console.log("Database Init Error:", e);
+            }
+        }
+        checkAndInitDB();
+
+        // Listen for Firebase Auth State (Auto-Login)
+        auth.onAuthStateChanged(firebaseUser => {
+            if(firebaseUser) {
+                setTimeout(() => {
+                    let users = getData('ro_users');
+                    currentUser = users.find(u => u.email === firebaseUser.email);
+                    if(currentUser && !currentUser.banned) {
+                        updateAuthUI();
+                    } else if (currentUser && currentUser.banned) {
+                        auth.signOut(); 
+                        alert("Your account is restricted by Admin!");
+                    }
+                }, 1000); // 1 second delay to ensure local sync
+            }
+        });
+
+        // Helpers
+        const fileToBase64 = file => new Promise((resolve, reject) => { 
+            const reader = new FileReader(); reader.readAsDataURL(file); 
+            reader.onload = () => resolve(reader.result); reader.onerror = e => reject(e); 
+        });
+        const getYTId = url => { 
+            let id = url.split('v=')[1] || url.split('youtu.be/')[1] || url.split('shorts/')[1]; 
+            if(id) { const amp = id.indexOf('&'); if(amp !== -1) id = id.substring(0, amp); } 
+            return id; 
+        };
+
+        // --- AUTHENTICATION LOGIC ---
+        window.onload = () => {
+            const savedEmail = localStorage.getItem('ro_remembered_email');
+            if(savedEmail) {
+                document.getElementById('email').value = savedEmail;
+                document.getElementById('remember-me').checked = true;
+            }
+        };
+
+        function setAuthMode(mode) {
+            document.getElementById('auth-mode').value = mode;
+            if(mode === 'login') {
+                document.getElementById('tab-login').className = "flex-1 py-2.5 rounded-xl text-sm font-bold bg-white text-[#4318FF] shadow-sm transition-all";
+                document.getElementById('tab-signup').className = "flex-1 py-2.5 rounded-xl text-sm font-bold text-[#A3AED0] hover:text-[#1B2559] transition-all";
+                document.getElementById('signup-fields').classList.add('hidden');
+                document.getElementById('extra-options').classList.remove('hidden');
+                document.getElementById('auth-btn-text').innerHTML = 'Sign In <i class="fa-solid fa-arrow-right ml-2"></i>';
+            } else {
+                document.getElementById('tab-login').className = "flex-1 py-2.5 rounded-xl text-sm font-bold text-[#A3AED0] hover:text-[#1B2559] transition-all";
+                document.getElementById('tab-signup').className = "flex-1 py-2.5 rounded-xl text-sm font-bold bg-white text-[#4318FF] shadow-sm transition-all";
+                document.getElementById('signup-fields').classList.remove('hidden');
+                document.getElementById('extra-options').classList.add('hidden');
+                document.getElementById('auth-btn-text').innerHTML = 'Create Account <i class="fa-solid fa-user-plus ml-2"></i>';
+            }
+        }
+
+        function togglePassword() { 
+            const pwdInput = document.getElementById('password'); const icon = document.getElementById('eye-icon'); 
+            if(pwdInput.type === 'password') { 
+                pwdInput.type = 'text'; icon.classList.replace('fa-eye', 'fa-eye-slash'); 
+            } else { 
+                pwdInput.type = 'password'; icon.classList.replace('fa-eye-slash', 'fa-eye'); 
+            } 
+        }
+
+        function forgotPasswordAlert() { 
+            const email = prompt("Enter your registered email to reset password:");
+            if(email) {
+                auth.sendPasswordResetEmail(email)
+                .then(() => { alert("Password reset link sent to your email!"); })
+                .catch((error) => { alert(error.message); });
+            }
+        }
+
+        document.getElementById('auth-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const mode = document.getElementById('auth-mode').value;
+            const email = document.getElementById('email').value.trim().toLowerCase();
+            const pass = document.getElementById('password').value.trim();
+            const name = document.getElementById('auth-name').value.trim();
+            const phone = document.getElementById('auth-phone').value.trim();
+            const rememberMe = document.getElementById('remember-me').checked;
+
+            // Admin Logic Check
+            let isAdminCredentials = (email === 'umsm@gmail.com' && (pass === 'repairo umsm' || pass === 'Repairo umsm'));
+
+            try {
+                document.getElementById('auth-btn-text').innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Processing...';
+                
+                if (mode === 'signup') {
+                    if (!name || !phone) { 
+                        document.getElementById('auth-btn-text').innerHTML = 'Create Account'; 
+                        return alert('Please provide your Name and Phone Number.'); 
+                    }
+                    
+                    const userCred = await auth.createUserWithEmailAndPassword(email, pass);
+                    
+                    let role = isAdminCredentials ? 'admin' : 'customer';
+                    let users = getData('ro_users');
+                    let newUser = { 
+                        uid: userCred.user.uid, 
+                        email: email, 
+                        role: role, 
+                        name: name, 
+                        phone: phone, 
+                        locality: '', address: '', pincode: '', banned: false 
+                    };
+                    users.push(newUser); 
+                    setData('ro_users', users); 
+                    
+                    alert('Account created successfully!');
+                } else {
+                    // Login
+                    await auth.signInWithEmailAndPassword(email, pass);
+                    
+                    // Force Admin Role Update if credentials match
+                    let users = getData('ro_users');
+                    let userIndex = users.findIndex(u => u.email === email);
+                    if(userIndex !== -1 && isAdminCredentials && users[userIndex].role !== 'admin') {
+                        users[userIndex].role = 'admin'; 
+                        setData('ro_users', users);
+                    }
+                }
+
+                if(rememberMe && mode === 'login') {
+                    localStorage.setItem('ro_remembered_email', email);
+                } else {
+                    localStorage.removeItem('ro_remembered_email');
+                }
+
+            } catch(error) {
+                alert(error.message);
+                if(mode === 'login') document.getElementById('auth-btn-text').innerHTML = 'Sign In <i class="fa-solid fa-arrow-right ml-2"></i>';
+                else document.getElementById('auth-btn-text').innerHTML = 'Create Account <i class="fa-solid fa-user-plus ml-2"></i>';
+            }
+        });
+
+        function updateAuthUI() {
+            document.getElementById('account-auth-section').classList.add('hidden');
+            document.getElementById('account-profile-section').classList.remove('hidden');
+            
+            if (currentUser.role === 'admin') { 
+                document.getElementById('nav-admin').classList.remove('hidden'); 
+                document.getElementById('nav-admin').classList.add('flex'); 
+                updateAdminStats(); 
+            }
+            
+            document.getElementById('user-display-name').innerText = currentUser.name || 'User';
+            document.getElementById('home-user-name').innerText = (currentUser.name || 'User').split(' ')[0];
+            document.getElementById('user-display-email').innerText = currentUser.email;
+            document.getElementById('user-initial').innerText = (currentUser.name || 'U').charAt(0).toUpperCase();
+            
+            document.getElementById('prof-name').value = currentUser.name || ''; 
+            document.getElementById('prof-phone').value = currentUser.phone || '';
+            document.getElementById('prof-locality').value = currentUser.locality || ''; 
+            document.getElementById('prof-address').value = currentUser.address || ''; 
+            document.getElementById('prof-pincode').value = currentUser.pincode || '';
+            
+            renderBookings(); 
+        }
+
+        function logout() { 
+            if(!confirm("Are you sure you want to securely logout?")) return;
+            auth.signOut().then(() => {
+                currentUser = null; 
+                document.getElementById('account-auth-section').classList.remove('hidden'); 
+                document.getElementById('account-profile-section').classList.add('hidden');
+                document.getElementById('nav-admin').classList.add('hidden'); 
+                document.getElementById('nav-admin').classList.remove('flex'); 
+                
+                document.getElementById('home-user-name').innerText = "Guest"; 
+                document.getElementById('email').value = ''; 
+                document.getElementById('password').value = '';
+                document.getElementById('auth-btn-text').innerHTML = 'Sign In <i class="fa-solid fa-arrow-right ml-2"></i>';
+                
+                switchTab('home'); 
+                renderBookings();
+            });
+        }
+
+        // Tab & Modals
+        function switchTab(tabName) {
+            if(tabName !== 'tv') {
+                document.querySelectorAll('#view-tv iframe').forEach(iframe => { iframe.src = iframe.src; });
+            }
+            document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active')); 
+            document.getElementById('view-' + tabName).classList.add('active');
+            
+            document.querySelectorAll('.nav-item').forEach(el => { 
+                el.classList.remove('active'); 
+                if(el.getAttribute('onclick').includes(tabName)) el.classList.add('active'); 
+            });
+        }
+
+        function openContactMenu() { 
+            const modal = document.getElementById('contact-modal'); 
+            const sheet = document.getElementById('contact-sheet'); 
+            modal.classList.remove('hidden'); 
+            modal.classList.add('flex'); 
+            setTimeout(() => { 
+                modal.classList.remove('opacity-0'); 
+                sheet.classList.remove('translate-y-full'); 
+            }, 10); 
+        }
+
+        function closeContactMenu() { 
+            const modal = document.getElementById('contact-modal'); 
+            const sheet = document.getElementById('contact-sheet'); 
+            modal.classList.add('opacity-0'); 
+            sheet.classList.add('translate-y-full'); 
+            setTimeout(() => { 
+                modal.classList.add('hidden'); 
+                modal.classList.remove('flex'); 
+            }, 300); 
+        }
+
+        function getLocation() { 
+            if (navigator.geolocation) { 
+                navigator.geolocation.getCurrentPosition((pos) => { 
+                    alert(`Location Detected: Lat ${pos.coords.latitude.toFixed(2)}. Experts found nearby!`); 
+                }, () => alert("Location permission denied.")); 
+            } 
+        }
+
+        function searchServices() { 
+            const query = document.getElementById('search-bar').value.toLowerCase(); 
+            renderServices(query); 
+        }
+
+        function saveProfile() {
+            currentUser.name = document.getElementById('prof-name').value; 
+            currentUser.phone = document.getElementById('prof-phone').value;
+            currentUser.locality = document.getElementById('prof-locality').value; 
+            currentUser.address = document.getElementById('prof-address').value; 
+            currentUser.pincode = document.getElementById('prof-pincode').value;
+            
+            let users = getData('ro_users'); 
+            let idx = users.findIndex(u => u.email === currentUser.email);
+            
+            if(idx !== -1) {
+                users[idx] = currentUser; 
+                setData('ro_users', users); 
+                updateAuthUI(); 
+                alert("Profile Successfully Updated!");
+            }
+        }
+
+        // Categories
+        function renderCategories() {
+            let cats = getData('ro_categories');
+            
+            if(cats.length > 0 && typeof cats[0] === 'string') { 
+                cats = cats.map(c => ({ id: Date.now() + Math.random(), name: c, available: true })); 
+                setData('ro_categories', cats); 
+            }
+            
+            const strip = document.getElementById('category-strip'); 
+            const select = document.getElementById('srv-cat'); 
+            const adminList = document.getElementById('admin-cats-list');
+            const activeCats = cats.filter(c => c.available !== false);
+
+            if(strip) {
+                strip.innerHTML = `<button onclick="filterCategory('All')" class="cat-btn px-6 py-2.5 rounded-2xl bg-gradient-to-r from-[#4318FF] to-[#0075FF] text-white text-xs font-bold whitespace-nowrap shadow-[0_5px_15px_rgba(67,24,255,0.3)] transition-all">All</button>` + 
+                activeCats.map(c => `<button onclick="filterCategory('${c.name}')" class="cat-btn px-6 py-2.5 rounded-2xl bg-white text-[#4318FF] text-xs font-bold whitespace-nowrap shadow-sm border border-[#E9EDF7] hover:bg-blue-50 transition-all">${c.name}</button>`).join('');
+            }
+            
+            if(select) {
+                select.innerHTML = activeCats.map(c => `<option value="${c.name}">${c.name}</option>`).join('');
+            }
+            
+            if(adminList) {
+                adminList.innerHTML = cats.map(c => `
+                <div class="bg-white p-4 rounded-xl border border-gray-100 flex justify-between items-center shadow-sm">
+                    <span class="font-bold text-[#1B2559] text-sm ${!c.available ? 'line-through text-gray-400' : ''}">${c.name}</span>
+                    <div class="flex gap-2">
+                        <button onclick="toggleCatStatus(${c.id})" class="text-[10px] font-bold px-3 py-1.5 rounded-lg ${c.available ? 'bg-green-100 text-green-600' : 'bg-orange-100 text-orange-600'}">${c.available ? 'AVAILABLE' : 'HIDDEN'}</button>
+                        <button onclick="deleteCat(${c.id})" class="bg-red-50 text-red-500 w-8 h-8 rounded-lg flex items-center justify-center"><i class="fa-solid fa-trash"></i></button>
+                    </div>
+                </div>`).join('');
+            }
+        }
+
+        function addCategory() {
+            const name = document.getElementById('new-cat-name').value.trim(); 
+            if(!name) return alert("Enter category name!");
+            let cats = getData('ro_categories');
+            if(!cats.find(c => c.name.toLowerCase() === name.toLowerCase())) { 
+                cats.push({ id: Date.now(), name: name, available: true }); 
+                setData('ro_categories', cats); 
+                document.getElementById('new-cat-name').value = ''; 
+                alert('Added!'); 
+            } else {
+                alert('Exists!');
+            }
+        }
+
+        function toggleCatStatus(id) { 
+            let cats = getData('ro_categories'); 
+            let idx = cats.findIndex(c => c.id === id); 
+            if(idx !== -1) { 
+                cats[idx].available = !cats[idx].available; 
+                setData('ro_categories', cats); 
+            } 
+        }
+
+        function deleteCat(id) { 
+            if(confirm("Delete category?")) { 
+                let cats = getData('ro_categories').filter(c => c.id !== id); 
+                setData('ro_categories', cats); 
+            } 
+        }
+
+        function filterCategory(cat) { 
+            currentCategory = cat; 
+            const buttons = document.querySelectorAll('.cat-btn'); 
+            buttons.forEach(btn => { 
+                if(btn.innerText === cat) {
+                    btn.className = "cat-btn px-6 py-2.5 rounded-2xl bg-gradient-to-r from-[#4318FF] to-[#0075FF] text-white text-xs font-bold whitespace-nowrap shadow-[0_5px_15px_rgba(67,24,255,0.3)] transition-all"; 
+                } else {
+                    btn.className = "cat-btn px-6 py-2.5 rounded-2xl bg-white text-[#4318FF] text-xs font-bold whitespace-nowrap shadow-sm border border-[#E9EDF7] hover:bg-blue-50 transition-all"; 
+                }
+            }); 
+            renderServices(); 
+        }
+
+        // Services
+        async function addService() {
+            const editId = document.getElementById('srv-edit-id').value; 
+            const name = document.getElementById('srv-name').value;
+            const cat = document.getElementById('srv-cat').value;
+            const price = document.getElementById('srv-price').value;
+            const charge = document.getElementById('srv-charge').value || 0;
+            const discount = document.getElementById('srv-discount').value || 0;
+            const fileInput = document.getElementById('srv-imgs');
+            
+            if(!name || !price) return alert('Name and Price required'); 
+            if(fileInput.files.length > 2) return alert('Max 2 photos allowed!');
+
+            let images = [];
+            if(fileInput.files.length > 0) { 
+                for(let i=0; i<fileInput.files.length; i++) {
+                    images.push(await fileToBase64(fileInput.files[i])); 
+                }
+            }
+
+            let services = getData('ro_services');
+            
+            if(editId) {
+                let idx = services.findIndex(s => s.id == editId);
+                if(idx !== -1) {
+                    services[idx].name = name; 
+                    services[idx].category = cat; 
+                    services[idx].price = Number(price); 
+                    services[idx].bookingCharge = Number(charge); 
+                    services[idx].discount = Number(discount);
+                    if(images.length > 0) services[idx].images = images; 
+                    alert('Updated!'); 
+                }
+            } else {
+                if(images.length === 0) {
+                    images.push('https://images.unsplash.com/photo-1581092921461-7031e4bf0e5d?w=500&q=80');
+                }
+                services.push({ 
+                    id: Date.now(), 
+                    name, 
+                    category: cat, 
+                    price: Number(price), 
+                    bookingCharge: Number(charge), 
+                    discount: Number(discount), 
+                    images: images, 
+                    available: true 
+                }); 
+                alert('Published!'); 
+            }
+            
+            setData('ro_services', services);
+            
+            document.getElementById('srv-edit-id').value = ''; 
+            document.getElementById('srv-name').value = ''; 
+            document.getElementById('srv-price').value = ''; 
+            document.getElementById('srv-charge').value = ''; 
+            document.getElementById('srv-discount').value = ''; 
+            document.getElementById('srv-imgs').value = ''; 
+            document.getElementById('srv-save-btn').innerText = "Publish Service";
+        }
+
+        function renderServices(query = '') {
+            const container = document.getElementById('services-container'); 
+            let services = getData('ro_services').filter(s => s.available !== false);
+            
+            if(currentCategory !== 'All') {
+                services = services.filter(s => s.category === currentCategory);
+            }
+            if(query) {
+                services = services.filter(s => s.name.toLowerCase().includes(query));
+            }
+
+            if(services.length) {
+                container.innerHTML = services.map(s => {
+                    const finalPrice = s.discount > 0 ? s.price - (s.price * (s.discount/100)) : s.price; 
+                    const imgSource = s.images ? s.images[0] : s.image;
+                    return `
+                    <div class="luxury-card overflow-hidden flex flex-col p-2 group cursor-pointer">
+                        <div class="relative rounded-[18px] overflow-hidden mb-3">
+                            <img src="${imgSource}" class="h-32 w-full object-cover">
+                            ${s.discount > 0 ? `<div class="absolute top-2 right-2 bg-red-500 text-white px-2 py-1 rounded-lg text-[9px] font-bold shadow-sm">${s.discount}% OFF</div>` : ''}
+                        </div>
+                        <div class="px-2 pb-2 flex flex-col flex-1">
+                            <h3 class="font-bold text-[#1B2559] text-xs leading-snug mb-2">${s.name}</h3>
+                            <div class="flex justify-between items-end mb-3">
+                                <div>
+                                    <p class="text-[10px] text-[#A3AED0] font-medium leading-none mb-1">Fee ₹${s.bookingCharge || 0}</p>
+                                    <p class="text-lg text-[#4318FF] font-extrabold leading-none">₹${finalPrice.toFixed(0)} ${s.discount>0 ? `<span class="text-xs text-gray-400 line-through">₹${s.price}</span>` : ''}</p>
+                                </div>
+                            </div>
+                            <button onclick="bookNow(${s.id})" class="mt-auto w-full btn-vibrant py-2.5 rounded-xl text-[10px] font-bold uppercase tracking-widest">Book Now</button>
+                        </div>
+                    </div>`;
+                }).join('');
+            } else {
+                container.innerHTML = `
+                <div class="col-span-2 text-center py-10">
+                    <i class="fa-solid fa-box-open text-4xl text-[#A3AED0] mb-3"></i>
+                    <p class="text-[#A3AED0] text-sm font-medium">No services found.</p>
+                </div>`;
+            }
+        }
+
+        function renderAdminServices() {
+            const services = getData('ro_services'); 
+            const container = document.getElementById('admin-services-list'); 
+            if(!container) return;
+            
+            if(services.length) {
+                container.innerHTML = services.map(s => {
+                    const imgSource = s.images ? s.images[0] : s.image;
+                    return `
+                    <div class="bg-white p-4 rounded-xl border border-gray-100 shadow-sm flex items-center gap-3 ${s.available === false ? 'opacity-60' : ''}">
+                        <img src="${imgSource}" class="w-14 h-14 rounded-lg object-cover bg-gray-50 shrink-0">
+                        <div class="flex-1 overflow-hidden">
+                            <h4 class="font-bold text-[#1B2559] text-sm truncate ${s.available === false ? 'line-through' : ''}">${s.name}</h4>
+                            <p class="text-[10px] font-bold text-[#4318FF] uppercase">${s.category} • ₹${s.price}</p>
+                        </div>
+                        <div class="flex flex-col gap-1 shrink-0">
+                            <button onclick="toggleServiceStatus(${s.id})" class="text-[9px] font-bold px-2 py-1 rounded ${s.available !== false ? 'bg-green-100 text-green-600' : 'bg-orange-100 text-orange-600'}">${s.available !== false ? 'AVAILABLE' : 'HIDDEN'}</button>
+                            <div class="flex gap-1">
+                                <button onclick="editService(${s.id})" class="bg-blue-50 text-blue-500 flex-1 py-1 rounded"><i class="fa-solid fa-pen"></i></button>
+                                <button onclick="deleteService(${s.id})" class="bg-red-50 text-red-500 flex-1 py-1 rounded"><i class="fa-solid fa-trash"></i></button>
+                            </div>
+                        </div>
+                    </div>`;
+                }).join('');
+            } else {
+                container.innerHTML = '<p class="text-xs text-gray-400 italic">No services published.</p>';
+            }
+        }
+
+        function toggleServiceStatus(id) { 
+            let services = getData('ro_services'); 
+            let idx = services.findIndex(s => s.id === id); 
+            if(idx !== -1) { 
+                services[idx].available = services[idx].available === false ? true : false; 
+                setData('ro_services', services); 
+            } 
+        }
+
+        function deleteService(id) { 
+            if(confirm("Delete this service?")) { 
+                let services = getData('ro_services').filter(s => s.id !== id); 
+                setData('ro_services', services); 
+            } 
+        }
+
+        function editService(id) { 
+            const s = getData('ro_services').find(x => x.id === id); 
+            if(!s) return; 
+            document.getElementById('srv-edit-id').value = s.id; 
+            document.getElementById('srv-name').value = s.name; 
+            document.getElementById('srv-cat').value = s.category; 
+            document.getElementById('srv-price').value = s.price; 
+            document.getElementById('srv-charge').value = s.bookingCharge || 0; 
+            document.getElementById('srv-discount').value = s.discount || 0; 
+            document.getElementById('srv-save-btn').innerText = "Update Service"; 
+            window.scrollTo(0,0); 
+        }
+
+        // Booking
+        function bookNow(id) {
+            if(!currentUser) { 
+                alert("Please login to your account to book a service."); 
+                switchTab('account'); 
+                return; 
+            }
+            if(!currentUser.phone || !currentUser.address) { 
+                alert("Please complete your profile details (Mobile, Address) in the Account tab to proceed."); 
+                switchTab('account'); 
+                return; 
+            }
+            
+            const service = getData('ro_services').find(s => s.id === id); 
+            const bookings = getData('ro_bookings'); 
+            const totalAmount = service.price + (service.bookingCharge || 0);
+            
+            const today = new Date(); 
+            const formattedDate = String(today.getDate()).padStart(2, '0') + '/' + String(today.getMonth() + 1).padStart(2, '0') + '/' + today.getFullYear();
+            
+            bookings.push({ 
+                id: Date.now(), 
+                userEmail: currentUser.email, 
+                userName: currentUser.name, 
+                userPhone: currentUser.phone, 
+                serviceName: service.name, 
+                price: totalAmount, 
+                status: 'Pending', 
+                date: formattedDate, 
+                scheduledDate: '' 
+            });
+            
+            setData('ro_bookings', bookings); 
+            alert(`✅ Booking Confirmed!\nTotal: ₹${totalAmount}\nWe will contact you shortly.`); 
+            switchTab('bookings');
+        }
+
+        function renderBookings() {
+            const bookings = getData('ro_bookings'); 
+            const users = getData('ro_users'); 
+            const myContainer = document.getElementById('bookings-container'); 
+            const loginPrompt = document.getElementById('bookings-login-prompt');
+            
+            if(!currentUser) { 
+                myContainer.classList.add('hidden'); 
+                loginPrompt.classList.remove('hidden'); 
+            } else {
+                myContainer.classList.remove('hidden'); 
+                loginPrompt.classList.add('hidden');
+                
+                const myBookings = bookings.filter(b => b.userEmail === currentUser.email);
+                
+                if(myBookings.length) {
+                    myContainer.innerHTML = myBookings.map(b => {
+                        let statusColor = b.status === 'Work Done' ? 'text-green-500' : (b.status === 'Cancel' ? 'text-red-500' : 'text-[#4318FF]'); 
+                        let barColor = b.status === 'Work Done' ? 'bg-[#05CD99]' : (b.status === 'Cancel' ? 'bg-red-500' : 'bg-gradient-to-b from-[#4318FF] to-[#0075FF]');
+                        return `
+                        <div class="luxury-card p-5 relative overflow-hidden mb-4">
+                            <div class="absolute left-0 top-0 bottom-0 w-2 ${barColor}"></div>
+                            <div class="flex justify-between items-start mb-3 pl-2">
+                                <div>
+                                    <h4 class="font-extrabold text-[#1B2559] text-sm mb-1">${b.serviceName}</h4>
+                                    <p class="text-[10px] text-[#A3AED0] font-bold uppercase tracking-wider"><i class="fa-regular fa-calendar mr-1"></i> Ordered: ${b.date}</p>
+                                    ${b.scheduledDate ? `<p class="text-[10px] text-[#4318FF] font-extrabold uppercase tracking-wider mt-1"><i class="fa-solid fa-clock mr-1"></i> Sch: ${b.scheduledDate}</p>` : `<p class="text-[10px] text-orange-500 font-bold uppercase mt-1">Waiting for Schedule</p>`}
+                                </div>
+                                <span class="font-extrabold text-[#4318FF] text-base bg-blue-50 px-3 py-1 rounded-xl">₹${b.price}</span>
+                            </div>
+                            <div class="flex items-center gap-2 pl-2">
+                                ${b.status !== 'Work Done' && b.status !== 'Cancel' ? '<span class="w-2.5 h-2.5 rounded-full bg-[#4318FF] animate-pulse"></span>' : ''}
+                                <span class="text-[11px] font-bold ${statusColor} uppercase">${b.status}</span>
+                            </div>
+                        </div>`;
+                    }).join('');
+                } else {
+                    myContainer.innerHTML = `
+                    <div class="text-center py-12">
+                        <div class="w-20 h-20 bg-blue-50 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fa-solid fa-receipt text-3xl text-[#4318FF]"></i>
+                        </div>
+                        <p class="text-[#A3AED0] text-sm font-medium">No history found.</p>
+                    </div>`;
+                }
+            }
+
+            if(currentUser && currentUser.role === 'admin') {
+                const adminList = document.getElementById('admin-bookings-list');
+                if(bookings.length) {
+                    adminList.innerHTML = bookings.map(b => {
+                        const cUser = users.find(u => u.email === b.userEmail) || {};
+                        return `
+                        <div class="luxury-card p-5 relative overflow-hidden mb-4 border border-blue-50">
+                            <div class="absolute left-0 top-0 bottom-0 w-2 ${b.status === 'Work Done' ? 'bg-[#05CD99]' : 'bg-[#FFB547]'}"></div>
+                            <div class="pl-2">
+                                <div class="flex justify-between items-start mb-3 border-b border-gray-100 pb-3">
+                                    <div>
+                                        <h4 class="font-bold text-[#1B2559] text-sm mb-1">${b.serviceName}</h4>
+                                        <p class="text-[10px] font-bold text-[#A3AED0] uppercase"><i class="fa-regular fa-calendar"></i> ${b.date}</p>
+                                    </div>
+                                    <span class="font-extrabold text-[#1B2559] text-base bg-gray-50 px-2 py-1 rounded-lg">₹${b.price}</span>
+                                </div>
+                                <div class="bg-[#F4F7FE] p-3 rounded-xl mb-4">
+                                    <div class="flex justify-between items-center mb-1">
+                                        <p class="text-xs font-extrabold text-[#1B2559]"><i class="fa-solid fa-user text-[#4318FF] mr-1"></i> ${cUser.name || b.userName}</p>
+                                        ${b.userPhone ? `<a href="tel:${b.userPhone}" class="bg-green-500 text-white px-3 py-1 rounded-lg text-[10px] font-bold shadow-md hover:bg-green-600"><i class="fa-solid fa-phone"></i> CALL</a>` : ''}
+                                    </div>
+                                    <p class="text-[11px] text-[#1B2559] font-medium leading-tight">
+                                        ${b.userPhone ? `Ph: ${b.userPhone}<br>` : ''}
+                                        ${cUser.address || 'No Address'}, ${cUser.locality || ''} ${cUser.pincode ? `(${cUser.pincode})` : ''}
+                                    </p>
+                                </div>
+                                <div class="space-y-3">
+                                    <div>
+                                        <label class="text-[10px] font-bold text-[#A3AED0] uppercase">Set Schedule Date</label>
+                                        <input type="date" id="sch-date-${b.id}" value="${b.scheduledDate || ''}" class="w-full mt-1 input-vibrant text-xs p-3 rounded-xl outline-none font-bold text-[#1B2559]">
+                                    </div>
+                                    <div>
+                                        <label class="text-[10px] font-bold text-[#A3AED0] uppercase">Update Status</label>
+                                        <select id="sch-status-${b.id}" class="w-full mt-1 input-vibrant text-xs p-3 rounded-xl outline-none font-bold text-[#1B2559]">
+                                            <option value="Pending" ${b.status==='Pending'?'selected':''}>Pending</option>
+                                            <option value="Confirm" ${b.status==='Confirm'?'selected':''}>Confirm</option>
+                                            <option value="In Progress" ${b.status==='In Progress'?'selected':''}>In Progress</option>
+                                            <option value="Work Done" ${b.status==='Work Done'?'selected':''}>Work Done</option>
+                                            <option value="Cancel" ${b.status==='Cancel'?'selected':''}>Cancel</option>
+                                        </select>
+                                    </div>
+                                    <button onclick="updateOrderDetails(${b.id})" class="w-full btn-vibrant py-3 rounded-xl text-xs font-bold mt-2">Save Updates</button>
+                                </div>
+                            </div>
+                        </div>`;
+                    }).join('');
+                } else {
+                    adminList.innerHTML = '<p class="text-sm text-[#A3AED0] font-medium text-center py-5">No orders yet.</p>';
+                }
+            }
+        }
+
+        function updateOrderDetails(id) { 
+            const b = getData('ro_bookings'); 
+            const target = b.find(x => x.id === id); 
+            if(target) { 
+                target.status = document.getElementById(`sch-status-${id}`).value; 
+                target.scheduledDate = document.getElementById(`sch-date-${id}`).value; 
+                setData('ro_bookings', b); 
+                alert('Updated!'); 
+            } 
+        }
+
+        // TV Logic
+        function switchTVTab(tab) {
+            document.getElementById('tab-long').className = tab === 'long' ? "flex-1 btn-vibrant py-2 rounded-xl text-xs font-bold shadow-lg" : "flex-1 bg-white text-[#4318FF] border border-[#E9EDF7] py-2 rounded-xl text-xs font-bold shadow-sm"; 
+            document.getElementById('tab-short').className = tab === 'short' ? "flex-1 btn-vibrant py-2 rounded-xl text-xs font-bold shadow-lg" : "flex-1 bg-white text-[#4318FF] border border-[#E9EDF7] py-2 rounded-xl text-xs font-bold shadow-sm";
+            document.getElementById('tv-long-container').style.display = tab === 'long' ? 'block' : 'none'; 
+            document.getElementById('tv-short-container').style.display = tab === 'short' ? 'grid' : 'none'; 
+            document.querySelectorAll('#view-tv iframe').forEach(iframe => { iframe.src = iframe.src; });
+        }
+
+        function addVideo() { 
+            const title = document.getElementById('tv-title').value;
+            const link = document.getElementById('tv-link').value;
+            const format = document.getElementById('tv-format').value; 
+            const ytId = getYTId(link); 
+            
+            if(!title || !ytId) return alert('Valid Title and Link required!'); 
+            
+            const vids = getData('ro_videos'); 
+            vids.push({ id: Date.now(), title, ytId, format }); 
+            setData('ro_videos', vids); 
+            alert('Added to TV!'); 
+            
+            document.getElementById('tv-title').value=''; 
+            document.getElementById('tv-link').value=''; 
+        }
+
+        function removeVideo(id) { 
+            let vids = getData('ro_videos').filter(v => v.id !== id); 
+            setData('ro_videos', vids); 
+        }
+
+        function renderAdminVideos() { 
+            const vids = getData('ro_videos'); 
+            const container = document.getElementById('admin-tv-list');
+            if(vids.length) {
+                container.innerHTML = vids.map(v => `
+                <div class="bg-white p-3 rounded-xl border border-gray-200 flex justify-between items-center">
+                    <div class="truncate">
+                        <p class="font-bold text-[#1B2559] text-xs truncate">${v.title}</p>
+                        <p class="text-[9px] text-[#A3AED0] uppercase">${v.format}</p>
+                    </div>
+                    <button onclick="removeVideo(${v.id})" class="text-red-500 ml-2"><i class="fa-solid fa-trash"></i></button>
+                </div>`).join(''); 
+            } else {
+                container.innerHTML = '';
+            }
+        }
+
+        function renderUserVideos() { 
+            const vids = getData('ro_videos'); 
+            const longCont = document.getElementById('tv-long-container'); 
+            const shortCont = document.getElementById('tv-short-container'); 
+            
+            longCont.innerHTML = ''; 
+            shortCont.innerHTML = ''; 
+            
+            vids.forEach(v => { 
+                const html = `
+                <div class="luxury-card overflow-hidden">
+                    <iframe class="w-full ${v.format === 'short' ? 'aspect-[9/16]' : 'aspect-video'}" src="https://www.youtube.com/embed/${v.ytId}" frameborder="0" allowfullscreen></iframe>
+                    <div class="p-3"><h3 class="font-bold text-[#1B2559] text-sm">${v.title}</h3></div>
+                </div>`; 
+                if(v.format === 'short') shortCont.innerHTML += html; 
+                else longCont.innerHTML += html; 
+            }); 
+        }
+
+        // Admin General
+        function updateAdminStats() { 
+            document.getElementById('stat-users').innerText = getData('ro_users').length; 
+            document.getElementById('stat-orders').innerText = getData('ro_bookings').length; 
+        }
+
+        function openAdminSec(secId) { 
+            document.getElementById('admin-home').classList.add('hidden'); 
+            document.getElementById('admin-content').classList.remove('hidden'); 
+            document.getElementById('admin-content').classList.add('flex'); 
+            
+            document.querySelectorAll('.admin-sec').forEach(el => el.classList.add('hidden')); 
+            document.getElementById('sec-' + secId).classList.remove('hidden'); 
+            
+            if(secId === 'users') renderAdminUsers(); 
+            if(secId === 'orders') renderBookings(); 
+            if(secId === 'cats') renderCategories(); 
+            if(secId === 'services') renderAdminServices(); 
+            if(secId === 'techs') renderAdminTechs(); 
+            if(secId === 'tv') renderAdminVideos(); 
+        }
+
+        function closeAdminSec() { 
+            document.getElementById('admin-content').classList.add('hidden'); 
+            document.getElementById('admin-content').classList.remove('flex'); 
+            document.getElementById('admin-home').classList.remove('hidden'); 
+            updateAdminStats(); 
+        }
+
+        // User Management
+        function renderAdminUsers() {
+            const users = getData('ro_users'); 
+            const container = document.getElementById('admin-users-list');
+            
+            if(users.length) {
+                container.innerHTML = users.map(u => `
+                <div class="luxury-card p-4 border-l-4 ${u.banned ? 'border-red-500 opacity-70' : (u.role === 'admin' ? 'border-purple-500' : 'border-[#4318FF]')}">
+                    <div class="flex items-center gap-3 mb-3">
+                        <div class="w-12 h-12 rounded-full ${u.role === 'admin' ? 'bg-purple-100 text-purple-600' : 'bg-blue-100 text-[#4318FF]'} flex items-center justify-center font-bold text-xl shrink-0">${(u.name || u.email).charAt(0).toUpperCase()}</div>
+                        <div class="overflow-hidden flex-1">
+                            <h4 class="font-extrabold text-[#1B2559] text-sm truncate">${u.name || 'New User'} ${u.banned ? '<span class="text-red-500">(BANNED)</span>' : ''}</h4>
+                            <p class="text-[11px] text-[#A3AED0] truncate">${u.email}</p>
+                        </div>
+                    </div>
+                    <div class="bg-[#F4F7FE] p-3 rounded-xl mb-3">
+                        <p class="text-xs text-[#1B2559] font-medium leading-relaxed">
+                            ${u.phone ? `<i class="fa-solid fa-phone text-[#4318FF] mr-1"></i> ${u.phone}<br>` : ''}
+                            ${u.address || 'No Address'}, ${u.locality || ''}<br>
+                            ${u.pincode ? `PIN: ${u.pincode}` : ''}
+                        </p>
+                    </div>
+                    <div class="flex justify-between items-center gap-2">
+                        ${u.phone ? `<a href="tel:${u.phone}" class="flex-1 text-center bg-green-100 text-green-700 py-1.5 rounded-lg text-[10px] font-bold"><i class="fa-solid fa-phone"></i> CALL</a>` : ''} 
+                        ${u.email !== 'umsm@gmail.com' ? `<button onclick="toggleAdminRole('${u.email}')" class="flex-1 text-[10px] font-bold py-1.5 rounded-lg ${u.role === 'admin' ? 'bg-purple-100 text-purple-700' : 'bg-gray-200 text-gray-700'}">${u.role === 'admin' ? 'RM ADMIN' : 'MAKE ADMIN'}</button>` : ''} 
+                        ${u.email !== 'umsm@gmail.com' ? `<button onclick="toggleBan('${u.email}')" class="flex-1 py-1.5 rounded-lg text-[10px] font-bold ${u.banned ? 'bg-blue-100 text-blue-700' : 'bg-red-100 text-red-700'}">${u.banned ? 'UNBAN' : 'BAN'}</button>` : ''}
+                    </div>
+                </div>`).join('');
+            } else {
+                container.innerHTML = '<p class="text-center text-gray-400 text-sm py-5">No users found.</p>';
+            }
+        }
+
+        function toggleBan(email) { 
+            let users = getData('ro_users'); 
+            let idx = users.findIndex(u => u.email === email); 
+            if(idx !== -1) { 
+                users[idx].banned = !users[idx].banned; 
+                setData('ro_users', users); 
+            } 
+        }
+
+        function toggleAdminRole(email) { 
+            let users = getData('ro_users'); 
+            let idx = users.findIndex(u => u.email === email); 
+            if(idx !== -1) { 
+                users[idx].role = users[idx].role === 'admin' ? 'customer' : 'admin'; 
+                setData('ro_users', users); 
+                alert('Role Updated!'); 
+            } 
+        }
+
+        // Tech Management
+        async function addTechnician() {
+            const name = document.getElementById('tech-name').value;
+            const prof = document.getElementById('tech-prof').value;
+            const phone = document.getElementById('tech-phone').value;
+            const exp = document.getElementById('tech-exp').value;
+            const fileInput = document.getElementById('tech-img');
+            
+            if(!name || !phone || !prof) return alert('Name, Profession & Phone required!');
+            
+            let imgBase64 = 'https://via.placeholder.com/150'; 
+            if(fileInput.files.length > 0) imgBase64 = await fileToBase64(fileInput.files[0]);
+            
+            const techs = getData('ro_technicians'); 
+            techs.push({ id: Date.now(), name, prof, phone, exp, image: imgBase64 }); 
+            setData('ro_technicians', techs); 
+            
+            document.getElementById('tech-name').value = ''; 
+            document.getElementById('tech-prof').value = ''; 
+            document.getElementById('tech-phone').value = ''; 
+            document.getElementById('tech-exp').value = ''; 
+            alert('Added!'); 
+        }
+
+        function renderAdminTechs() {
+            const techs = getData('ro_technicians'); 
+            const container = document.getElementById('admin-tech-list'); 
+            if(!container) return;
+            
+            if(techs.length) {
+                container.innerHTML = techs.map(t => `
+                <div class="bg-white p-4 rounded-2xl border border-gray-100 shadow-sm flex items-center gap-4 ${t.banned || t.available === false ? 'opacity-60' : ''}">
+                    <img src="${t.image}" class="w-16 h-16 rounded-xl object-cover bg-gray-50 shrink-0">
+                    <div class="overflow-hidden flex-1">
+                        <span class="text-[9px] bg-purple-100 text-purple-700 font-bold px-2 py-1 rounded uppercase tracking-wider">${t.prof || 'Expert'}</span>
+                        <h4 class="font-extrabold text-[#1B2559] text-sm mt-1 truncate ${t.banned ? 'text-red-500' : ''}">${t.name} ${t.banned ? '(BANNED)' : ''}</h4>
+                        <p class="text-[11px] text-[#A3AED0] mt-1"><i class="fa-solid fa-phone mr-1 text-[#4318FF]"></i> ${t.phone}</p>
+                        <p class="text-[10px] text-gray-500 font-medium mb-2">Exp: ${t.exp || 'N/A'}</p>
+                        <div class="flex gap-2">
+                            <button onclick="toggleTechStatus(${t.id}, 'avail')" class="text-[9px] font-bold px-2 py-1 rounded ${t.available !== false ? 'bg-green-100 text-green-600' : 'bg-orange-100 text-orange-600'}">${t.available !== false ? 'AVAILABLE' : 'OFF DUTY'}</button>
+                            <button onclick="toggleTechStatus(${t.id}, 'ban')" class="text-[9px] font-bold px-2 py-1 rounded ${t.banned ? 'bg-blue-100 text-blue-600' : 'bg-red-100 text-red-600'}">${t.banned ? 'UNBAN' : 'BAN'}</button>
+                            <button onclick="deleteTech(${t.id})" class="bg-red-50 text-red-500 w-6 h-6 rounded flex items-center justify-center"><i class="fa-solid fa-trash text-[10px]"></i></button>
+                        </div>
+                    </div>
+                </div>`).join('');
+            } else {
+                container.innerHTML = '<p class="text-xs text-gray-400 italic">No technicians added.</p>';
+            }
+        }
+
+        function toggleTechStatus(id, type) { 
+            let techs = getData('ro_technicians'); 
+            let idx = techs.findIndex(t => t.id === id); 
+            if(idx !== -1) { 
+                if(type === 'ban') techs[idx].banned = !techs[idx].banned; 
+                if(type === 'avail') techs[idx].available = techs[idx].available === false ? true : false; 
+                setData('ro_technicians', techs); 
+            } 
+        }
+
+        function deleteTech(id) { 
+            if(confirm("Remove technician?")) { 
+                let techs = getData('ro_technicians').filter(t => t.id !== id); 
+                setData('ro_technicians', techs); 
+            } 
+        }
+
+    </script>
+</body>
+</html>
