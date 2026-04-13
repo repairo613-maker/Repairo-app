@@ -207,9 +207,16 @@ header{ padding:15px 20px; display:flex; justify-content:space-between; align-it
         <div class="card" style="text-align:center; padding:20px; background: linear-gradient(145deg, #111, #0a0c10);">
             <img id="myAvatarDisplay" src="https://api.dicebear.com/7.x/adventurer/svg?seed=Gamer" class="profile-img-main">
             
-            <div class="fft-id-badge">ID: <span id="myFftIdDisplay">...</span></div>
-            <div style="font-weight:bold; font-size:18px; color:#fff;" id="profileNameDisplay">Gamer</div>
-            <p id="myBioDisplay" style="color:#aaa; font-style:italic; font-size:12px; margin:5px 0 15px 0;">Pro Gamer | FFTourney</p>
+            <div id="profileNameDisplay" style="font-weight:900; font-size:22px; color:#fff; letter-spacing:1px; margin-top:10px; display:flex; align-items:center; justify-content:center; gap:8px;">
+    Loading... <i class="fa-solid fa-circle-check" style="color:#00d4ff; font-size:16px;"></i>
+</div>
+
+<div style="display: flex; justify-content: center; margin-top: 5px;">
+    <div class="fft-id-badge" style="margin: 0; background: rgba(0, 212, 255, 0.1); border: 1px solid #00d4ff; padding: 4px 15px;">
+        ID: <span id="myFftIdDisplay">...</span>
+    </div>
+</div>
+
             
             <div style="display:flex; justify-content:center; gap:10px; margin-bottom:15px;">
                 <a id="myInstaLink" href="#" target="_blank" class="social-link-btn insta"><i class="fa-brands fa-instagram"></i></a>
@@ -223,6 +230,8 @@ header{ padding:15px 20px; display:flex; justify-content:space-between; align-it
             <p style="font-size:11px; color:#00ff88; margin:0;">Select Your Premium Avatar:</p>
             <div class="avatar-grid" id="avatarPicker">
             <p style="color:#666; font-size:12px;">Loading avatars...</p></div>
+                <input type="text" id="inputName" placeholder="Enter Your In-Game Name">
+
                 <input type="text" id="inputProfession" placeholder="Write a short Bio/Profession">
                 <div style="display:flex; gap:10px;">
                     <select id="inputGender" style="flex:1;"><option value="Male">Male</option><option value="Female">Female</option></select>
@@ -281,6 +290,31 @@ header{ padding:15px 20px; display:flex; justify-content:space-between; align-it
                 </div>
             </div>
         </div>
+        <div class="card" style="border: 1px solid #00d4ff; background: #0a0c10;">
+    <h3 style="color:#00d4ff; margin-top:0; font-size:15px;"><i class="fa-solid fa-user-plus"></i> Search Player</h3>
+    <div style="display:flex; gap:10px;">
+        <input type="number" id="searchFftId" placeholder="Enter FFT ID (Ex: 20000001)" style="flex:1; padding:10px; background:#000; border:1px solid #333; color:#fff; border-radius:8px; outline:none;">
+        <button onclick="searchPlayerById()" class="card-btn" style="width:auto; margin:0; padding:10px 15px; background:#2e7dff;"><i class="fa-solid fa-magnifying-glass"></i></button>
+    </div>
+</div>
+
+<div class="card" style="padding:0; overflow:hidden; border:1px solid #00ff88; margin-bottom:15px;">
+    <div onclick="toggleSection('friendSection', this)" style="background:#111; padding:12px; display:flex; justify-content:space-between; align-items:center; cursor:pointer;">
+        <span style="color:#fff; font-weight:bold; font-size:14px;"><i class="fa-solid fa-users" style="color:#00ff88;"></i> My Friends (<span id="friendCount">0</span>/50)</span>
+        <i class="fa-solid fa-chevron-down drop-icon" style="color:#00ff88; transition: transform 0.3s;"></i>
+    </div>
+    <div id="friendSection" style="display:none; padding:12px; border-top:1px dashed #333; background:#0a0c10;">
+        <div id="friendReqArea" style="margin-bottom:15px; display:none;">
+            <p style="color:#ffcc00; font-size:11px; font-weight:bold; margin-bottom:5px;">PENDING REQUESTS</p>
+            <div id="friendReqList"></div>
+            <hr style="border:0; border-top:1px solid #333; margin:10px 0;">
+        </div>
+        <div id="myFriendsList">
+            <p style="color:#aaa; font-size:12px; text-align:center;">No friends added yet.</p>
+        </div>
+    </div>
+</div>
+
 
         <div class="dashboard-grid">
             <div class="grid-card" style="border-color:#00ff00;">
@@ -797,6 +831,67 @@ header{ padding:15px 20px; display:flex; justify-content:space-between; align-it
     </div>
 </div>
 
+<div id="privateChatModal" class="modal-overlay" style="z-index: 2800;">
+    <div class="modal-content" style="height: 80vh; display:flex; flex-direction:column; background: #0a0c10; border: 2px solid #00ff88; box-shadow: 0 0 20px rgba(0, 255, 136, 0.4);">
+        <div style="text-align:center; padding-bottom:10px; border-bottom:1px dashed #00ff88;">
+            <h3 style="color:#fff; text-shadow: 0 0 10px #00ff88; margin:0;"><i class="fa-solid fa-comment-dots"></i> <span id="privateChatUserName">Friend</span></h3>
+            <div style="font-size:10px; color:#aaa; margin-top:3px;">Private Chat | 12H Auto-Delete</div>
+        </div>
+        
+        <div id="privateChatBox" style="flex:1; background:#111; border-radius:8px; padding:15px; overflow-y:auto; display:flex; flex-direction:column; gap:10px; margin:10px 0; border:1px solid #222;">
+            <div class='empty'>Loading messages...</div>
+        </div>
+
+        <div style="display:flex; gap:8px;">
+            <input type="text" id="privateChatInput" placeholder="Type a message..." style="flex:1; padding:12px; background:#1a1c23; border:1px solid #00ff88; color:#00ff88; border-radius:6px; outline:none; font-weight:bold; font-family:monospace;">
+            <button id="privateChatSendBtn" style="background:linear-gradient(45deg, #00ff88, #00b09b); color:#000; border:none; width:45px; height:45px; border-radius:6px; cursor:pointer; box-shadow: 0 0 10px #00ff88;"><i class="fa-solid fa-paper-plane"></i></button>
+        </div>
+        <button class="card-btn" onclick="closePrivateChat()" style="background:#333; margin-top:10px; border:1px solid #555;">Close Chat</button>
+    </div>
+</div>
+
+
+<div id="publicProfileModal" class="modal-overlay" style="z-index: 2900;">
+    <div class="modal-content" style="text-align:center; background: linear-gradient(145deg, #161a20, #0a0c10); border: 2px solid #00d4ff; box-shadow: 0 0 30px rgba(0, 212, 255, 0.2); max-height: 90vh; overflow-y: auto;">
+        
+        <img id="pubProfileAvatar" src="https://api.dicebear.com/7.x/adventurer/svg?seed=Gamer" style="width: 100px; height: 100px; border-radius: 50%; border: 3px solid #00d4ff; background:#fff; margin-bottom:10px; object-fit: cover; box-shadow: 0 0 15px rgba(0, 212, 255, 0.4);">
+        
+        <div style="font-weight:bold; font-size:24px; color:#fff;" id="pubProfileName">Loading...</div>
+        <div id="pubProfileGender" style="font-size: 10px; color: #fff; background: #333; padding: 2px 10px; border-radius: 20px; display: inline-block; margin-bottom: 5px; text-transform: uppercase; font-weight: bold;">MALE</div>
+
+        <div style="display: block; margin: 5px auto 10px auto;">
+            <div class="fft-id-badge" style="background: rgba(0, 212, 255, 0.1); border: 1px solid #00d4ff; padding: 4px 15px;">ID: <span id="pubProfileFftId">...</span></div>
+        </div>
+        
+        <p id="pubProfileBio" style="color:#aaa; font-style:italic; font-size:13px; margin:5px 0 15px 0; padding: 0 10px; line-height: 1.4;">Fetching bio...</p>
+
+        <div id="pubExtraInfo" style="background: rgba(255,255,255,0.05); border-radius: 12px; padding: 12px; margin-bottom: 15px; border: 1px solid #222;">
+            <div id="pubPhoneRow" style="color:#00ff88; font-size: 13px; font-weight: bold; margin-bottom: 10px; display: none;">
+                <i class="fa-solid fa-phone"></i> <span id="pubProfilePhone">...</span>
+            </div>
+            <div style="display:flex; justify-content:center; gap:20px;">
+                <a id="pubInstaLink" href="#" target="_blank" class="social-link-btn insta" style="display:none; width:40px; height:40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px;"><i class="fa-brands fa-instagram"></i></a>
+                <a id="pubFbLink" href="#" target="_blank" class="social-link-btn fb" style="display:none; width:40px; height:40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px;"><i class="fa-brands fa-facebook-f"></i></a>
+            </div>
+        </div>
+        
+        <div style="display:flex; justify-content:space-around; background:#111; padding:12px; border-radius:8px; border:1px dashed #333; margin-bottom:15px;">
+            <div>
+                <div style="font-size:11px; color:#888; text-transform:uppercase;">Win Rate</div>
+                <div id="pubProfileWinRate" style="color:#00ff00; font-weight:bold; font-size:18px;">0%</div>
+            </div>
+            <div>
+                <div style="font-size:11px; color:#888; text-transform:uppercase;">Rank Tier</div>
+                <div id="pubProfileRank" style="font-weight:bold; font-size:18px;">BRONZE</div>
+            </div>
+        </div>
+
+        <div id="pubProfileFriendBtnContainer"></div>
+        <button class="card-btn" onclick="closePlayerProfile()" style="background:#333; margin-top:10px; border:1px solid #555;">Close Profile</button>
+    </div>
+</div>
+
+
 
 <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-auth-compat.js"></script>
@@ -975,7 +1070,6 @@ header{ padding:15px 20px; display:flex; justify-content:space-between; align-it
     });
  }
 
-
  function showLogin(){
     document.getElementById("auth").innerHTML=`<div class="auth-box">
         <h3 class="text-gradient">Welcome Back</h3>
@@ -990,8 +1084,11 @@ header{ padding:15px 20px; display:flex; justify-content:space-between; align-it
         <button class="card-btn" onclick="login()">LOGIN</button>
         <div class="switch" style="margin-top:20px; color:#888; text-align:center; font-size:13px;">Don't have an account? <span onclick="showSignup()" style="color:#2e7dff; cursor:pointer; font-weight:bold;">Sign Up</span></div>
     </div>`;
-    document.getElementById("auth").style.display="block"; document.getElementById("mainApp").style.display="none";
+    document.getElementById("auth").style.display="block"; 
+    document.getElementById("mainApp").style.display="none";
+    document.querySelector(".bottom-nav").style.display="none"; // 👈 লগইন পেজে মেনুবার হাইড করবে
  }
+
 
  function showSignup(){
     document.getElementById("auth").innerHTML=`<div class="auth-box">
@@ -1088,10 +1185,12 @@ header{ padding:15px 20px; display:flex; justify-content:space-between; align-it
     if(user){
         document.getElementById("auth").style.display="none";
         document.getElementById("mainApp").style.display="block";
+        document.querySelector(".bottom-nav").style.display="flex"; // 👈 লগইন হয়ে গেলে মেনুবার দেখাবে
+        
         displayWallet(); renderApp();
-         setupFftProfile();
+        setupFftProfile();
         renderUserHistory();
-        loadUserProfile(); // Eta add koro
+        loadUserProfile(); 
         loadReferralData();
         loadLivePayouts();
         loadAnnouncement();
@@ -1100,13 +1199,9 @@ header{ padding:15px 20px; display:flex; justify-content:space-between; align-it
         loadGlobalChat();
         loadMyTeam();
         loadMyGuild();
+        loadFriendsSystem(); // ফ্রেন্ড সিস্টেম লোড
 
-
-
-
-
-        // ADMIN CHECK (Tomar admin email ekhane set kora achhe)
-                // 👉 NEW ADMIN & STAFF CHECK
+        // 👉 NEW ADMIN & STAFF CHECK
         let adminBtn = document.getElementById("adminBtn");
         if(user === "admin@gmail.com" || user === "match@gmail.com" || user === "pay@gmail.com") {
             adminBtn.style.display = "block";
@@ -1123,6 +1218,7 @@ header{ padding:15px 20px; display:flex; justify-content:space-between; align-it
  
     }else{ showLogin(); }
  }
+
 
  function createAmountTabs(){
     let html=""; 
@@ -2167,7 +2263,7 @@ header{ padding:15px 20px; display:flex; justify-content:space-between; align-it
     alert("Room Details Successfully Updated!");
  }
 
- function adminDeclareWinners(key, prize) {
+function adminDeclareWinners(key, prize) {
     let select = document.getElementById("winSelect_"+key);
     let selectedWinners = Array.from(select.selectedOptions).map(option => option.value);
     if(selectedWinners.length === 0) return alert("Please select at least one winner!");
@@ -2177,59 +2273,66 @@ header{ padding:15px 20px; display:flex; justify-content:space-between; align-it
         let players = Object.values(matchData.players || {});
         let winnerDisplay = [];
 
+        // 🔄 এখান থেকে উইনারদের লুপ শুরু
         selectedWinners.forEach(email => {
             let safeEmail = safeKey(email);
             let userRef = db.ref("users/" + safeEmail);
             
+            // ১. ওয়ালেটে টাকা অ্যাড করা
             userRef.child("wallet").once("value", wSnap => {
                 let bal = wSnap.val() || 0;
                 userRef.child("wallet").set(bal + prize); 
             });
-            // 🔥 MAGIC: TEAM SCORE UPDATE 🔥
+
+            // ২. 🔥 MAGIC: TEAM SCORE UPDATE 🔥
             userRef.child("teamId").once("value", tSnap => {
                 let tId = tSnap.val();
-                if(tId) { // Jodi player tar kono team thake
+                if(tId) { // যদি প্লেয়ারের কোনো টিম থাকে
                     db.ref("teams/" + tId + "/score").once("value", sSnap => {
                         let currentScore = sSnap.val() || 0;
-                        db.ref("teams/" + tId + "/score").set(currentScore + prize); // Prize er poriman tai Team Score hisebe jog holo
+                        db.ref("teams/" + tId + "/score").set(currentScore + prize); 
                     });
                 }
             });
 
-            // 👉 ASHOL MAGIC EKHANE ADD HOLO: 'reqId: Date.now()' 
+            // ৩. 🔥 MAGIC: GUILD SCORE UPDATE (লুপের ভেতরে আনা হয়েছে) 🔥
+            userRef.child("guildId").once("value", gSnap => {
+                let gId = gSnap.val();
+                if(gId) { // যদি প্লেয়ারের কোনো গিল্ড থাকে
+                    db.ref("guilds/" + gId + "/score").once("value", gsSnap => {
+                        let currentGuildScore = gsSnap.val() || 0;
+                        db.ref("guilds/" + gId + "/score").set(currentGuildScore + prize); 
+                    });
+                }
+            });
+
+            // ৪. হিস্ট্রি সেভ করা
             let historyRef = userRef.child("history").push();
             historyRef.set({ amount: prize, type: "Match Win 🏆", status: "Success", time: new Date().toLocaleString(), reqId: Date.now() });
 
             let playerObj = players.find(p => p.email === email);
             let playerName = playerObj ? playerObj.name : email; 
             winnerDisplay.push("🏆 " + playerName + " (Won ₹" + prize + ")");
-        });
+        }); 
+        // 🔄 লুপ এখানে শেষ!
 
         let resultMsg = "Match Winners:\n" + winnerDisplay.join("\n");
         
-        // Ekhane Date r Timestamp add kora hoyechhe
+        // রেজাল্ট সেভ করা
         db.ref("results/" + key).set({
             message: resultMsg,
             date: new Date().toLocaleDateString('en-IN'),
             timestamp: Date.now()
         });
         
+        // ম্যাচ ডিলিট করা এবং টেলিগ্রামে মেসেজ পাঠানো
         db.ref("matches/" + key).remove();
-            sendToTelegramAdmin(`🏆 MATCH RESULT DECLARED\nMatch: ${key}\nPrize Given: ₹${prize}\nWinners:\n${winnerDisplay.join("\n")}`);
-            // 🔥 MAGIC: GUILD SCORE UPDATE 🔥
-            userRef.child("guildId").once("value", gSnap => {
-                let gId = gSnap.val();
-                if(gId) { // Jodi player tar kono Guild thake
-                    db.ref("guilds/" + gId + "/score").once("value", gsSnap => {
-                        let currentGuildScore = gsSnap.val() || 0;
-                        db.ref("guilds/" + gId + "/score").set(currentGuildScore + prize); // Prize er poriman tai Guild Score hisebe jog holo
-                    });
-                }
-            });
+        sendToTelegramAdmin(`🏆 MATCH RESULT DECLARED\nMatch: ${key}\nPrize Given: ₹${prize}\nWinners:\n${winnerDisplay.join("\n")}`);
 
         alert("Success! ₹" + prize + " added to winners. Match moved to Results.");
     });
- }
+}
+
 
 
 
@@ -3296,28 +3399,30 @@ header{ padding:15px 20px; display:flex; justify-content:space-between; align-it
  function sendGlobalMessage() {
     let msgInput = document.getElementById("chatInputMsg");
     let msg = msgInput.value.trim();
-    if(!msg) return; // Faka message atkano
+    if(!msg) return;
 
     let userEmail = localStorage.getItem("loggedUser");
     if(!userEmail) return alert("Please login to chat!");
     let safeUser = safeKey(userEmail);
 
-    // Message pathanor aage button ta 'Sending...' kora
     let sendBtn = msgInput.nextElementSibling;
     sendBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
     sendBtn.disabled = true;
 
-    // Database theke player er nam ana
-    db.ref("users/" + safeUser + "/name").once("value", snap => {
-        let playerName = snap.val() || userEmail.split('@')[0].substring(0, 8); // Nam na thakle email nibe
+    // Database theke player er nam r avatar eksathe ana
+    db.ref("users/" + safeUser).once("value", snap => {
+        let uData = snap.val() || {};
+        let playerName = uData.name || userEmail.split('@')[0].substring(0, 8);
+        let playerAvatar = (uData.profile && uData.profile.avatar) ? uData.profile.avatar : "https://api.dicebear.com/7.x/adventurer/svg?seed=Gamer";
         
         let chatRef = db.ref("world_chat").push();
         chatRef.set({
             name: playerName,
             email: userEmail,
+            avatar: playerAvatar, // Avatar add kora holo
             message: msg,
             time: new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' }),
-            timestamp: Date.now() // 🔥 Eta diyei auto-delete hobe
+            timestamp: Date.now()
         }).then(() => {
             msgInput.value = ""; 
             sendBtn.innerHTML = '<i class="fa-solid fa-paper-plane"></i>';
@@ -3325,6 +3430,7 @@ header{ padding:15px 20px; display:flex; justify-content:space-between; align-it
         });
     });
  }
+
 
  function loadGlobalChat() {
     db.ref("world_chat").on("value", snap => {
@@ -3338,24 +3444,24 @@ header{ padding:15px 20px; display:flex; justify-content:space-between; align-it
             let msgTime = data.timestamp || 0;
             let diffHours = (now - msgTime) / (1000 * 60 * 60);
 
-            // 🔴 24 Hour Auto-Delete 🔴
             if (diffHours > 24) {
                 db.ref("world_chat/" + key).remove();
             } else {
                 let isMe = data.email === myEmail;
-                
-                // 🔥 THE GAMING VIBE UI 🔥
                 let align = isMe ? "align-self: flex-end;" : "align-self: flex-start;";
                 let bgStyle = isMe ? "background: linear-gradient(135deg, rgba(0, 212, 255, 0.1), rgba(0, 85, 255, 0.2)); border-right: 3px solid #00d4ff;" : "background: rgba(28, 34, 43, 0.8); border-left: 3px solid #ffcc00;";
                 let nameColor = isMe ? "#00d4ff" : "#ffcc00";
                 let msgColor = isMe ? "#fff" : "#eee";
                 let shadow = isMe ? "box-shadow: 0 4px 15px rgba(0, 212, 255, 0.2);" : "box-shadow: 0 4px 15px rgba(0,0,0,0.5);";
-                let icon = isMe ? '<i class="fa-solid fa-user-astronaut"></i>' : '<i class="fa-solid fa-headset"></i>';
+                
+                // Avatar image theke asbe (na thakle default)
+                let userAvatar = data.avatar || "https://api.dicebear.com/7.x/adventurer/svg?seed=Gamer";
 
                 html += `
                 <div style="max-width:85%; padding:10px 15px; border-radius:6px; ${align} ${bgStyle} ${shadow} backdrop-filter: blur(4px);">
-                    <div style="font-size:10px; color:${nameColor}; font-weight:900; margin-bottom:4px; text-transform:uppercase; letter-spacing:1px; display:flex; align-items:center; gap:5px;">
-                        ${icon} ${isMe ? "You" : data.name}
+                    <div onclick="openPlayerProfile('${data.email}')" style="cursor:pointer; font-size:11px; color:${nameColor}; font-weight:900; margin-bottom:6px; text-transform:uppercase; letter-spacing:1px; display:flex; align-items:center; gap:8px;">
+                        <img src="${userAvatar}" style="width:20px; height:20px; border-radius:50%; object-fit:cover; border:1px solid ${nameColor};"> 
+                        ${isMe ? "You" : data.name}
                     </div>
                     <div style="font-size:13px; color:${msgColor}; word-break: break-word; font-family: 'Courier New', Courier, monospace; font-weight:bold; text-shadow: 0 0 2px rgba(255,255,255,0.2);">${data.message}</div>
                     <div style="font-size:9px; color:#666; text-align:right; margin-top:5px; font-family:monospace;">[${data.time}]</div>
@@ -3370,6 +3476,98 @@ header{ padding:15px 20px; display:flex; justify-content:space-between; align-it
         setTimeout(() => { chatBox.scrollTop = chatBox.scrollHeight; }, 100);
     });
  }
+
+ // ==========================================
+ // 🔍 PUBLIC PROFILE OPEN & CLOSE LOGIC
+ // ==========================================
+ function closePlayerProfile() {
+    document.getElementById("publicProfileModal").style.display = "none";
+ }
+
+function openPlayerProfile(playerEmail) {
+    let user = localStorage.getItem("loggedUser");
+    if(!user) return;
+    let mySafe = safeKey(user);
+    let safeTarget = safeKey(playerEmail);
+
+    document.getElementById("publicProfileModal").style.display = "flex";
+    
+    // Reset Views
+    document.getElementById("pubProfileName").innerText = "Loading...";
+    document.getElementById("pubInstaLink").style.display = "none";
+    document.getElementById("pubFbLink").style.display = "none";
+    document.getElementById("pubPhoneRow").style.display = "none";
+
+    db.ref("users/" + safeTarget).once("value", snap => {
+        let uData = snap.val();
+        if(!uData) return;
+
+        let prof = uData.profile || {};
+        let name = uData.name || playerEmail.split('@')[0];
+        
+        // Populate Basic Data
+        document.getElementById("pubProfileName").innerText = name;
+        document.getElementById("pubProfileFftId").innerText = uData.fftId || "----";
+        document.getElementById("pubProfileBio").innerText = prof.profession || "No bio added.";
+        document.getElementById("pubProfileAvatar").src = prof.avatar || "https://api.dicebear.com/7.x/adventurer/svg?seed=Gamer";
+        
+        // Gender & Phone
+        if(prof.gender) {
+            let gen = document.getElementById("pubProfileGender");
+            gen.innerText = prof.gender;
+            gen.style.background = prof.gender === "Male" ? "#2e7dff" : "#ff0055";
+        }
+        if(prof.phone) {
+            document.getElementById("pubPhoneRow").style.display = "block";
+            document.getElementById("pubProfilePhone").innerText = prof.phone;
+        }
+
+        // Social Links
+        if(prof.insta) {
+            let inst = document.getElementById("pubInstaLink");
+            inst.style.display = "flex";
+            inst.href = "https://instagram.com/" + prof.insta.replace('@','');
+        }
+        if(prof.fb) {
+            let fb = document.getElementById("pubFbLink");
+            fb.style.display = "flex";
+            fb.href = prof.fb.includes('http') ? prof.fb : "https://" + prof.fb;
+        }
+
+        // --- Friendship Button Logic (আগের মতোই থাকবে) ---
+        let btnContainer = document.getElementById("pubProfileFriendBtnContainer");
+        let safeNameChat = name.replace(/'/g, "");
+
+        if (mySafe === safeTarget) {
+            btnContainer.innerHTML = "<button class='card-btn' style='background:#333; cursor:default;'>This is You</button>";
+        } else {
+            db.ref("users/" + mySafe + "/friends/" + safeTarget).once("value", fSnap => {
+                if(fSnap.exists()) {
+                    btnContainer.innerHTML = `<div style="display:flex; gap:10px;"><button class="card-btn" style="background:#111; border:1px solid #00ff88; color:#00ff88; flex:1;">Friends ✅</button><button class="card-btn" onclick="closePlayerProfile(); openFriendChat('${safeTarget}', '${safeNameChat}')" style="background:#2e7dff; flex:1;">Chat 💬</button></div>`;
+                } else {
+                    btnContainer.innerHTML = `<button class="card-btn" onclick="sendFriendRequest('${playerEmail}')" style="background:linear-gradient(45deg, #00ff88, #00d4ff); color:#000;">Add Friend ➕</button>`;
+                }
+            });
+        }
+
+        // Stats Calculation
+        let history = uData.history || {};
+        let played = 0, won = 0, earned = 0;
+        Object.values(history).forEach(h => {
+            if(h.type && h.type.includes("Entry Fee") && h.status === "Success") played++;
+            if(h.type === "Match Win 🏆" && h.status === "Success") { won++; earned += parseInt(h.amount); }
+        });
+        document.getElementById("pubProfileWinRate").innerText = (played > 0 ? Math.round((won/played)*100) : 0) + "%";
+        let rank = getPlayerRank(earned);
+        let rankEl = document.getElementById("pubProfileRank");
+        rankEl.innerHTML = `${rank.icon} ${rank.name}`;
+        rankEl.style.color = rank.color;
+    });
+}
+
+
+
+
 
 
 
@@ -3618,56 +3816,86 @@ header{ padding:15px 20px; display:flex; justify-content:space-between; align-it
  // ==========================================
  let currentAvatar = "https://api.dicebear.com/7.x/adventurer/svg?seed=Gamer"; // Default Avatar
 
- function setupFftProfile() {
+let isGeneratingId = false; // 🔥 এটা হলো আমাদের সিকিউরিটি লক
+
+function setupFftProfile() {
     let user = localStorage.getItem("loggedUser");
     if(!user) return;
     let safeUser = safeKey(user);
 
-    db.ref("users/" + safeUser).once("value", snap => {
-        let data = snap.val() || {};
-        loadAllAvatars(); // User profile khullei jate avatar list load hoy
+    // অ্যাভাটার লিস্ট লোড করার জন্য কল করো
+    loadAllAvatars();
 
-        // 1. 🆔 Unique 8-Digit FFT ID Generation
+    db.ref("users/" + safeUser).on("value", snap => {
+        let data = snap.val() || {};
+        let prof = data.profile || {};
+        
+        // ১. অটোমেটিক ইউনিক FFT ID জেনারেট করা (লক সিস্টেম সহ)
         if(!data.fftId) {
-            let assignedId = "";
-            if(user === "admin@gmail.com") assignedId = "11111111";
-            else if(user === "pay@gmail.com") assignedId = "11111112";
-            else if(user === "match@gmail.com") assignedId = "11111113";
-            else {
-                // Normal players get random starting from 20000000
-                db.ref("settings/lastAssignedId").transaction(current => {
-                    let nextId = (current || 20000000) + 1;
-                    db.ref("users/" + safeUser + "/fftId").set(nextId.toString());
-                    db.ref("fft_id_map/" + nextId).set(safeUser); // Eita pore search e lagbe
-                    return nextId;
+            if(isGeneratingId) return; // 🔒 যদি আইডি তৈরির কাজ চলতে থাকে, তবে এখানে আটকে যাবে
+            isGeneratingId = true; // 🔒 কাজ শুরু হলো, তাই লক করে দিলাম
+
+            if(user === "admin@gmail.com") {
+                db.ref("users/" + safeUser + "/fftId").set("11111111");
+                db.ref("fft_id_map/11111111").set(safeUser);
+                isGeneratingId = false; // কাজ শেষ, লক খুলে দিলাম
+            } else if(user === "pay@gmail.com") {
+                db.ref("users/" + safeUser + "/fftId").set("11111112");
+                db.ref("fft_id_map/11111112").set(safeUser);
+                isGeneratingId = false;
+            } else if(user === "match@gmail.com") {
+                db.ref("users/" + safeUser + "/fftId").set("11111113");
+                db.ref("fft_id_map/11111113").set(safeUser);
+                isGeneratingId = false;
+            } else {
+                // নরমাল ইউজারদের জন্য
+                db.ref("settings/lastAssignedId").transaction(function(current) {
+                    return (current || 20000000) + 1;
+                }, function(error, committed, snapshot) {
+                    if (committed) {
+                        let newId = snapshot.val().toString();
+                        db.ref("users/" + safeUser + "/fftId").set(newId).then(() => {
+                            db.ref("fft_id_map/" + newId).set(safeUser);
+                            isGeneratingId = false; // 🔓 ডাটাবেসে সেভ হওয়ার পর লক খুলবে
+                        });
+                    } else {
+                        isGeneratingId = false; // কোনো এরর হলেও লক খুলে যাবে
+                    }
                 });
             }
-            if(assignedId) {
-                db.ref("users/" + safeUser + "/fftId").set(assignedId);
-                db.ref("fft_id_map/" + assignedId).set(safeUser);
-                data.fftId = assignedId; 
-            }
+            return; 
         }
-        
-        // 2. 📱 Update UI dynamically
-        if(document.getElementById("myFftIdDisplay")) {
-            document.getElementById("myFftIdDisplay").innerText = data.fftId || "Loading...";
+
+        // ২. একাউন্ট পেজের মেইন ডিসপ্লে আপডেট
+        if(document.getElementById("profileNameDisplay")) {
+            let actualName = data.name || user.split('@')[0];
+            document.getElementById("profileNameDisplay").innerHTML = `${actualName} <i class="fa-solid fa-circle-check" style="color:#00d4ff; font-size:16px;"></i>`;
         }
+        if(document.getElementById("myFftIdDisplay")) document.getElementById("myFftIdDisplay").innerText = data.fftId;
+        if(document.getElementById("myAvatarDisplay")) document.getElementById("myAvatarDisplay").src = prof.avatar || "https://api.dicebear.com/7.x/adventurer/svg?seed=Gamer";
+        if(document.getElementById("myBioDisplay")) document.getElementById("myBioDisplay").innerText = prof.profession || "No bio added.";
+
+        // ৩. এডিট সেকশনের ইনপুট বক্সে পুরনো ডাটা ভরে দেওয়া
+        if(document.getElementById("inputName")) document.getElementById("inputName").value = data.name || "";
+        if(document.getElementById("inputProfession")) document.getElementById("inputProfession").value = prof.profession || "";
+        if(document.getElementById("inputGender")) document.getElementById("inputGender").value = prof.gender || "Male";
+        if(document.getElementById("inputPhone")) document.getElementById("inputPhone").value = prof.phone || "";
+        if(document.getElementById("inputInsta")) document.getElementById("inputInsta").value = prof.insta || "";
+        if(document.getElementById("inputFb")) document.getElementById("inputFb").value = prof.fb || "";
         
-        let prof = data.profile || {};
-        if(prof.avatar) {
-            document.getElementById("myAvatarDisplay").src = prof.avatar;
-            currentAvatar = prof.avatar;
-        }
-        if(prof.profession) document.getElementById("myBioDisplay").innerText = prof.profession;
-        
-        // Social Links Enable
+        currentAvatar = prof.avatar || "";
+
+        // ৪. সোশ্যাল বাটন আপডেট
         let instaBtn = document.getElementById("myInstaLink");
         let fbBtn = document.getElementById("myFbLink");
         if(prof.insta && instaBtn) { instaBtn.style.display = "inline-flex"; instaBtn.href = "https://instagram.com/" + prof.insta; }
         if(prof.fb && fbBtn) { fbBtn.style.display = "inline-flex"; fbBtn.href = prof.fb; }
     });
- }
+}
+
+
+
+
 
  function pickAvatar(element, imageUrl) {
     document.querySelectorAll('.avatar-item').forEach(img => img.classList.remove('selected'));
@@ -3681,8 +3909,10 @@ header{ padding:15px 20px; display:flex; justify-content:space-between; align-it
     if(!user) return;
     let safeUser = safeKey(user);
     
+    let newName = document.getElementById("inputName").value.trim();
+    
     let bioData = {
-        avatar: currentAvatar, // Direct URL ta save hobe
+        avatar: currentAvatar,
         profession: document.getElementById("inputProfession").value,
         gender: document.getElementById("inputGender").value,
         phone: document.getElementById("inputPhone").value,
@@ -3690,11 +3920,17 @@ header{ padding:15px 20px; display:flex; justify-content:space-between; align-it
         fb: document.getElementById("inputFb").value
     };
 
+    // নাম আপডেট করা (যদি ইউজার নাম দিয়ে থাকে)
+    if(newName) {
+        db.ref("users/" + safeUser + "/name").set(newName);
+    }
+
     db.ref("users/" + safeUser + "/profile").update(bioData).then(() => {
         alert("Profile & Avatar Updated Successfully! 🔥");
         location.reload();
     });
  }
+
 
 
  // 👑 ADMIN: Add Avatar Link (Workaround for Billing Issue) // ==========================================
@@ -3848,9 +4084,198 @@ header{ padding:15px 20px; display:flex; justify-content:space-between; align-it
     });
  }
 
+// --- FRIEND SYSTEM CORE ---
+
+function searchPlayerById() {
+    let id = document.getElementById("searchFftId").value.trim();
+    if(!id) return alert("Please enter an ID!");
+
+    db.ref("fft_id_map/" + id).once("value", snap => {
+        if(!snap.exists()) return alert("Player not found! Check the ID again.");
+        
+        let playerEmailKey = snap.val();
+        openPlayerProfile(playerEmailKey.replace(/_/g, '.')); // আগের প্রোফাইল ভিজিট ফাংশন কল হবে
+    });
+}
+
+function sendFriendRequest(targetEmail) {
+    let myEmail = localStorage.getItem("loggedUser");
+    if(myEmail === targetEmail) return alert("You can't add yourself!");
+    
+    let safeMe = safeKey(myEmail);
+    let safeTarget = safeKey(targetEmail);
+
+    // Friend limit check (50)
+    db.ref("users/" + safeMe + "/friends").once("value", snap => {
+        if(snap.numChildren() >= 50) return alert("Friend limit reached (50)!");
+
+        db.ref("friend_requests/" + safeTarget + "/" + safeMe).set({
+            status: "pending",
+            time: Date.now()
+        }).then(() => {
+            alert("Friend Request Sent! 🚀");
+            if(typeof closePlayerProfile === 'function') closePlayerProfile();
+        });
+    });
+}
+
+// Friend রিকোয়েস্ট এবং লিস্ট লোড করা
+// ফ্রেন্ড রিকোয়েস্ট এবং লিস্ট লোড করা (Updated with Avatar & Name)
+function loadFriendsSystem() {
+    let myEmail = localStorage.getItem("loggedUser");
+    if(!myEmail) return;
+    let safeMe = safeKey(myEmail);
+
+    // ১. Pending Requests (যেমন ছিল)
+    db.ref("friend_requests/" + safeMe).on("value", snap => {
+        let reqArea = document.getElementById("friendReqArea");
+        let reqList = document.getElementById("friendReqList");
+        let html = "";
+        if(snap.exists()) {
+            reqArea.style.display = "block";
+            snap.forEach(child => {
+                let senderSafe = child.key;
+                let senderEmail = senderSafe.replace(/_/g, '.');
+                html += `
+                <div style="display:flex; justify-content:space-between; align-items:center; background:#111; padding:8px; border-radius:6px; margin-bottom:5px; border:1px solid #ffcc00;">
+                    <span style="color:#fff; font-size:12px;">${senderEmail.split('@')[0]}</span>
+                    <div style="display:flex; gap:5px;">
+                        <button onclick="acceptFriend('${senderSafe}')" style="background:#00ff00; border:none; padding:5px 8px; border-radius:4px;"><i class="fa-solid fa-check"></i></button>
+                        <button onclick="rejectFriend('${senderSafe}')" style="background:#ff0055; border:none; padding:5px 8px; border-radius:4px;"><i class="fa-solid fa-xmark"></i></button>
+                    </div>
+                </div>`;
+            });
+            reqList.innerHTML = html;
+        } else { reqArea.style.display = "none"; }
+    });
+
+    // ২. Friends List (নামের ভুল সংশোধন করা হয়েছে)
+    db.ref("users/" + safeMe + "/friends").on("value", snap => {
+        let friendList = document.getElementById("myFriendsList");
+        let countEl = document.getElementById("friendCount");
+        let count = snap.numChildren();
+        countEl.innerText = count;
+
+        if(count > 0) {
+            friendList.innerHTML = "<div style='text-align:center; padding:10px;'><i class='fa-solid fa-spinner fa-spin' style='color:#00ff88;'></i> Syncing Comms...</div>";
+            
+            let friendsHtml = "";
+            let processed = 0;
+
+            snap.forEach(child => {
+                let fSafeEmail = child.key;
+                db.ref("users/" + fSafeEmail).once("value", uSnap => {
+                    let uData = uSnap.val() || {};
+                    let name = uData.name || fSafeEmail.replace(/_/g, '.').split('@')[0];
+                    let fftId = uData.fftId || "----";
+                    let avatar = (uData.profile && uData.profile.avatar) ? uData.profile.avatar : "https://api.dicebear.com/7.x/adventurer/svg?seed=Gamer";
+
+                    // নামের মাঝখানে স্পেস থাকলেও যাতে বাটন না ভাঙে তার জন্য 'escape' লজিক
+                    let safeName = name.replace(/'/g, "\\'"); 
+
+                    friendsHtml += `
+                    <div style="display:flex; justify-content:space-between; align-items:center; background:#161a20; padding:10px; border-radius:8px; margin-bottom:8px; border:1px solid #333;">
+                        <div onclick="openPlayerProfile('${fSafeEmail.replace(/_/g, '.')}')" style="cursor:pointer; display:flex; align-items:center; gap:10px; flex:1;">
+                            <img src="${avatar}" style="width:38px; height:38px; border-radius:50%; object-fit:cover; border:2px solid #00ff88;">
+                            <div>
+                                <div style="color:#fff; font-size:14px; font-weight:bold;">${name}</div>
+                                <div style="color:#aaa; font-size:10px;">ID: ${fftId}</div>
+                            </div>
+                        </div>
+                        <div style="display:flex; gap:8px;">
+                            <button onclick="openFriendChat('${fSafeEmail}', '${safeName}')" style="background:#2e7dff; border:none; color:#fff; padding:8px 12px; border-radius:6px; font-size:14px; cursor:pointer;"><i class="fa-solid fa-comment"></i></button>
+                            <button onclick="unfriend('${fSafeEmail}')" style="background:transparent; border:1px solid #ff4444; color:#ff4444; padding:8px 12px; border-radius:6px; font-size:14px; cursor:pointer;"><i class="fa-solid fa-user-minus"></i></button>
+                        </div>
+                    </div>`;
+
+                    processed++;
+                    if(processed === count) friendList.innerHTML = friendsHtml;
+                });
+            });
+        } else {
+            friendList.innerHTML = "<p style='color:#aaa; font-size:12px; text-align:center;'>No friends added yet.</p>";
+        }
+    });
+}
+
+
+// ==========================================
+// 💬 PRIVATE 1-ON-1 CHAT LOGIC (12H AUTO DELETE)
+// ==========================================
+
+function closePrivateChat() { 
+    document.getElementById("privateChatModal").style.display = "none"; 
+    currentActiveChatId = ""; 
+}
+
+function openFriendChat(fSafe, friendName) {
+    let user = localStorage.getItem("loggedUser");
+    if(!user) return;
+    let mySafe = safeKey(user);
+    
+    // ইউনিক চ্যাট আইডি তৈরি
+    let chatId = mySafe < fSafe ? mySafe + "_" + fSafe : fSafe + "_" + mySafe;
+    
+    currentActiveChatId = chatId;
+    
+    // Modal Display Fix
+    let modal = document.getElementById("privateChatModal");
+    if(modal) {
+        modal.style.display = "flex";
+        document.getElementById("privateChatUserName").innerText = friendName;
+        
+        // চ্যাট বক্স ক্লিয়ার করে লোডিং দেখানো
+        document.getElementById("privateChatBox").innerHTML = "<div class='empty'>Synchronizing...</div>";
+        
+        // পুরনো মেসেজ ক্লিনআপ
+        cleanupOldMessages(chatId);
+
+        // চ্যাট লোড করা
+        loadPrivateChat("private_chats", chatId, "privateChatBox", "#00ff88");
+
+        // সেন্ড বাটন সেটআপ
+        document.getElementById("privateChatSendBtn").onclick = () => sendPrivateMessage("private_chats", chatId, "privateChatInput", "privateChatSendBtn");
+    } else {
+        alert("Chat Modal missing! Please check HTML code.");
+    }
+}
+
+
+function cleanupOldMessages(chatId) {
+    let twelveHoursAgo = Date.now() - (12 * 60 * 60 * 1000);
+    db.ref("private_chats/" + chatId).once("value", snap => {
+        snap.forEach(child => {
+            if (child.val().timestamp < twelveHoursAgo) {
+                child.ref.remove(); // ডিলিট
+            }
+        });
+    });
+}
+
+// (আগের acceptFriend, rejectFriend, unfriend ফাংশনগুলো যেমন ছিল তেমনই থাকবে)
+function acceptFriend(senderSafe) {
+    let mySafe = safeKey(localStorage.getItem("loggedUser"));
+    db.ref("users/" + mySafe + "/friends/" + senderSafe).set(true);
+    db.ref("users/" + senderSafe + "/friends/" + mySafe).set(true);
+    db.ref("friend_requests/" + mySafe + "/" + senderSafe).remove();
+    alert("Friend Request Accepted! 🤝");
+}
+
+function rejectFriend(senderSafe) {
+    let mySafe = safeKey(localStorage.getItem("loggedUser"));
+    db.ref("friend_requests/" + mySafe + "/" + senderSafe).remove();
+}
+
+function unfriend(fSafe) {
+    if(!confirm("Remove from friend list?")) return;
+    let mySafe = safeKey(localStorage.getItem("loggedUser"));
+    db.ref("users/" + mySafe + "/friends/" + fSafe).remove();
+    db.ref("users/" + fSafe + "/friends/" + mySafe).remove();
+}
+
 
 
 </script>
 
 </body>
-    </html>
+               </html>
