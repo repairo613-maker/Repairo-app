@@ -136,7 +136,7 @@ header{ padding:15px 20px; display:flex; justify-content:space-between; align-it
             <h3 style="margin: 0 0 8px 0; color: #fff; font-size: 16px;"><i class="fa-brands fa-android"></i> Download Official App</h3>
             <p style="margin: 0 0 12px 0; color: #e0f7fa; font-size: 12px;">Get the best gaming experience on your phone!</p>
             <a href="fftourney.apk" download style="text-decoration: none;">
-                <button style="background: #0f1115; color: #00d4ff; border: 1px solid #00d4ff; padding: 10px 20px; border-radius: 8px; font-weight: bold; cursor: pointer; width: 100%; font-size: 14px;"><i class="fa-solid fa-download"></i> Download APK Free</button>
+                <button style="background: #0f1115; color: #00d4ff; border: 1px solid #00d4ff; padding: 10px 20px; border-radius: 8px; font-weight: bold; cursor: pointer; width: 100%; font-size: 14px;"><i class="fa-solid fa-download"></i> Download APK </button>
             </a>
         </div>
 
@@ -185,9 +185,17 @@ header{ padding:15px 20px; display:flex; justify-content:space-between; align-it
     </div>
 
     <div id="resultsPage" class="page" style="display:none; padding:15px;">
-        <h3 style="text-align:center;" class="text-gradient">Match Results</h3>
-        <div class="empty">No results declared yet.</div>
+        <h3 style="text-align:center;" class="text-gradient"><i class="fa-solid fa-trophy"></i> Tournament Results</h3>
+        
+        <div class="tabs" style="margin-bottom:15px; background:#111; border-radius:8px; border:1px solid #333;">
+            <div class="tab active" id="resAllTab" onclick="switchResultTab('all')">All Results</div>
+            <div class="tab" id="resMyTab" onclick="switchResultTab('my')">My Results</div>
+        </div>
+
+        <div id="allResultsContainer"></div>
+        <div id="myResultsContainer" style="display:none;"></div>
     </div>
+
     
     <div id="leaderboardPage" class="page" style="display:none; padding:15px;">
         <h3 style="text-align:center;" class="text-gradient"><i class="fa-solid fa-ranking-star"></i> Top Earners</h3>
@@ -544,6 +552,38 @@ header{ padding:15px 20px; display:flex; justify-content:space-between; align-it
             </div>
         </div>
     </div>
+    <div id="wishPage" class="page" style="display:none; padding:15px;">
+    <h3 style="text-align:center;" class="text-gradient"><i class="fa-solid fa-lightbulb"></i> Feature Wishlist</h3>
+    <p style="text-align:center; color:#aaa; font-size:11px; margin-top:-10px;">Suggest new features & discuss with others!</p>
+    
+    <div class="card" style="border: 1px solid #ffcc00;">
+        <textarea id="wishInput" placeholder="What feature do you want to see in FFTourney Pro?" style="width:100%; height:70px; background:#000; color:#fff; border:1px solid #333; border-radius:8px; padding:10px; box-sizing:border-box; font-size:13px;"></textarea>
+        <button onclick="submitWish()" class="card-btn" style="background:linear-gradient(45deg, #ffcc00, #ff8800); color:#000; margin-top:10px; font-weight:bold;">SUBMIT WISH</button>
+    </div>
+
+    <div id="wishListContainer" style="display:flex; flex-direction:column; gap:15px; margin-top:20px;">
+        <div class="empty">Loading wishes...</div>
+    </div>
+</div>
+
+<div id="votingPage" class="page" style="display:none; padding:15px;">
+    <h3 style="text-align:center;" class="text-gradient"><i class="fa-solid fa-fire"></i> Community Polls</h3>
+    
+    <div class="card" style="border:1px solid #00ff88; background:rgba(0,255,136,0.05);">
+        <h4 style="margin-top:0; color:#00ff88; font-size:14px;">Create a Poll</h4>
+        <input type="text" id="pollQuestion" placeholder="Question (Ex: Next match mode?)" style="width:100%; padding:10px; background:#000; border:1px solid #333; color:#fff; border-radius:6px; margin-bottom:8px; box-sizing:border-box;">
+        <div id="pollOptionsInputs">
+            <input type="text" class="p-opt" placeholder="Option 1" style="width:100%; padding:8px; background:#000; border:1px solid #222; color:#fff; border-radius:6px; margin-bottom:5px; box-sizing:border-box;">
+            <input type="text" class="p-opt" placeholder="Option 2" style="width:100%; padding:8px; background:#000; border:1px solid #222; color:#fff; border-radius:6px; margin-bottom:5px; box-sizing:border-box;">
+        </div>
+        <button onclick="createPoll()" class="card-btn" style="background:#00ff88; color:#000; padding:10px; margin-top:5px; font-weight:bold;">POST POLL</button>
+    </div>
+
+    <div id="pollListContainer" style="display:flex; flex-direction:column; gap:15px; margin-top:20px;">
+        <div class="empty">Loading polls...</div>
+    </div>
+</div>
+
     <div id="tvPage" class="page" style="display:none; padding:15px; height: calc(100vh - 80px); overflow-y:auto; background: #050505; position:relative;">
         <div style="text-align:center; padding-bottom:15px; border-bottom: 2px dashed #ff0055; margin-bottom:15px;">
             <h3 style="margin:0; color:#fff; font-size:24px; font-family:'Courier New', monospace; text-shadow: 0 0 15px #ff0055, 0 0 30px #ff0055;"><i class="fa-solid fa-satellite-dish fa-fade"></i> ESPORTS TV</h3>
@@ -563,6 +603,8 @@ header{ padding:15px 20px; display:flex; justify-content:space-between; align-it
   <div class="nav-item" onclick="showPage('leaderboardPage', this)"><i class="fa-solid fa-ranking-star"></i>Top</div>
     <div class="nav-item" onclick="showPage('chatPage', this)"><i class="fa-solid fa-comments"></i>Chat</div>
     <div class="nav-item" onclick="showPage('tvPage', this)"><i class="fa-solid fa-tv"></i>Watch</div>
+<div class="nav-item" onclick="showPage('wishPage', this)"><i class="fa-solid fa-wand-magic-sparkles"></i>Wish</div>
+<div class="nav-item" onclick="showPage('votingPage', this)"><i class="fa-solid fa-square-poll-vertical"></i>Vote</div>
 
   <div class="nav-item" onclick="showPage('accountPage', this)"><i class="fa-solid fa-user"></i>Account</div>
 </div>
@@ -576,6 +618,16 @@ header{ padding:15px 20px; display:flex; justify-content:space-between; align-it
     <button class="card-btn" onclick="closeAnnouncement()" style="background:linear-gradient(45deg, #ff0055, #990000); margin:0;">Don't show again today</button>
   </div>
 </div>
+<div id="personalNoticeModal" class="modal-overlay" style="z-index: 3100;">
+  <div class="modal-content" style="text-align:center; border: 2px solid #ff0055; box-shadow: 0 0 40px rgba(255, 0, 85, 0.4);">
+    <h2 style="color:#ff0055; margin-top:0; margin-bottom:10px;"><i class="fa-solid fa-envelope-open-text fa-shake"></i> ADMIN MESSAGE</h2>
+    <div id="personalNoticeText" style="color:#fff; font-size:15px; line-height:1.6; margin-bottom:20px; background:#111; padding:15px; border-radius:8px; border:1px solid #333; white-space: pre-wrap;">
+        Loading message...
+    </div>
+    <button class="card-btn" onclick="closePersonalNotice()" style="background:linear-gradient(45deg, #2e7dff, #00d4ff); margin:0;">I Understand (Close)</button>
+  </div>
+</div>
+
 <div id="rankModal" class="modal-overlay" style="z-index: 2500;">
     <div class="modal-content">
         <h3 class="text-gradient" style="text-align:center; margin-top:0;"><i class="fa-solid fa-trophy"></i> Rank Tiers</h3>
@@ -1194,6 +1246,7 @@ header{ padding:15px 20px; display:flex; justify-content:space-between; align-it
         loadReferralData();
         loadLivePayouts();
         loadAnnouncement();
+        loadPersonalNotice();
         loadPlayerStats();
         checkBanStatus();
         loadGlobalChat();
@@ -1369,6 +1422,10 @@ header{ padding:15px 20px; display:flex; justify-content:space-between; align-it
     // 👆 👆 👆
     if(pageId === "leaderboardPage") loadLeaderboard('daily')
     window.scrollTo(0,0);
+    // showPage ফাংশনের একদম শেষে এগুলো বসাও
+    if(pageId === "wishPage") loadWishes();
+    if(pageId === "votingPage") loadPolls();
+
  }
 
 
@@ -1409,52 +1466,73 @@ header{ padding:15px 20px; display:flex; justify-content:space-between; align-it
  }
 
 
- // Result page er notun function
+ // Result page er notun function // ==========================================
+ // 🏆 RESULT ENGINE (AUTO-DELETE 5 DAYS + FILTER)
+ // ==========================================
  function renderResultsPage() {
+    let myEmail = localStorage.getItem("loggedUser");
+    if(!myEmail) return;
+
     db.ref("results").on("value", snap => {
-        let resultsArray = [];
-        snap.forEach(childSnap => {
-            resultsArray.push({ key: childSnap.key, data: childSnap.val() });
-        });
-        
-        // Sobtheke notun result upore rakhar jonno sort kora (Timestamp diye)
-        resultsArray.sort((a, b) => {
-            let timeA = a.data.timestamp || 0;
-            let timeB = b.data.timestamp || 0;
-            return timeB - timeA; // Notun ta upore
-        });
+        let allHtml = ""; 
+        let myHtml = "";
+        let now = Date.now();
+        let fiveDaysMs = 5 * 24 * 60 * 60 * 1000; // ⚡ 5 Days in Milliseconds
 
-        let html = "";
-        resultsArray.forEach(item => {
-            let key = item.key;
-            let data = item.data;
-            
-            // Purono data r notun data eksathe handle kora
-            let resultMsg = typeof data === 'string' ? data : data.message;
-            let dateStr = typeof data === 'string' ? "Recent" : data.date;
+        let resultsArr = [];
+        snap.forEach(child => {
+            let data = child.val();
+            let key = child.key;
+            let resTime = data.timestamp || 0;
 
-            // Key theke ashol Mode r Time ber kora
-            let timeParts = key.split("_");
-            let time = timeParts[timeParts.length - 1];
-            let modeKey = timeParts[1] + "_" + timeParts[2]; // ex: 1v1_cs ba 2v2_hs
-            let modeObj = modes.find(m => m.key === modeKey);
-            let modeName = modeObj ? modeObj.label : modeKey.toUpperCase();
+            // 🕒 1. AUTO-DELETE LOGIC: 5 din purono hole Firebase theke muche dao
+            if (now - resTime > fiveDaysMs) {
+                db.ref("results/" + key).remove();
+                return; // Delete kore loop skip korbe
+            }
 
-            html += `<div class="card" style="border-left: 3px solid #ffcc00; margin-bottom:15px;">
-                <div style="background:#111; padding:10px; border-radius:8px; margin-bottom:10px; border:1px solid #333;">
-                    <div style="color:#00d4ff; font-weight:bold; font-size:13px; margin-bottom:5px;"><i class="fa-solid fa-calendar-day"></i> Date: <span style="color:#fff;">${dateStr}</span></div>
-                    <div style="color:#00d4ff; font-weight:bold; font-size:13px; margin-bottom:5px;"><i class="fa-regular fa-clock"></i> Match Time: <span style="color:#fff;">${formatTime(parseInt(time))}</span></div>
-                    <div style="color:#ffcc00; font-weight:bold; font-size:13px;"><i class="fa-solid fa-gamepad"></i> Mode: <span style="color:#fff;">${modeName}</span></div>
-                </div>
-                <pre style="color:#fff; font-family:inherit; margin:0; font-size:13px; white-space: pre-wrap;">${resultMsg}</pre>
-            </div>`;
+            resultsArr.push({ key, data });
         });
 
-        if(resultsArray.length === 0) html = "<div class='empty'>No results declared yet.</div>";
-        let resPage = document.getElementById("resultsPage");
-        if(resPage) resPage.innerHTML = `<h3 style="text-align:center;" class="text-gradient"><i class="fa-solid fa-trophy"></i> Match Results</h3>` + html;
+        // 🔄 Newest results first dekhabo
+        resultsArr.reverse().forEach(item => {
+            let msg = item.data.message || "";
+            let isMyMatch = msg.includes(myEmail); // 🔍 Email check korchhe jate My Results filter hoy
+
+            let cardHtml = `
+                <div class="card" style="border-left: 3px solid #ffcc00; margin-bottom:15px;">
+                    <div style="background:#111; padding:8px; border-radius:8px; margin-bottom:10px; font-size:11px; display:flex; justify-content:space-between;">
+                        <span style="color:#00d4ff;">📅 ${item.data.date || 'Recent'}</span>
+                        <span style="color:#888;">ID: ${item.key.split('_').pop()}</span>
+                    </div>
+                    <pre style="color:#fff; font-family:inherit; margin:0; font-size:13px; white-space: pre-wrap;">${msg}</pre>
+                </div>`;
+
+            allHtml += cardHtml;
+            if(isMyMatch) myHtml += cardHtml;
+        });
+
+        // 📱 UI Update
+        document.getElementById("allResultsContainer").innerHTML = allHtml || "<div class='empty'>No results declared yet.</div>";
+        document.getElementById("myResultsContainer").innerHTML = myHtml || "<div class='empty'>You haven't played or won any matches in the last 5 days.</div>";
     });
  }
+
+ // 🔥 Function: Sub-tab change korar jonno
+ function switchResultTab(type) {
+    if(type === 'all') {
+        document.getElementById("allResultsContainer").style.display = "block";
+        document.getElementById("myResultsContainer").style.display = "none";
+        document.getElementById("resAllTab").classList.add("active");
+        document.getElementById("resMyTab").classList.remove("active");
+    } else {
+        document.getElementById("allResultsContainer").style.display = "none";
+        document.getElementById("myResultsContainer").style.display = "block";
+        document.getElementById("resAllTab").classList.remove("active");
+        document.getElementById("resMyTab").classList.add("active");
+    }
+ }
+
 
 
 
@@ -2116,14 +2194,96 @@ header{ padding:15px 20px; display:flex; justify-content:space-between; align-it
 
 
  function renderAdminUsers() {
-    db.ref("users").on("value", (snap) => {
-        allUsersData = [];
-        snap.forEach(childSnap => {
-            allUsersData.push({ safeEmail: childSnap.key, data: childSnap.val() });
+    // Prothome shudhu search box r dashboard dekhabo, data fetch korbo na
+    document.getElementById("adminUsersSection").innerHTML = `
+        <div class="card" style="border:1px solid #00d4ff; background:#111;">
+            <h4 style="color:#00d4ff;">🔍 Specific User Search</h4>
+            <p style="font-size:10px; color:#888;">Search by Email or FFT ID to save bandwidth.</p>
+            <input type="text" id="adminUserSearchInput" class="search-box" placeholder="Enter Full Email or FFT ID">
+            <button onclick="adminFindUser()" class="card-btn">Search User</button>
+        </div>
+        <div id="adminUserResult"></div>
+    `;
+ }
+
+ function adminFindUser() {
+    let query = document.getElementById("adminUserSearchInput").value.trim();
+    if(!query) return alert("Bhai, kichhu ekta to lekho!");
+    
+    let resultArea = document.getElementById("adminUserResult");
+    resultArea.innerHTML = "<div class='empty'>Searching...</div>";
+
+    // Logic: Jodi number hoy tahole FFT ID map theke email khunjbo
+    if(!isNaN(query)) {
+        db.ref("fft_id_map/" + query).once("value", snap => {
+            if(snap.exists()) fetchUserDataForAdmin(snap.val());
+            else resultArea.innerHTML = "<div class='empty'>User Not Found!</div>";
         });
-        displayAdminUsers(allUsersData);
+    } else {
+        fetchUserDataForAdmin(safeKey(query));
+    }
+ }
+
+ function fetchUserDataForAdmin(safeEmail) {
+    db.ref("users/" + safeEmail).once("value", snap => {
+        let u = snap.val();
+        if(!u) return alert("User data missing!");
+        
+        let actualEmail = safeEmail.replace(/_/g, '.');
+        let isBanned = u.banned ? true : false;
+
+        document.getElementById("adminUserResult").innerHTML = `
+            <div class="card" style="margin-top:15px; border-left:3px solid #2e7dff;">
+                <div style="font-weight:bold; color:#fff;">User: ${actualEmail}</div>
+                <div style="color:#00d4ff;">ID: ${u.fftId} | Balance: ₹${u.wallet || 0}</div>
+                
+                <div style="display:flex; gap:8px; margin-top:10px;">
+                    <input type="number" id="amt_${safeEmail}" placeholder="Amount" style="flex:1; padding:8px; background:#000; color:#fff; border:1px solid #333; border-radius:5px;">
+                    <button onclick="adminAddMoney('${actualEmail}')" style="background:#2e7dff; padding:8px 12px; border-radius:5px; border:none; color:#fff;">Add</button>
+                    <button onclick="adminDeductMoney('${actualEmail}')" style="background:#ff0055; padding:8px 12px; border-radius:5px; border:none; color:#fff;">Cut</button>
+                </div>
+
+                <div style="margin-top:10px; display:flex; gap:5px;">
+                    ${isBanned 
+                        ? `<button onclick="adminToggleBan('${actualEmail}', true)" class="card-btn" style="flex:1; padding:8px; background:#00ff00; color:#000; font-size:11px;"><i class="fa-solid fa-unlock"></i> Unban User</button>`
+                        : `<button onclick="adminToggleBan('${actualEmail}', false)" class="card-btn" style="flex:1; padding:8px; background:#330000; color:#ff0000; border:1px solid red; font-size:11px;"><i class="fa-solid fa-ban"></i> Ban User</button>`
+                    }
+                </div>
+
+                <hr style="border-color:#333; margin:15px 0;">
+                
+                <h5 style="color:#ffcc00; margin:0 0 5px 0;"><i class="fa-solid fa-bell"></i> Send Pop-up Warning</h5>
+                <textarea id="specificNoticeMsg_${safeEmail}" placeholder="Type important warning or message here..." style="width:100%; height:50px; background:#000; border:1px solid #333; color:#fff; border-radius:5px; padding:8px; box-sizing:border-box; font-size:11px;"></textarea>
+                <button onclick="adminSendSpecificNotice('${safeEmail}')" class="card-btn" style="margin-top:5px; background:linear-gradient(45deg, #ffcc00, #ff8800); color:#000; padding:8px; font-size:11px;"><i class="fa-solid fa-paper-plane"></i> Send Alert to Screen</button>
+            </div>
+        `;
     });
  }
+
+ // 🔥 Function: Specific Notice Pathanor jonno
+ function adminSendSpecificNotice(safeEmail) {
+    let msg = document.getElementById("specificNoticeMsg_" + safeEmail).value.trim();
+    if(!msg) return alert("Write a message first!");
+    
+    db.ref("users/" + safeEmail + "/personalNotice").set(msg).then(() => {
+        alert("✅ Pop-up notice sent! User will see it immediately on their screen.");
+        document.getElementById("specificNoticeMsg_" + safeEmail).value = "";
+    });
+ }
+
+ // 🔥 Function: Ban/Unban update korle jate sathe sathe screen-e change dekhay
+ function adminToggleBan(email, currentlyBanned) {
+    let safeUser = safeKey(email);
+    let action = currentlyBanned ? "UNBAN" : "BAN";
+    if(!confirm(`Are you sure you want to ${action} ${email}?`)) return;
+    
+    db.ref("users/" + safeUser + "/banned").set(!currentlyBanned).then(() => {
+        alert(`User ${email} has been ${action}NED!`);
+        fetchUserDataForAdmin(safeUser); // Button ta sathe sathe update korar jonno
+    });
+ }
+
+
 
  function displayAdminUsers(usersList) {
     let html = `<input type="text" id="adminUserSearch" class="search-box" placeholder="Search user by email address..." onkeyup="filterUsers()">`;
@@ -2692,7 +2852,7 @@ function adminDeclareWinners(key, prize) {
 
     document.getElementById("leaderboardList").innerHTML = "<div class='empty'><i class='fa-solid fa-spinner fa-spin'></i> Loading Top Players...</div>";
 
-    db.ref("users").once("value", snap => {
+    db.ref("users").limitToFirst(50).once("value", snap => {
         let leaderboard = [];
         let now = Date.now();
 
@@ -2982,6 +3142,32 @@ function adminDeclareWinners(key, prize) {
         }
     });
  }
+
+ // ==========================================
+ // 📩 PERSONAL SPECIFIC NOTICE LOGIC
+ // ==========================================
+ function loadPersonalNotice() {
+    let safeUser = safeKey(localStorage.getItem("loggedUser"));
+    if(!safeUser) return;
+    
+    // Database-e check korchhe kono personal message aachhe kina
+    db.ref("users/" + safeUser + "/personalNotice").on("value", snap => {
+        let notice = snap.val();
+        if(notice && notice.trim() !== "") {
+            document.getElementById("personalNoticeText").innerText = notice;
+            document.getElementById("personalNoticeModal").style.display = "flex";
+        }
+    });
+ }
+
+ function closePersonalNotice() {
+    let safeUser = safeKey(localStorage.getItem("loggedUser"));
+    // User jokhoni close korbe, message-ta database theke muche jabe jate abar na ashe
+    db.ref("users/" + safeUser + "/personalNotice").remove().then(() => {
+        document.getElementById("personalNoticeModal").style.display = "none";
+    });
+ }
+
 
  function closeAnnouncement() {
     let currentNotice = document.getElementById("announcementText").innerText;
@@ -3941,37 +4127,41 @@ function setupFftProfile() {
  function adminUploadAvatarMagic() {
     let fileInput = document.getElementById("avatarFileInput");
     let file = fileInput.files[0];
-    
-    if(!file) return alert("Bhai, aage gallery theke ekta chobi select koro!");
-    
-    // File size choto rakhar jonno (Max 2 MB)
-    if(file.size > 2 * 1024 * 1024) {
-         return alert("File is too big! Please select an image under 2 MB.");
-    }
+    if(!file) return alert("Select an image first!");
 
     let btn = document.getElementById("uploadAvatarBtn");
-    btn.innerHTML = "<i class='fa-solid fa-spinner fa-spin'></i> Uploading...";
+    btn.innerHTML = "<i class='fa-solid fa-spinner fa-spin'></i> Compressing...";
     btn.disabled = true;
 
-    // Image ke Text-e (Base64) convert korar Magic
+    // 🔥 IMAGE COMPRESSOR ENGINE
     let reader = new FileReader();
-    reader.onload = function(e) {
-        let base64String = e.target.result; // Eitai holo tomar chobi!
-        
-        // Direct Realtime Database-e save kore dilam
-        db.ref("settings/avatars").push({ url: base64String }).then(() => {
-            alert("Avatar Uploaded Successfully! ✅");
-            btn.innerHTML = "UPLOAD AVATAR";
-            btn.disabled = false;
-            fileInput.value = "";
-            loadAllAvatars(); // Auto refresh the list
-        }).catch(err => {
-            alert("Upload failed: " + err.message);
-            btn.innerHTML = "UPLOAD AVATAR";
-            btn.disabled = false;
-        });
-    };
     reader.readAsDataURL(file);
+    reader.onload = function(event) {
+        let img = new Image();
+        img.src = event.target.result;
+        img.onload = function() {
+            let canvas = document.createElement("canvas");
+            let ctx = canvas.getContext("2d");
+            
+            // Size limit (Max 200px width for avatars)
+            let maxWidth = 200;
+            let scale = maxWidth / img.width;
+            canvas.width = maxWidth;
+            canvas.height = img.height * scale;
+
+            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+            
+            // quality 0.6 mane 60% quality, size ekdom kome jabe (30KB)
+            let compressedBase64 = canvas.toDataURL("image/jpeg", 0.6);
+
+            db.ref("settings/avatars").push({ url: compressedBase64 }).then(() => {
+                alert("Compressed & Uploaded! Size: ~30KB ✅");
+                btn.innerHTML = "UPLOAD AVATAR";
+                btn.disabled = false;
+                fileInput.value = "";
+            });
+        };
+    };
  }
 
  // 👑 ADMIN: Delete Avatar
@@ -4273,6 +4463,211 @@ function unfriend(fSafe) {
     db.ref("users/" + fSafe + "/friends/" + mySafe).remove();
 }
 
+// ==========================================
+// 💡 FEATURE WISH PAGE LOGIC
+// ==========================================
+
+function submitWish() {
+    let wishText = document.getElementById("wishInput").value.trim();
+    if(!wishText) return alert("Write something first!");
+
+    let userEmail = localStorage.getItem("loggedUser");
+    let safeUser = safeKey(userEmail);
+
+    db.ref("users/" + safeUser + "/name").once("value", snap => {
+        let name = snap.val() || userEmail.split('@')[0];
+        let avatar = document.getElementById("myAvatarDisplay").src;
+
+        db.ref("wishes").push({
+            name: name,
+            email: userEmail,
+            avatar: avatar,
+            text: wishText,
+            time: new Date().toLocaleString(),
+            timestamp: Date.now()
+        }).then(() => {
+            document.getElementById("wishInput").value = "";
+            alert("Your wish has been posted! Admin will check it.");
+        });
+    });
+}
+
+function loadWishes() {
+    db.ref("wishes").on("value", snap => {
+        let html = "";
+        let wishes = [];
+        let myEmail = localStorage.getItem("loggedUser");
+        let isAdmin = (myEmail === "admin@gmail.com");
+
+        snap.forEach(child => { wishes.push({key: child.key, data: child.val()}); });
+        
+        wishes.reverse().forEach(w => {
+            let isOwner = (w.data.email === myEmail || isAdmin);
+            let statusText = w.data.status === "Done" ? `<span style="background:#00ff88; color:#000; font-size:9px; padding:2px 6px; border-radius:10px; font-weight:bold; margin-left:10px;">DONE ✅</span>` : `<span style="background:#333; color:#aaa; font-size:9px; padding:2px 6px; border-radius:10px; font-weight:bold; margin-left:10px;">PENDING...</span>`;
+
+            let repliesHtml = "";
+            if(w.data.replies) {
+                Object.values(w.data.replies).forEach(r => {
+                    repliesHtml += `<div style="font-size:11px; color:#ddd; background:rgba(255,255,255,0.05); padding:5px 8px; border-radius:5px; margin-top:5px; border-left:2px solid #ffcc00;">
+                        <b style="color:#ffcc00;">${r.name}:</b> ${r.text}
+                    </div>`;
+                });
+            }
+
+            html += `<div class="card" style="border-left:4px solid #ffcc00; background:#111; position:relative;">
+                <div style="display:flex; align-items:center; gap:10px; margin-bottom:8px;">
+                    <img src="${w.data.avatar}" style="width:30px; height:30px; border-radius:50%; border:1px solid #ffcc00;">
+                    <div>
+                        <div style="color:#fff; font-size:13px; font-weight:bold;">${w.data.name} ${statusText}</div>
+                        <div style="color:#666; font-size:9px;">${w.data.time}</div>
+                    </div>
+                </div>
+                
+                <div style="color:#eee; font-size:13px; margin-bottom:10px; border-bottom:1px dashed #222; padding-bottom:10px;">${w.data.text}</div>
+                
+                <div style="display:flex; gap:10px; margin-bottom:10px;">
+                    ${isAdmin && w.data.status !== "Done" ? `<button onclick="markWishDone('${w.key}')" style="font-size:10px; background:#00ff88; color:#000; border:none; border-radius:4px; padding:4px 8px; cursor:pointer; font-weight:bold;">Mark Done</button>` : ''}
+                    ${isOwner ? `<button onclick="deleteWish('${w.key}')" style="font-size:10px; background:#ff4444; color:#fff; border:none; border-radius:4px; padding:4px 8px; cursor:pointer; font-weight:bold;">Delete/Cancel</button>` : ''}
+                </div>
+
+                <div id="replies_${w.key}">${repliesHtml}</div>
+                <div style="display:flex; gap:5px; margin-top:10px;">
+                    <input type="text" id="replyInput_${w.key}" placeholder="Add a comment..." style="flex:1; background:#000; color:#fff; border:1px solid #333; border-radius:5px; padding:5px; font-size:11px;">
+                    <button onclick="replyToWish('${w.key}')" style="background:#ffcc00; border:none; border-radius:5px; padding:5px 10px; cursor:pointer;"><i class="fa-solid fa-paper-plane"></i></button>
+                </div>
+            </div>`;
+        });
+        document.getElementById("wishListContainer").innerHTML = html || "<div class='empty'>No wishes yet.</div>";
+    });
+}
+
+// উইশ ম্যানেজমেন্ট ফাংশন
+function markWishDone(id) {
+    db.ref("wishes/" + id + "/status").set("Done");
+}
+
+function deleteWish(id) {
+    if(confirm("Do you want to delete this wish?")) {
+        db.ref("wishes/" + id).remove();
+    }
+}
+
+
+function replyToWish(wishId) {
+    let input = document.getElementById("replyInput_" + wishId);
+    let text = input.value.trim();
+    if(!text) return;
+
+    let userEmail = localStorage.getItem("loggedUser");
+    let safeUser = safeKey(userEmail);
+
+    db.ref("users/" + safeUser + "/name").once("value", snap => {
+        let name = snap.val() || userEmail.split('@')[0];
+        db.ref("wishes/" + wishId + "/replies").push({ name: name, text: text });
+        input.value = "";
+    });
+}
+
+// ==========================================
+// 🔥 COMMUNITY VOTING LOGIC (24H AUTO CLEAN)
+// ==========================================
+
+function createPoll() {
+    let question = document.getElementById("pollQuestion").value.trim();
+    let optionInputs = document.querySelectorAll(".p-opt");
+    let options = [];
+    
+    optionInputs.forEach(opt => { if(opt.value.trim()) options.push(opt.value.trim()); });
+    if(!question || options.length < 2) return alert("Fill question & at least 2 options!");
+
+    let pollData = {
+        question: question,
+        options: options,
+        votes: {}, // To store votes count
+        voters: {}, // To prevent double voting
+        timestamp: Date.now(),
+        creator: localStorage.getItem("loggedUser")
+    };
+
+    db.ref("polls").push(pollData).then(() => {
+        document.getElementById("pollQuestion").value = "";
+        optionInputs.forEach(o => o.value = "");
+        alert("Poll Created! Valid for 24 hours.");
+    });
+}
+
+function loadPolls() {
+    db.ref("polls").on("value", snap => {
+        let html = "";
+        let now = Date.now();
+        let myEmail = localStorage.getItem("loggedUser");
+        let mySafe = safeKey(myEmail);
+        
+        snap.forEach(child => {
+            let id = child.key;
+            let p = child.val();
+            
+            // ২৪ ঘণ্টার অটো ক্লিনআপ
+            if (now - p.timestamp > 24 * 60 * 60 * 1000) {
+                db.ref("polls/" + id).remove();
+                return;
+            }
+
+            let voters = p.voters || {};
+            let hasVoted = voters[mySafe] ? true : false;
+            let totalVotes = Object.keys(voters).length;
+            let isCreator = (p.creator === myEmail || myEmail === "admin@gmail.com");
+
+            let optionsHtml = "";
+            p.options.forEach((opt, idx) => {
+                let voteCount = p.votes ? (p.votes[idx] || 0) : 0;
+                let percent = totalVotes > 0 ? Math.round((voteCount / totalVotes) * 100) : 0;
+                
+                optionsHtml += `
+                <div style="margin-bottom:12px;">
+                    <div style="display:flex; justify-content:space-between; font-size:12px; margin-bottom:4px;">
+                        <span style="color:#fff;">${opt}</span>
+                        <span style="color:#00ff88;">${percent}%</span>
+                    </div>
+                    <div style="height:10px; background:#222; border-radius:10px; overflow:hidden; position:relative;">
+                        <div style="width:${percent}%; height:100%; background:linear-gradient(90deg, #00ff88, #00d4ff);"></div>
+                    </div>
+                    ${!hasVoted ? `<button onclick="votePoll('${id}', ${idx})" style="width:100%; background:transparent; border:1px solid #00ff88; color:#00ff88; font-size:10px; margin-top:5px; border-radius:4px; padding:4px; cursor:pointer;">VOTE FOR THIS</button>` : ''}
+                </div>`;
+            });
+
+            html += `<div class="card" style="border-left:4px solid #00ff88; position:relative;">
+                ${isCreator ? `<i class="fa-solid fa-trash" onclick="deletePoll('${id}')" style="position:absolute; top:15px; right:15px; color:#ff4444; cursor:pointer;"></i>` : ''}
+                <div style="font-weight:bold; color:#fff; font-size:14px; margin-bottom:15px; padding-right:25px;"><i class="fa-solid fa-circle-question" style="color:#00ff88;"></i> ${p.question}</div>
+                ${optionsHtml}
+                <div style="font-size:10px; color:#666; margin-top:10px;">Total Votes: ${totalVotes} • Ends in 24h</div>
+            </div>`;
+        });
+        document.getElementById("pollListContainer").innerHTML = html || "<div class='empty'>No active polls. Create one!</div>";
+    });
+}
+
+// পোল ডিলিট করার ফাংশন
+function deletePoll(id) {
+    if(confirm("Are you sure you want to delete this poll?")) {
+        db.ref("polls/" + id).remove();
+    }
+}
+
+
+function votePoll(pollId, optIdx) {
+    let mySafe = safeKey(localStorage.getItem("loggedUser"));
+    db.ref("polls/" + pollId).once("value", snap => {
+        let p = snap.val();
+        if(p.voters && p.voters[mySafe]) return alert("You already voted!");
+
+        // Update Voter list
+        db.ref("polls/" + pollId + "/voters/" + mySafe).set(true);
+        // Update Vote Count
+        let currentVotes = p.votes ? (p.votes[optIdx] || 0) : 0;
+        db.ref("polls/" + pollId + "/votes/" + optIdx).set(currentVotes + 1);
+    });
+}
 
 
 </script>
