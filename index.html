@@ -4013,75 +4013,62 @@ function setupFftProfile() {
     if(!user) return;
     let safeUser = safeKey(user);
 
-    // অ্যাভাটার লিস্ট লোড করার জন্য কল করো
-    loadAllAvatars();
+    loadAllAvatars(); // এভাটার লিস্ট ব্যাকগ্রাউন্ডে লোড হবে
 
+    // ১. আইডি জেনারেশন (একবারই রান করবে)
+    db.ref("users/" + safeUser + "/fftId").once("value", snap => {
+        if (!snap.exists()) {
+            if(user === "admin@gmail.com") {
+                db.ref("users/" + safeUser + "/fftId").set("11111111");
+                db.ref("fft_id_map/11111111").set(safeUser);
+            } else {
+                db.ref("settings/lastAssignedId").transaction(curr => (curr || 20000000) + 1, (err, comm, snp) => {
+                    if (comm) {
+                        let newId = snp.val().toString();
+                        db.ref("users/" + safeUser + "/fftId").set(newId);
+                        db.ref("fft_id_map/" + newId).set(safeUser);
+                    }
+                });
+            }
+        }
+    });
+
+    // ২. প্রোফাইল ডেটা ফাস্ট ডিসপ্লে
     db.ref("users/" + safeUser).on("value", snap => {
         let data = snap.val() || {};
         let prof = data.profile || {};
         
-        // ১. অটোমেটিক ইউনিক FFT ID জেনারেট করা (লক সিস্টেম সহ)
-        if(!data.fftId) {
-            if(isGeneratingId) return; // 🔒 যদি আইডি তৈরির কাজ চলতে থাকে, তবে এখানে আটকে যাবে
-            isGeneratingId = true; // 🔒 কাজ শুরু হলো, তাই লক করে দিলাম
-
-            if(user === "admin@gmail.com") {
-                db.ref("users/" + safeUser + "/fftId").set("11111111");
-                db.ref("fft_id_map/11111111").set(safeUser);
-                isGeneratingId = false; // কাজ শেষ, লক খুলে দিলাম
-            } else if(user === "pay@gmail.com") {
-                db.ref("users/" + safeUser + "/fftId").set("11111112");
-                db.ref("fft_id_map/11111112").set(safeUser);
-                isGeneratingId = false;
-            } else if(user === "match@gmail.com") {
-                db.ref("users/" + safeUser + "/fftId").set("11111113");
-                db.ref("fft_id_map/11111113").set(safeUser);
-                isGeneratingId = false;
-            } else {
-                // নরমাল ইউজারদের জন্য
-                db.ref("settings/lastAssignedId").transaction(function(current) {
-                    return (current || 20000000) + 1;
-                }, function(error, committed, snapshot) {
-                    if (committed) {
-                        let newId = snapshot.val().toString();
-                        db.ref("users/" + safeUser + "/fftId").set(newId).then(() => {
-                            db.ref("fft_id_map/" + newId).set(safeUser);
-                            isGeneratingId = false; // 🔓 ডাটাবেসে সেভ হওয়ার পর লক খুলবে
-                        });
-                    } else {
-                        isGeneratingId = false; // কোনো এরর হলেও লক খুলে যাবে
-                    }
-                });
-            }
-            return; 
-        }
-
-        // ২. একাউন্ট পেজের মেইন ডিসপ্লে আপডেট
+        let actualName = data.name || user.split('@')[0];
         if(document.getElementById("profileNameDisplay")) {
-            let actualName = data.name || user.split('@')[0];
             document.getElementById("profileNameDisplay").innerHTML = `${actualName} <i class="fa-solid fa-circle-check" style="color:#00d4ff; font-size:16px;"></i>`;
         }
-        if(document.getElementById("myFftIdDisplay")) document.getElementById("myFftIdDisplay").innerText = data.fftId;
+        
+        if(document.getElementById("myFftIdDisplay")) document.getElementById("myFftIdDisplay").innerText = data.fftId || "----";
         if(document.getElementById("myAvatarDisplay")) document.getElementById("myAvatarDisplay").src = prof.avatar || "https://api.dicebear.com/7.x/adventurer/svg?seed=Gamer";
         if(document.getElementById("myBioDisplay")) document.getElementById("myBioDisplay").innerText = prof.profession || "No bio added.";
 
-        // ৩. এডিট সেকশনের ইনপুট বক্সে পুরনো ডাটা ভরে দেওয়া
-        if(document.getElementById("inputName")) document.getElementById("inputName").value = data.name || "";
-        if(document.getElementById("inputProfession")) document.getElementById("inputProfession").value = prof.profession || "";
-        if(document.getElementById("inputGender")) document.getElementById("inputGender").value = prof.gender || "Male";
-        if(document.getElementById("inputPhone")) document.getElementById("inputPhone").value = prof.phone || "";
-        if(document.getElementById("inputInsta")) document.getElementById("inputInsta").value = prof.insta || "";
-        if(document.getElementById("inputFb")) document.getElementById("inputFb").value = prof.fb || "";
+        const inputs = {
+            "inputName": data.name || "",
+            "inputProfession": prof.profession || "",
+            "inputGender": prof.gender || "Male",
+            "inputPhone": prof.phone || "",
+            "inputInsta": prof.insta || "",
+            "inputFb": prof.fb || ""
+        };
+        for (let id in inputs) {
+            let el = document.getElementById(id);
+            if(el && el !== document.activeElement) el.value = inputs[id];
+        }
         
         currentAvatar = prof.avatar || "";
 
-        // ৪. সোশ্যাল বাটন আপডেট
         let instaBtn = document.getElementById("myInstaLink");
         let fbBtn = document.getElementById("myFbLink");
         if(prof.insta && instaBtn) { instaBtn.style.display = "inline-flex"; instaBtn.href = "https://instagram.com/" + prof.insta; }
         if(prof.fb && fbBtn) { fbBtn.style.display = "inline-flex"; fbBtn.href = prof.fb; }
     });
 }
+
 
 
 
@@ -4094,13 +4081,16 @@ function setupFftProfile() {
  }
 
 
- function saveBioData() {
+function saveBioData() {
     let user = localStorage.getItem("loggedUser");
     if(!user) return;
     let safeUser = safeKey(user);
     
+    let btn = document.querySelector("button[onclick='saveBioData()']");
+    btn.innerHTML = "<i class='fa-solid fa-spinner fa-spin'></i> Saving...";
+    btn.disabled = true;
+
     let newName = document.getElementById("inputName").value.trim();
-    
     let bioData = {
         avatar: currentAvatar,
         profession: document.getElementById("inputProfession").value,
@@ -4110,16 +4100,20 @@ function setupFftProfile() {
         fb: document.getElementById("inputFb").value
     };
 
-    // নাম আপডেট করা (যদি ইউজার নাম দিয়ে থাকে)
-    if(newName) {
-        db.ref("users/" + safeUser + "/name").set(newName);
-    }
+    let updates = {};
+    updates["/users/" + safeUser + "/profile"] = bioData;
+    if(newName) updates["/users/" + safeUser + "/name"] = newName;
 
-    db.ref("users/" + safeUser + "/profile").update(bioData).then(() => {
-        alert("Profile & Avatar Updated Successfully! 🔥");
-        location.reload();
+    db.ref().update(updates).then(() => {
+        btn.innerHTML = "SAVE PROFILE";
+        btn.disabled = false;
+        alert("Profile Updated Successfully! 🚀");
+    }).catch(err => {
+        alert("Error: " + err.message);
+        btn.disabled = false;
     });
- }
+}
+
 
 
 
