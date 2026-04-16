@@ -236,24 +236,39 @@ header{ padding:15px 20px; display:flex; justify-content:space-between; align-it
             </div>
 
             <button onclick="toggleSection('editBioSection', this)" class="card-btn" style="background:transparent; border:1px solid #2e7dff; color:#2e7dff; padding:8px; font-size:12px; text-transform:none;"><i class="fa-solid fa-pen-to-square"></i> Edit Bio & Avatar <i class="fa-solid fa-chevron-down drop-icon"></i></button>
-
             <div id="editBioSection" style="display:none; margin-top:15px; text-align:left; border-top:1px dashed #333; padding-top:15px;">
-                <p style="font-size:11px; color:#00ff88; margin:0;">Select Your Anime Avatar:</p>
-            <p style="font-size:11px; color:#00ff88; margin:0;">Select Your Premium Avatar:</p>
-            <div class="avatar-grid" id="avatarPicker">
-            <p style="color:#666; font-size:12px;">Loading avatars...</p></div>
-                <input type="text" id="inputName" placeholder="Enter Your In-Game Name">
-
-                <input type="text" id="inputProfession" placeholder="Write a short Bio/Profession">
-                <div style="display:flex; gap:10px;">
-                    <select id="inputGender" style="flex:1;"><option value="Male">Male</option><option value="Female">Female</option></select>
-                    <input type="number" id="inputPhone" placeholder="Mobile Number" style="flex:2;">
-                </div>
-                <input type="text" id="inputInsta" placeholder="Instagram Username (Ex: dark_soul)">
-                <input type="text" id="inputFb" placeholder="Facebook Profile Link">
                 
-                <button class="card-btn" onclick="saveBioData()" style="padding:10px; font-size:13px; margin-top:5px;">Save Profile</button>
+                <div style="background:rgba(0, 212, 255, 0.05); border:1px solid #00d4ff; padding:10px; border-radius:8px; margin-bottom:15px;">
+                    <p style="margin:0; font-size:11px; color:#00d4ff; font-weight:bold; line-height:1.4;">
+                        <i class="fa-solid fa-shield-halved"></i> NOTE: All details below are OPTIONAL. You don't have to fill everything. Just fill what you want to share and click Save!
+                    </p>
+                </div>
+                
+                <p style="font-size:11px; color:#00ff88; margin:0 0 10px 0; font-weight:bold;">Choose Avatar:</p>
+                <div class="avatar-grid" id="avatarPicker" style="background:#0f1115; padding:10px; border-radius:8px; border:1px solid #232730;"><p style="color:#666; font-size:12px;">Loading avatars...</p></div>
+
+                <p style="font-size:11px; color:#aaa; margin:15px 0 5px 0; text-transform:uppercase; font-weight:bold;">Gaming Identity</p>
+                <input type="text" id="inputName" placeholder="In-Game Name (Optional)" style="width:100%; padding:12px; margin-bottom:10px; border-radius:8px; border:1px solid #232730; background:#0f1115; color:#fff; box-sizing: border-box; outline:none; transition:0.3s;" onfocus="this.style.borderColor='#00d4ff'" onblur="this.style.borderColor='#232730'">
+
+                <p style="font-size:11px; color:#aaa; margin:0 0 5px 0; text-transform:uppercase; font-weight:bold;">Personal Info</p>
+                <input type="text" id="inputProfession" placeholder="Short Bio / Profession (Optional)" style="width:100%; padding:12px; margin-bottom:10px; border-radius:8px; border:1px solid #232730; background:#0f1115; color:#fff; box-sizing: border-box; outline:none; transition:0.3s;" onfocus="this.style.borderColor='#00d4ff'" onblur="this.style.borderColor='#232730'">
+                
+                <div style="display:flex; gap:10px; margin-bottom:15px;">
+                    <select id="inputGender" style="flex:1; padding:12px; border-radius:8px; border:1px solid #232730; background:#0f1115; color:#fff; box-sizing: border-box; outline:none; cursor:pointer;">
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                        <option value="Other">Other</option>
+                    </select>
+                    <input type="number" id="inputPhone" placeholder="Mobile Number (Optional)" style="flex:2; padding:12px; border-radius:8px; border:1px solid #232730; background:#0f1115; color:#fff; box-sizing: border-box; outline:none; transition:0.3s;" onfocus="this.style.borderColor='#00d4ff'" onblur="this.style.borderColor='#232730'">
+                </div>
+
+                <p style="font-size:11px; color:#aaa; margin:0 0 5px 0; text-transform:uppercase; font-weight:bold;">Social Links</p>
+                <input type="text" id="inputInsta" placeholder="Instagram Username (Optional)" style="width:100%; padding:12px; margin-bottom:10px; border-radius:8px; border:1px solid #232730; background:#0f1115; color:#fff; box-sizing: border-box; outline:none; transition:0.3s;" onfocus="this.style.borderColor='#E1306C'" onblur="this.style.borderColor='#232730'">
+                <input type="text" id="inputFb" placeholder="Facebook Profile Link (Optional)" style="width:100%; padding:12px; margin-bottom:15px; border-radius:8px; border:1px solid #232730; background:#0f1115; color:#fff; box-sizing: border-box; outline:none; transition:0.3s;" onfocus="this.style.borderColor='#1877F2'" onblur="this.style.borderColor='#232730'">
+                
+                <button class="card-btn" onclick="saveBioData()" style="padding:14px; font-size:14px; margin-top:5px; background:linear-gradient(45deg, #0055ff, #00d4ff); font-weight:900; letter-spacing:1px; box-shadow: 0 5px 15px rgba(0, 212, 255, 0.3); border:none; color:white; width:100%; border-radius:12px; cursor:pointer;"><i class="fa-solid fa-floppy-disk"></i> SAVE PROFILE</button>
             </div>
+
         </div>
         <div class="card" style="text-align:center; padding:15px; background: linear-gradient(145deg, #161a20, #0a0c10); border: 1px solid #2e7dff;">
             <p style="color:#aaa; margin:0 0 5px 0; font-size:12px;"><i class="fa-solid fa-wallet"></i> Wallet Balance</p>
@@ -1187,20 +1202,32 @@ header{ padding:15px 20px; display:flex; justify-content:space-between; align-it
 
 
  function signup(){
-    let email = document.getElementById("signupEmail").value; 
+    let email = document.getElementById("signupEmail").value.trim(); 
     let pass = document.getElementById("signupPass").value;
-    if(!email || !pass) return alert("Fill all fields");
+    if(!email || !pass) return alert("Please fill all fields!");
 
-    // Firebase theke account toiri kora
+    // Button-ke loading state-e pathachhi (Optional beauty)
+    let btn = document.querySelector("button[onclick='signup()']");
+    btn.innerHTML = "<i class='fa-solid fa-spinner fa-spin'></i> Creating Account...";
+    btn.disabled = true;
+
     auth.createUserWithEmailAndPassword(email, pass)
     .then((userCredential) => {
-        alert("Account created successfully!"); 
-        showLogin();
+        // 🔥 MAGIC: Account toiri houar sathe sathe session set kora
+        localStorage.setItem("loggedUser", email); 
+        
+        alert("🎉 Congratulations! Your account has been created and you are now logged in.");
+        
+        // 🚀 Direct app-e niye jaoa
+        checkLogin(); 
     })
     .catch((error) => {
-        alert(error.message); // Password choto hole ba email ager theke thakle ekhane bolbe
+        alert("Signup Error: " + error.message);
+        btn.innerHTML = "SIGN UP";
+        btn.disabled = false;
     });
  }
+
 
  function login(){
     let email = document.getElementById("loginEmail").value; 
@@ -1375,13 +1402,14 @@ header{ padding:15px 20px; display:flex; justify-content:space-between; align-it
     });
  }
 
- function joinMatch(key, slots) {
+function joinMatch(key, slots) {
     let user = localStorage.getItem("loggedUser");
     if(!user) return alert("Please Login first!");
     let safeUser = safeKey(user);
 
-    db.ref("users/" + safeUser + "/wallet").once("value").then((snap) => {
-        let balance = snap.val() || 0;
+    db.ref("users/" + safeUser).once("value").then((snap) => {
+        let userData = snap.val() || {};
+        let balance = userData.wallet || 0;
         if(balance < activeAmount) return alert("Insufficient Balance! Please Add Money.");
 
         db.ref("matches/" + key + "/players").once("value").then((playersSnap) => {
@@ -1391,25 +1419,29 @@ header{ padding:15px 20px; display:flex; justify-content:space-between; align-it
             if(players.find(p => p.email === user)) return alert("You already joined this match!");
             if(players.length >= slots) return alert("Sorry, Slots are full!");
 
-            let name = prompt("Enter FreeFire Name:");
-            if(!name) return;
-            
+            // 🟢 Prompts for Name & UID
+            let name = prompt("Enter exactly your Free Fire Name:");
+            if(!name || name.trim() === "") return alert("Joining canceled. Name is required.");
+
+            let uid = prompt("Enter exactly your Free Fire UID (Number):");
+            if(!uid || uid.trim() === "") return alert("Joining canceled. UID is required.");
+
             updateWallet(-activeAmount, "Entry Fee");
             let matchTime = parseInt(key.split("_").pop()); 
             
             db.ref("matches/" + key + "/players").push({
-                name: name,
+                name: name.trim(),
+                uid: uid.trim(), // UID Saved!
                 email: user,
                 joinedTime: matchTime
             });
-            // Telegram Notification Pathano
-            let msg = `🎮 NEW MATCH JOIN\nUser: ${user}\nFF Name: ${name}\nMatch Key: ${key}\nEntry Paid: ₹${activeAmount}`;
-            sendToTelegramAdmin(msg);
 
+            sendToTelegramAdmin(`🎮 NEW MATCH JOIN\nUser: ${user}\nFF Name: ${name}\nUID: ${uid}\nMatch: ${key}`);
             alert("Joined Successfully!");
         });
     });
- }
+}
+
 
 
 
@@ -1473,54 +1505,70 @@ header{ padding:15px 20px; display:flex; justify-content:space-between; align-it
  // Result page er notun function // ==========================================
  // 🏆 RESULT ENGINE (AUTO-DELETE 5 DAYS + FILTER)
  // ==========================================
- function renderResultsPage() {
+function renderResultsPage() {
     let myEmail = localStorage.getItem("loggedUser");
     if(!myEmail) return;
 
     db.ref("results").on("value", snap => {
         let allHtml = ""; 
         let myHtml = "";
-        let now = Date.now();
-        let fiveDaysMs = 5 * 24 * 60 * 60 * 1000; // ⚡ 5 Days in Milliseconds
-
         let resultsArr = [];
+        let now = Date.now();
+        let fiveDaysMs = 5 * 24 * 60 * 60 * 1000; 
+
         snap.forEach(child => {
             let data = child.val();
-            let key = child.key;
-            let resTime = data.timestamp || 0;
-
-            // 🕒 1. AUTO-DELETE LOGIC: 5 din purono hole Firebase theke muche dao
-            if (now - resTime > fiveDaysMs) {
-                db.ref("results/" + key).remove();
-                return; // Delete kore loop skip korbe
+            if (now - (data.timestamp || 0) > fiveDaysMs) {
+                db.ref("results/" + child.key).remove();
+                return;
             }
-
-            resultsArr.push({ key, data });
+            resultsArr.push({ key: child.key, data: data });
         });
 
-        // 🔄 Newest results first dekhabo
-        resultsArr.reverse().forEach(item => {
+        resultsArr.sort((a, b) => b.data.timestamp - a.data.timestamp);
+
+        resultsArr.forEach(item => {
             let msg = item.data.message || "";
-            let isMyMatch = msg.includes(myEmail); // 🔍 Email check korchhe jate My Results filter hoy
+            
+            // 🟢 NIKHUT TRACKING: Nam-er bodole email/participant list check hochhe
+            let isMyMatch = false;
+            if(item.data.participantEmails && item.data.participantEmails.includes(myEmail)) {
+                isMyMatch = true;
+            } else if(item.data.winnerEmails && item.data.winnerEmails.includes(myEmail)) {
+                isMyMatch = true;
+            }
+
+            let displayTitle = item.data.matchTitle;
+            if (!displayTitle) {
+                let parts = item.key.split('_'); 
+                if(parts.length >= 3) {
+                    displayTitle = formatTime(parseInt(parts[parts.length - 1])) + " | ₹" + parts[0] + " " + parts[1].toUpperCase().replace('_', ' ');
+                } else {
+                    displayTitle = "Match ID: " + item.key.split('_').pop();
+                }
+            }
 
             let cardHtml = `
-                <div class="card" style="border-left: 3px solid #ffcc00; margin-bottom:15px;">
-                    <div style="background:#111; padding:8px; border-radius:8px; margin-bottom:10px; font-size:11px; display:flex; justify-content:space-between;">
-                        <span style="color:#00d4ff;">📅 ${item.data.date || 'Recent'}</span>
-                        <span style="color:#888;">ID: ${item.key.split('_').pop()}</span>
+                <div class="card" style="border-left: 4px solid #ffcc00; background: linear-gradient(145deg, #161a20, #0a0c10);">
+                    <div style="background:#1c222b; padding:10px; border-radius:8px; margin-bottom:12px; display:flex; justify-content:space-between; align-items:center; border:1px solid #333;">
+                        <span style="color:#00d4ff; font-weight:bold; font-size:12px;"><i class="fa-solid fa-calendar-day"></i> ${item.data.date || 'Recent'}</span>
+                        <span style="background:#ffcc00; color:#000; padding:4px 10px; border-radius:5px; font-weight:900; font-size:11px; box-shadow: 0 0 15px rgba(255,204,0,0.2); text-transform:uppercase;">${displayTitle}</span>
                     </div>
-                    <pre style="color:#fff; font-family:inherit; margin:0; font-size:13px; white-space: pre-wrap;">${msg}</pre>
+                    <pre style="color:#fff; font-family:inherit; margin:0; font-size:14px; white-space: pre-wrap; line-height:1.6;">${msg}</pre>
                 </div>`;
 
             allHtml += cardHtml;
             if(isMyMatch) myHtml += cardHtml;
         });
 
-        // 📱 UI Update
-        document.getElementById("allResultsContainer").innerHTML = allHtml || "<div class='empty'>No results declared yet.</div>";
-        document.getElementById("myResultsContainer").innerHTML = myHtml || "<div class='empty'>You haven't played or won any matches in the last 5 days.</div>";
+        document.getElementById("allResultsContainer").innerHTML = allHtml || "<div class='empty'>Waiting for results...</div>";
+        document.getElementById("myResultsContainer").innerHTML = myHtml || "<div class='empty'>No matches played recently.</div>";
     });
- }
+}
+
+
+
+
 
  // 🔥 Function: Sub-tab change korar jonno
  function switchResultTab(type) {
@@ -2427,73 +2475,78 @@ header{ padding:15px 20px; display:flex; justify-content:space-between; align-it
     alert("Room Details Successfully Updated!");
  }
 
+
 function adminDeclareWinners(key, prize) {
     let select = document.getElementById("winSelect_"+key);
     let selectedWinners = Array.from(select.selectedOptions).map(option => option.value);
     if(selectedWinners.length === 0) return alert("Please select at least one winner!");
 
+    let timeParts = key.split("_");
+    let matchMin = parseInt(timeParts[timeParts.length - 1]);
+    let readableTime = formatTime(matchMin);
+    let modeStr = timeParts[1].toUpperCase().replace('_', ' ');
+    let matchHeader = readableTime + " | ₹" + timeParts[0] + " " + modeStr;
+
     db.ref("matches/" + key).once("value", snap => {
         let matchData = snap.val();
-        let players = Object.values(matchData.players || {});
-        let winnerDisplay = [];
+        if(!matchData) return alert("Match not found!");
 
-        // 🔄 এখান থেকে উইনারদের লুপ শুরু
+        let players = Object.values(matchData.players || {});
+        let allEmails = players.map(p => p.email); 
+        let winnerDisplay = [];
+        let timestampNow = Date.now(); // 🎯 Exact Time lock for Leaderboard
+
         selectedWinners.forEach(email => {
             let safeEmail = safeKey(email);
             let userRef = db.ref("users/" + safeEmail);
             
-            // ১. ওয়ালেটে টাকা অ্যাড করা
-            userRef.child("wallet").once("value", wSnap => {
-                let bal = wSnap.val() || 0;
-                userRef.child("wallet").set(bal + prize); 
-            });
+            // 💰 1. Wallet & Rank Score Update (Transaction use korle over-write hobe na)
+            userRef.child("wallet").transaction(current => (current || 0) + prize);
+            userRef.child("rankScore").transaction(current => (current || 0) + prize);
 
-            // ২. 🔥 MAGIC: TEAM SCORE UPDATE 🔥
+            // 🛡️ 2. Team Score Update Logic
             userRef.child("teamId").once("value", tSnap => {
                 let tId = tSnap.val();
-                if(tId) { // যদি প্লেয়ারের কোনো টিম থাকে
-                    db.ref("teams/" + tId + "/score").once("value", sSnap => {
-                        let currentScore = sSnap.val() || 0;
-                        db.ref("teams/" + tId + "/score").set(currentScore + prize); 
-                    });
+                if(tId) {
+                    db.ref("teams/" + tId + "/score").transaction(current => (current || 0) + prize);
                 }
             });
 
-            // ৩. 🔥 MAGIC: GUILD SCORE UPDATE (লুপের ভেতরে আনা হয়েছে) 🔥
+            // 🏰 3. Guild Score Update Logic
             userRef.child("guildId").once("value", gSnap => {
                 let gId = gSnap.val();
-                if(gId) { // যদি প্লেয়ারের কোনো গিল্ড থাকে
-                    db.ref("guilds/" + gId + "/score").once("value", gsSnap => {
-                        let currentGuildScore = gsSnap.val() || 0;
-                        db.ref("guilds/" + gId + "/score").set(currentGuildScore + prize); 
-                    });
+                if(gId) {
+                    db.ref("guilds/" + gId + "/score").transaction(current => (current || 0) + prize);
                 }
             });
 
-            // ৪. হিস্ট্রি সেভ করা
-            let historyRef = userRef.child("history").push();
-            historyRef.set({ amount: prize, type: "Match Win 🏆", status: "Success", time: new Date().toLocaleString(), reqId: Date.now() });
+            // 📊 4. History Record (Leaderboard-er ashol engine)
+            userRef.child("history").push().set({ 
+                amount: prize, 
+                type: "Match Win 🏆", 
+                status: "Success", 
+                time: new Date().toLocaleString(),
+                reqId: timestampNow 
+            });
 
             let playerObj = players.find(p => p.email === email);
-            let playerName = playerObj ? playerObj.name : email; 
-            winnerDisplay.push("🏆 " + playerName + " (Won ₹" + prize + ")");
+            let displayN = playerObj ? `${playerObj.name} (UID: ${playerObj.uid || '----'})` : email;
+            winnerDisplay.push("🏆 " + displayN + " (Won ₹" + prize + ")");
         }); 
-        // 🔄 লুপ এখানে শেষ!
 
-        let resultMsg = "Match Winners:\n" + winnerDisplay.join("\n");
-        
-        // রেজাল্ট সেভ করা
+        // 🚀 5. Save Result and Remove Match
         db.ref("results/" + key).set({
-            message: resultMsg,
+            message: "Match Winners:\n" + winnerDisplay.join("\n"),
             date: new Date().toLocaleDateString('en-IN'),
-            timestamp: Date.now()
+            timestamp: timestampNow,
+            matchTitle: matchHeader,
+            winnerEmails: selectedWinners,
+            participantEmails: allEmails
+        }).then(() => {
+            db.ref("matches/" + key).remove().then(() => {
+                alert("Match Success! Prize distributed, scores updated, and match removed! 🎯");
+            });
         });
-        
-        // ম্যাচ ডিলিট করা এবং টেলিগ্রামে মেসেজ পাঠানো
-        db.ref("matches/" + key).remove();
-        sendToTelegramAdmin(`🏆 MATCH RESULT DECLARED\nMatch: ${key}\nPrize Given: ₹${prize}\nWinners:\n${winnerDisplay.join("\n")}`);
-
-        alert("Success! ₹" + prize + " added to winners. Match moved to Results.");
     });
 }
 
@@ -2501,46 +2554,51 @@ function adminDeclareWinners(key, prize) {
 
 
 
-  function adminCancelMatch(key) {
-    if(!confirm("Are you sure you want to CANCEL this match? Entry fee will be automatically refunded to all players.")) return;
+
+
+
+
+
+function adminCancelMatch(key) {
+    if(!confirm("Cancel & Refund all players?")) return;
+
+    let timeParts = key.split("_");
+    let entryFee = parseInt(timeParts[0]); 
+    let matchMin = parseInt(timeParts[timeParts.length - 1]);
+    let matchHeader = formatTime(matchMin) + " | ₹" + entryFee + " " + timeParts[1].toUpperCase().replace('_', ' ');
 
     db.ref("matches/" + key).once("value", snap => {
         let matchData = snap.val();
-        
         if(!matchData || !matchData.players) {
             db.ref("matches/" + key).remove();
-            return alert("Match canceled. No players were joined.");
+            return alert("Match deleted.");
         }
 
         let players = Object.values(matchData.players);
-        let entryFee = parseInt(key.split("_")[0]); 
+        let allEmails = players.map(p => p.email);
 
         players.forEach(p => {
             let safeEmail = safeKey(p.email);
-            let userRef = db.ref("users/" + safeEmail);
-            
-            userRef.child("wallet").once("value", wSnap => {
-                let bal = wSnap.val() || 0;
-                userRef.child("wallet").set(bal + entryFee); 
-            });
-
-            let historyRef = userRef.child("history").push();
-            historyRef.set({ amount: entryFee, type: "Match Canceled (Refund)", status: "Success", time: new Date().toLocaleString() });
+            db.ref("users/" + safeEmail + "/wallet").once("value", wSnap => db.ref("users/" + safeEmail + "/wallet").set((wSnap.val() || 0) + entryFee));
+            db.ref("users/" + safeEmail + "/history").push({ amount: entryFee, type: "Match Canceled (Refund)", status: "Success", time: new Date().toLocaleString() });
         });
 
-        // Ekhane Date r Timestamp add kora hoyechhe
+        // 🟢 PRO FIX: Force Delete
         db.ref("results/" + key).set({
             message: "⚠️ This match was CANCELED by the Admin. \nEntry fees (₹" + entryFee + ") have been successfully refunded to all joined players.",
             date: new Date().toLocaleDateString('en-IN'),
-            timestamp: Date.now()
+            timestamp: Date.now(),
+            matchTitle: matchHeader,
+            participantEmails: allEmails
+        }).then(() => {
+            db.ref("matches/" + key).remove().then(() => alert("Match Canceled & Refunded Successfully!"));
         });
-        
-        db.ref("matches/" + key).remove();
-        sendToTelegramAdmin(`🚫 MATCH CANCELLED & REFUNDED\nMatch: ${key}\nRefunded: ₹${entryFee} to ${players.length} players.`);
-
-        alert("Match Canceled Successfully! ₹" + entryFee + " refunded to " + players.length + " players.");
     });
- }
+}
+
+
+
+
 
  function sendIssue(issueType){
     let user = localStorage.getItem("loggedUser") || "Unknown User";
@@ -4008,14 +4066,24 @@ function openPlayerProfile(playerEmail) {
 
 let isGeneratingId = false; // 🔥 এটা হলো আমাদের সিকিউরিটি লক
 
+
+
+
+ function pickAvatar(element, imageUrl) {
+    document.querySelectorAll('.avatar-item').forEach(img => img.classList.remove('selected'));
+    element.classList.add('selected');
+    currentAvatar = imageUrl; // Pura link ta ekhon currentAvatar variable-e thakbe
+ }
+
+
 function setupFftProfile() {
     let user = localStorage.getItem("loggedUser");
     if(!user) return;
     let safeUser = safeKey(user);
 
-    loadAllAvatars(); // এভাটার লিস্ট ব্যাকগ্রাউন্ডে লোড হবে
+    loadAllAvatars(); // Background e load hobe
 
-    // ১. আইডি জেনারেশন (একবারই রান করবে)
+    // ID Setup Logic
     db.ref("users/" + safeUser + "/fftId").once("value", snap => {
         if (!snap.exists()) {
             if(user === "admin@gmail.com") {
@@ -4033,7 +4101,7 @@ function setupFftProfile() {
         }
     });
 
-    // ২. প্রোফাইল ডেটা ফাস্ট ডিসপ্লে
+    // Profile Display Update
     db.ref("users/" + safeUser).on("value", snap => {
         let data = snap.val() || {};
         let prof = data.profile || {};
@@ -4043,10 +4111,13 @@ function setupFftProfile() {
             document.getElementById("profileNameDisplay").innerHTML = `${actualName} <i class="fa-solid fa-circle-check" style="color:#00d4ff; font-size:16px;"></i>`;
         }
         
-        if(document.getElementById("myFftIdDisplay")) document.getElementById("myFftIdDisplay").innerText = data.fftId || "----";
+        // Display ID
+        let displayId = data.fftId || "----";
+        if(document.getElementById("myFftIdDisplay")) document.getElementById("myFftIdDisplay").innerText = displayId;
         if(document.getElementById("myAvatarDisplay")) document.getElementById("myAvatarDisplay").src = prof.avatar || "https://api.dicebear.com/7.x/adventurer/svg?seed=Gamer";
         if(document.getElementById("myBioDisplay")) document.getElementById("myBioDisplay").innerText = prof.profession || "No bio added.";
 
+        // 🟢 SMART INPUT LOADER (Crash proof)
         const inputs = {
             "inputName": data.name || "",
             "inputProfession": prof.profession || "",
@@ -4064,22 +4135,10 @@ function setupFftProfile() {
 
         let instaBtn = document.getElementById("myInstaLink");
         let fbBtn = document.getElementById("myFbLink");
-        if(prof.insta && instaBtn) { instaBtn.style.display = "inline-flex"; instaBtn.href = "https://instagram.com/" + prof.insta; }
-        if(prof.fb && fbBtn) { fbBtn.style.display = "inline-flex"; fbBtn.href = prof.fb; }
+        if(instaBtn) { instaBtn.style.display = prof.insta ? "inline-flex" : "none"; if(prof.insta) instaBtn.href = "https://instagram.com/" + prof.insta; }
+        if(fbBtn) { fbBtn.style.display = prof.fb ? "inline-flex" : "none"; if(prof.fb) fbBtn.href = prof.fb; }
     });
 }
-
-
-
-
-
-
- function pickAvatar(element, imageUrl) {
-    document.querySelectorAll('.avatar-item').forEach(img => img.classList.remove('selected'));
-    element.classList.add('selected');
-    currentAvatar = imageUrl; // Pura link ta ekhon currentAvatar variable-e thakbe
- }
-
 
 function saveBioData() {
     let user = localStorage.getItem("loggedUser");
@@ -4087,17 +4146,21 @@ function saveBioData() {
     let safeUser = safeKey(user);
     
     let btn = document.querySelector("button[onclick='saveBioData()']");
-    btn.innerHTML = "<i class='fa-solid fa-spinner fa-spin'></i> Saving...";
-    btn.disabled = true;
+    if(btn) {
+        btn.innerHTML = "<i class='fa-solid fa-spinner fa-spin'></i> Saving...";
+        btn.disabled = true;
+    }
 
-    let newName = document.getElementById("inputName").value.trim();
+    // 🟢 SMART DATA FETCHING (Box na thakle error khabe na, faka text nebe)
+    let newName = document.getElementById("inputName") ? document.getElementById("inputName").value.trim() : "";
+    
     let bioData = {
         avatar: currentAvatar,
-        profession: document.getElementById("inputProfession").value,
-        gender: document.getElementById("inputGender").value,
-        phone: document.getElementById("inputPhone").value,
-        insta: document.getElementById("inputInsta").value.replace('@',''),
-        fb: document.getElementById("inputFb").value
+        profession: document.getElementById("inputProfession") ? document.getElementById("inputProfession").value : "",
+        gender: document.getElementById("inputGender") ? document.getElementById("inputGender").value : "Male",
+        phone: document.getElementById("inputPhone") ? document.getElementById("inputPhone").value : "",
+        insta: document.getElementById("inputInsta") ? document.getElementById("inputInsta").value.replace('@','') : "",
+        fb: document.getElementById("inputFb") ? document.getElementById("inputFb").value : ""
     };
 
     let updates = {};
@@ -4105,14 +4168,22 @@ function saveBioData() {
     if(newName) updates["/users/" + safeUser + "/name"] = newName;
 
     db.ref().update(updates).then(() => {
-        btn.innerHTML = "SAVE PROFILE";
-        btn.disabled = false;
+        if(btn) {
+            btn.innerHTML = "<i class='fa-solid fa-floppy-disk'></i> SAVE PROFILE";
+            btn.disabled = false;
+        }
         alert("Profile Updated Successfully! 🚀");
     }).catch(err => {
+        if(btn) {
+            btn.innerHTML = "<i class='fa-solid fa-floppy-disk'></i> SAVE PROFILE";
+            btn.disabled = false;
+        }
         alert("Error: " + err.message);
-        btn.disabled = false;
     });
 }
+
+
+
 
 
 
