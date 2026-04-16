@@ -2914,7 +2914,7 @@ function adminCancelMatch(key) {
 
     document.getElementById("leaderboardList").innerHTML = "<div class='empty'><i class='fa-solid fa-spinner fa-spin'></i> Loading Top Players...</div>";
 
-    db.ref("users").limitToFirst(50).once("value", snap => {
+    db.ref("users").limitToLast(100).once("value", snap => {
         let leaderboard = [];
         let now = Date.now();
 
@@ -3681,7 +3681,7 @@ function adminCancelMatch(key) {
 
 
  function loadGlobalChat() {
-    db.ref("world_chat").on("value", snap => {
+    db.ref("world_chat").limitToLast(30).on("value", snap => {
         let html = "";
         let now = Date.now();
         let myEmail = localStorage.getItem("loggedUser");
