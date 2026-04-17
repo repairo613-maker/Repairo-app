@@ -1049,21 +1049,19 @@ header{ padding:15px 20px; display:flex; justify-content:space-between; align-it
 
  // Server theke settings load kora
  // Server theke settings load kora
+ // Server theke settings load kora (Tiny Data, so .on() is perfectly safe)
  function loadSettings(){
     db.ref("settings").on("value", snap => {
         if(snap.val()){
             let data = snap.val();
+            // 🟢 BUG FIX: Fallback logic fixed so it loads saved time correctly even if it's 0
+            tournamentSettings.interval = data.interval !== undefined ? data.interval : 15;
+            tournamentSettings.startTime = data.startTime !== undefined ? data.startTime : 9;
+            tournamentSettings.endTime = data.endTime !== undefined ? data.endTime : 22;
             
-            // Time Settings
-            tournamentSettings.interval = data.interval || 15;
-            tournamentSettings.startTime = data.startTime || 9;
-            tournamentSettings.endTime = data.endTime || 22;
-            
-            // Hidden Data (Make sure object exists)
             tournamentSettings.hiddenModes = data.hiddenModes || {};
             tournamentSettings.hiddenAmounts = data.hiddenAmounts || {}; 
             
-            // Custom Arrays
             if(data.customModes) modes = data.customModes;
             if(data.customAmounts) entryAmounts = data.customAmounts;
         }
@@ -1073,19 +1071,100 @@ header{ padding:15px 20px; display:flex; justify-content:space-between; align-it
         createModeTabs(); 
         renderApp();      
 
-        // 👉 ADMIN PANEL AUTO REFRESH (Jodi admin page khola thake)
+        // 👉 Admin Panel open thakle auto refresh korbe
         if(document.getElementById("adminPage").style.display === "block"){
             renderAdminTournaments();
         }
     });
  }
- loadSettings();
-
-
 
 
  let activeAmount=10;
  let activeMode="1v1_cs";
+
+
+ function saveTimeSettings(){
+    let interval = parseInt(document.getElementById("adminTimeInput").value);
+    let start = parseInt(document.getElementById("adminStartInput").value);
+    let end = parseInt(document.getElementById("adminEndInput").value);
+
+    if(interval < 5) return alert("Minimum 5 minutes gap required!");
+    if(start >= end) return alert("Start time must be less than End time!");
+
+    // Save sobkichhu eksathe
+    db.ref("settings").update({
+        interval: interval,
+        startTime: start,
+        endTime: end
+    }).then(() => {
+        alert("Time Settings Updated! Matches will run from " + start + ":00 to " + end + ":00");
+    });
+ }
+
+ function toggleMode(modeKey){
+    let currentStatus = tournamentSettings.hiddenModes[modeKey];
+    db.ref("settings/hiddenModes/" + modeKey).set(!currentStatus);
+ }
+
+ function addNewMode(){
+    let label = document.getElementById("newModeLabel").value;
+    let type = document.getElementById("newModeType").value;
+    let slots = parseInt(document.getElementById("newModeSlots").value);
+
+    if(!label || !slots) return alert("Please fill all fields!");
+
+    let key = label.toLowerCase().replace(/\s+/g, '_') + "_" + Math.floor(Math.random()*100);
+    let newModeObj = { key: key, label: label, slots: slots, type: type };
+    let updatedModes = [...modes, newModeObj];
+    
+    db.ref("settings/customModes").set(updatedModes).then(() => {
+        alert("New Mode Added Successfully! ✅");
+        document.getElementById("newModeLabel").value = "";
+        document.getElementById("newModeSlots").value = "";
+    });
+ }
+
+ function resetModes(){
+    if(confirm("Are you sure? All custom modes will be deleted and reset to Default (1v1, 2v2, 4v4)!")){
+        db.ref("settings/customModes").remove().then(() => { location.reload(); });
+    }
+ }
+
+ // ====== AMOUNT MANAGEMENT FUNCTIONS ======
+ function renderAdminAmounts(){
+    let html = "";
+    entryAmounts.forEach(amt => {
+        let isHidden = tournamentSettings.hiddenAmounts[amt];
+        let color = isHidden ? '#555' : '#00d4ff'; // Grey if OFF, Blue if ON
+        let style = isHidden ? 'opacity:0.5; border:1px solid red;' : 'border:1px solid #00d4ff;';
+        
+        html += `<div onclick="toggleAmountState(${amt})" style="${style} color:#fff; padding:8px 12px; border-radius:6px; cursor:pointer; font-weight:bold;">
+            ₹${amt} ${isHidden ? '❌' : '✅'}
+        </div>`;
+    });
+    document.getElementById("adminAmountToggles").innerHTML = html;
+ }
+
+ function toggleAmountState(amt){
+    let currentStatus = tournamentSettings.hiddenAmounts[amt];
+    db.ref("settings/hiddenAmounts/" + amt).set(!currentStatus);
+ }
+
+ function addNewAmount(){
+    let val = parseInt(document.getElementById("newAmountInput").value);
+    if(!val) return alert("Please enter a valid amount!");
+    if(entryAmounts.includes(val)) return alert("This amount already exists!");
+
+    let updatedAmounts = [...entryAmounts, val];
+    updatedAmounts.sort((a,b) => a - b); // Sort choto theke boro
+
+    db.ref("settings/customAmounts").set(updatedAmounts).then(() => {
+        alert("New Amount ₹" + val + " Added!");
+        document.getElementById("newAmountInput").value = "";
+    });
+ }
+
+
 
  function getWallet(){
     let user=localStorage.getItem("loggedUser");
@@ -1144,7 +1223,10 @@ header{ padding:15px 20px; display:flex; justify-content:space-between; align-it
  function showLogin(){
     document.getElementById("auth").innerHTML=`<div class="auth-box">
         <h3 class="text-gradient">Welcome Back</h3>
-        <input type="email" id="loginEmail" placeholder="Email Address">
+        <div style="background:rgba(0, 212, 255, 0.1); border:1px solid #00d4ff; padding:10px; border-radius:8px; margin-bottom:15px; font-size:11px; color:#00d4ff; text-align:center;">
+            <i class="fa-solid fa-shield-halved"></i> 100% Safe & Secure Login
+        </div>
+        <input type="text" id="loginEmail" placeholder="Phone Number (10 Digits)" inputmode="text" style="font-weight:bold; letter-spacing:1px;">
         <div class="password-container">
             <input type="password" id="loginPass" placeholder="Password">
             <i class="fa-solid fa-eye toggle-password" onclick="togglePassword('loginPass', this)"></i>
@@ -1157,22 +1239,37 @@ header{ padding:15px 20px; display:flex; justify-content:space-between; align-it
     </div>`;
     document.getElementById("auth").style.display="block"; 
     document.getElementById("mainApp").style.display="none";
-    document.querySelector(".bottom-nav").style.display="none"; // 👈 লগইন পেজে মেনুবার হাইড করবে
+    document.querySelector(".bottom-nav").style.display="none"; 
+ }
+
+ // 🔥 NEW: Phone Number to Email Converter Magic
+ function formatAuthId(input) {
+    input = input.trim();
+    if(input.includes("@")) return input; // Admin ba Old User hole email tai rakhbe
+    
+    let phone = input.replace(/\D/g, ''); // Shob symbol kete shudhu number nebe
+    if(phone.length === 10) return phone + "@fft.in"; // Ekdom chhotto format: number@fft.in
+    
+    return null; // 10 digit na hole reject korbe
  }
 
 
  function showSignup(){
     document.getElementById("auth").innerHTML=`<div class="auth-box">
         <h3 class="text-gradient">Create Account</h3>
-        <input type="email" id="signupEmail" placeholder="Email Address">
+        <div style="background:rgba(0, 212, 255, 0.1); border:1px solid #00d4ff; padding:10px; border-radius:8px; margin-bottom:15px; font-size:11px; color:#00d4ff; text-align:center;">
+            <i class="fa-solid fa-lock"></i> Create a custom password for your account. Do not share it!
+        </div>
+        <input type="text" id="signupEmail" placeholder="Phone Number (10 Digits)" inputmode="numeric" style="font-weight:bold; letter-spacing:1px;">
         <div class="password-container">
-            <input type="password" id="signupPass" placeholder="Password">
+            <input type="password" id="signupPass" placeholder="Create a New Password">
             <i class="fa-solid fa-eye toggle-password" onclick="togglePassword('signupPass', this)"></i>
         </div>
         <button class="card-btn" onclick="signup()">SIGN UP</button>
         <div class="switch" style="margin-top:20px; color:#888; text-align:center; font-size:13px;">Already have an account? <span onclick="showLogin()" style="color:#2e7dff; cursor:pointer; font-weight:bold;">Login</span></div>
     </div>`;
  }
+
 
  function togglePassword(inputId, icon) {
     let input = document.getElementById(inputId);
@@ -1188,62 +1285,71 @@ header{ padding:15px 20px; display:flex; justify-content:space-between; align-it
  }
 
  function forgotPassword() {
-    let email = document.getElementById("loginEmail").value;
-    if(!email) return alert("Please enter your email address in the box first to reset your password.");
+    let rawInput = document.getElementById("loginEmail").value.trim();
+    if(!rawInput) return alert("Please enter your Phone Number or Admin Email in the box first.");
     
-    auth.sendPasswordResetEmail(email).then(() => {
-        alert("Password reset link has been sent to your email!");
-    }).catch((error) => {
-        alert(error.message);
-    });
+    if(rawInput.includes("@")) {
+        // Admin-der jonno ashol password reset email jabe
+        auth.sendPasswordResetEmail(rawInput).then(() => alert("Password reset link has been sent to your email!")).catch((err) => alert(err.message));
+    } else {
+        // Normal user jara phone number diye khuleche tader jonno pop-up warning
+        alert("🔒 Password Recovery:\nSince you registered with a Phone Number, please contact Customer Support (Admin) on Telegram to reset your password. Provide them your registered Phone Number.");
+    }
  }
+
 
  
 
 
  function signup(){
-    let email = document.getElementById("signupEmail").value.trim(); 
+    let rawInput = document.getElementById("signupEmail").value.trim(); 
     let pass = document.getElementById("signupPass").value;
-    if(!email || !pass) return alert("Please fill all fields!");
+    if(!rawInput || !pass) return alert("Please fill all fields!");
 
-    // Button-ke loading state-e pathachhi (Optional beauty)
+    let email = formatAuthId(rawInput); // Phone ke shadow email-e convert kora hochhe
+    if(!email) return alert("⚠️ Please enter a valid 10-digit Phone Number!");
+    if(pass.length < 6) return alert("⚠️ Password must be at least 6 characters long!");
+
     let btn = document.querySelector("button[onclick='signup()']");
     btn.innerHTML = "<i class='fa-solid fa-spinner fa-spin'></i> Creating Account...";
     btn.disabled = true;
 
     auth.createUserWithEmailAndPassword(email, pass)
     .then((userCredential) => {
-        // 🔥 MAGIC: Account toiri houar sathe sathe session set kora
+        // 🔥 AUTO LOGIN MAGIC: Account toiri holei loggedUser save kore app-e dhukiye debe
         localStorage.setItem("loggedUser", email); 
-        
-        alert("🎉 Congratulations! Your account has been created and you are now logged in.");
-        
-        // 🚀 Direct app-e niye jaoa
+        alert("🎉 Congratulations! Your account has been created.");
         checkLogin(); 
     })
     .catch((error) => {
-        alert("Signup Error: " + error.message);
+        alert("Signup Error: This Phone Number is already registered or invalid!");
         btn.innerHTML = "SIGN UP";
         btn.disabled = false;
     });
  }
 
-
  function login(){
-    let email = document.getElementById("loginEmail").value; 
+    let rawInput = document.getElementById("loginEmail").value.trim(); 
     let pass = document.getElementById("loginPass").value;
-    if(!email || !pass) return alert("Fill all fields");
+    if(!rawInput || !pass) return alert("Fill all fields");
 
-    // Firebase theke check kora
+    let email = formatAuthId(rawInput);
+    if(!email) return alert("⚠️ Please enter a valid 10-digit Phone Number or Admin Email!");
+
+    let btn = document.querySelector("button[onclick='login()']");
+    if(btn) { btn.innerHTML = "<i class='fa-solid fa-spinner fa-spin'></i> Logging in..."; btn.disabled = true; }
+
     auth.signInWithEmailAndPassword(email, pass)
     .then((userCredential) => {
-        localStorage.setItem("loggedUser", email); // Tomar baki app jate thikthak chole tai eta roilo
+        localStorage.setItem("loggedUser", email); 
         checkLogin();
     })
     .catch((error) => {
-        alert("Invalid credentials! " + error.message);
+        alert("❌ Invalid Phone Number or Password!");
+        if(btn) { btn.innerHTML = "LOGIN"; btn.disabled = false; }
     });
  }
+
 
 
 
@@ -1465,18 +1571,27 @@ function joinMatch(key, slots) {
  }
 
 
- function renderJoiningPage(){
+function renderJoiningPage(){
     let userEmail = localStorage.getItem("loggedUser");
     if(!userEmail) return;
 
-    db.ref("matches").on("value", snap => {
-        let html = ""; let hasMatches = false;
+    document.getElementById("joiningList").innerHTML = "<div class='empty'><i class='fa-solid fa-spinner fa-spin'></i> Loading Matches...</div>";
+
+    // 🔥 DATA SAVER: Changed .on to .once
+    db.ref("matches").once("value", snap => {
+        // Notun: Room ID check korar Refresh Button
+        let html = `
+            <div style="text-align:right; margin-bottom:10px;">
+                <button onclick="renderJoiningPage()" class="card-btn" style="width:auto; padding:6px 12px; font-size:11px; background:#00d4ff; color:#000; margin:0; box-shadow:0 0 10px rgba(0,212,255,0.4);"><i class="fa-solid fa-rotate-right"></i> Refresh Room ID</button>
+            </div>`; 
+        let hasMatches = false;
+
         snap.forEach(childSnap => {
             let key = childSnap.key;
             let matchData = childSnap.val();
             let players = matchData.players ? Object.values(matchData.players) : [];
-            
             let myEntry = players.find(p => p.email === userEmail);
+
             if(myEntry) {
                 hasMatches = true;
                 let roomData = matchData.room || {};
@@ -1491,15 +1606,16 @@ function joinMatch(key, slots) {
                             <button onclick="copyText('${roomData.pass}', 'Password')" style="background:#ffcc00; color:#000; border:none; padding:4px 10px; border-radius:4px; font-size:11px; font-weight:bold; cursor:pointer;"><i class="fa-solid fa-copy"></i> Copy</button>
                         </div>
                     </div>` : 
-                    `<div style="font-size:12px; color:#aaa; margin-top:5px;">Room ID/Pass will be shared here 10-15 mins before start.</div>`;
+                    `<div style="font-size:12px; color:#aaa; margin-top:5px;">Room ID/Pass will be shared here 10-15 mins before start. (Click Refresh to check)</div>`;
 
-                html+=`<div class="card"><div class="card-title" style="color:#2e7dff">Upcoming Match</div><div class="card-time">Time: ${formatTime(myEntry.joinedTime)}</div>${roomHtml}</div>`;
+                html += `<div class="card"><div class="card-title" style="color:#2e7dff">Upcoming Match</div><div class="card-time">Time: ${formatTime(myEntry.joinedTime)}</div>${roomHtml}</div>`;
             }
         });
-        if(!hasMatches) html="<div class='empty'>You haven't joined any match.</div>";
-        document.getElementById("joiningList").innerHTML=html;
+        if(!hasMatches) html = "<div class='empty'>You haven't joined any match.</div>";
+        document.getElementById("joiningList").innerHTML = html;
     });
- }
+}
+
 
 
  // Result page er notun function // ==========================================
@@ -1509,7 +1625,10 @@ function renderResultsPage() {
     let myEmail = localStorage.getItem("loggedUser");
     if(!myEmail) return;
 
-    db.ref("results").on("value", snap => {
+    document.getElementById("allResultsContainer").innerHTML = "<div class='empty'><i class='fa-solid fa-spinner fa-spin'></i> Loading Results...</div>";
+
+    // 🔥 DATA SAVER: Changed to limitToLast(20) and .once()
+    db.ref("results").limitToLast(20).once("value", snap => {
         let allHtml = ""; 
         let myHtml = "";
         let resultsArr = [];
@@ -1529,24 +1648,15 @@ function renderResultsPage() {
 
         resultsArr.forEach(item => {
             let msg = item.data.message || "";
-            
-            // 🟢 NIKHUT TRACKING: Nam-er bodole email/participant list check hochhe
             let isMyMatch = false;
+            
             if(item.data.participantEmails && item.data.participantEmails.includes(myEmail)) {
                 isMyMatch = true;
             } else if(item.data.winnerEmails && item.data.winnerEmails.includes(myEmail)) {
                 isMyMatch = true;
             }
 
-            let displayTitle = item.data.matchTitle;
-            if (!displayTitle) {
-                let parts = item.key.split('_'); 
-                if(parts.length >= 3) {
-                    displayTitle = formatTime(parseInt(parts[parts.length - 1])) + " | ₹" + parts[0] + " " + parts[1].toUpperCase().replace('_', ' ');
-                } else {
-                    displayTitle = "Match ID: " + item.key.split('_').pop();
-                }
-            }
+            let displayTitle = item.data.matchTitle || ("Match ID: " + item.key.split('_').pop());
 
             let cardHtml = `
                 <div class="card" style="border-left: 4px solid #ffcc00; background: linear-gradient(145deg, #161a20, #0a0c10);">
@@ -1561,10 +1671,11 @@ function renderResultsPage() {
             if(isMyMatch) myHtml += cardHtml;
         });
 
-        document.getElementById("allResultsContainer").innerHTML = allHtml || "<div class='empty'>Waiting for results...</div>";
+        document.getElementById("allResultsContainer").innerHTML = allHtml || "<div class='empty'>No results declared yet.</div>";
         document.getElementById("myResultsContainer").innerHTML = myHtml || "<div class='empty'>No matches played recently.</div>";
     });
 }
+
 
 
 
@@ -2138,26 +2249,51 @@ function renderResultsPage() {
 
  /* ================= MASTER ADMIN & FINANCE ENGINE ================= */
  let appChart = null; 
-
+ 
+ /* ================= MASTER ADMIN & STAFF ROLE ENGINE ================= */
  function showAdminPage() {
     let user = localStorage.getItem("loggedUser");
     document.querySelectorAll(".page").forEach(p=>p.style.display="none");
     document.getElementById("adminPage").style.display="block";
-    let isSuper = (user === "admin@gmail.com");
     
-    // Admin features visibility
-    let financeTab = document.getElementById("tabFinance");
-    if(financeTab) financeTab.style.display = isSuper ? "flex" : "none";
-    
-    // Fix for blank data: Load everything once
-    renderAdminUsers(); renderAdminMatches(); 
-    renderAdminDeposits(); renderAdminWithdrawals(); 
-    renderAdminTournaments();
+    // Prothome shob Tab button khunje nilam
+    let tUsers = document.getElementById("tabUsers");
+    let tMatches = document.getElementById("tabMatches");
+    let tTourn = document.getElementById("tabTournaments");
+    let tDep = document.getElementById("tabDeposits");
+    let tWith = document.getElementById("tabWithdrawals");
+    let tFin = document.getElementById("tabFinance");
+    let tAva = document.getElementById("tabAvatars");
 
-    if(isSuper) switchAdminTab('users');
-    else if(user === "match@gmail.com") switchAdminTab('matches');
-    else switchAdminTab('deposits');
+    // Security Phase 1: Prothome shob Tab Hide (Gayeb) kore dao
+    [tUsers, tMatches, tTourn, tDep, tWith, tFin, tAva].forEach(t => { if(t) t.style.display = "none"; });
+
+    // Security Phase 2: Jar je power, take shudhu shei Tab dekhaw
+    if (user === "admin@gmail.com") {
+        // 👑 SUPER ADMIN: Shob dekhte pabe
+        [tUsers, tMatches, tTourn, tDep, tWith, tFin, tAva].forEach(t => { if(t) t.style.display = "flex"; });
+        switchAdminTab('users'); // Default page
+    } 
+    else if (user === "pay@gmail.com") {
+        // 💸 PAYMENT STAFF: Shudhu Users, Deposit r Withdraw dekhbe
+        [tUsers, tDep, tWith].forEach(t => { if(t) t.style.display = "flex"; });
+        switchAdminTab('deposits'); // Default page
+    } 
+    else if (user === "match@gmail.com") {
+        // 🎮 MATCH STAFF: Shudhu Match r Tournament dekhbe
+        [tMatches, tTourn].forEach(t => { if(t) t.style.display = "flex"; });
+        switchAdminTab('matches'); // Default page
+    }
+
+    // Background-e data load kore rakha jate click korlei chole ashe
+    renderAdminUsers(); 
+    renderAdminMatches(); 
+    renderAdminDeposits(); 
+    renderAdminWithdrawals(); 
+    renderAdminTournaments();
  }
+
+
 
  function switchAdminTab(tab) {
     document.querySelectorAll("#adminPage [id$='Section']").forEach(s => s.style.display = "none");
@@ -2654,36 +2790,6 @@ function adminCancelMatch(key) {
 
 
 
- function approveWithdraw(reqId, userEmail) {
-    let safeUser = safeKey(userEmail);
-    db.ref("withdraw_requests/" + reqId + "/status").set("Success"); // Request success
-    db.ref("users/" + safeUser + "/history/" + reqId + "/status").set("Success"); // History success
-    alert("Withdrawal marked as Success!");
- }
-
- // 👉 NEW DECLINE FUNCTION (Refunds Money)
- function declineWithdraw(reqId, userEmail, amount) {
-    if(!confirm("Decline korle ei takata player-er wallet e ferot chole jabe. Tumi ki sure?")) return;
-    let safeUser = safeKey(userEmail);
-
-    db.ref("withdraw_requests/" + reqId + "/status").set("Declined");
-    db.ref("users/" + safeUser + "/history/" + reqId + "/status").set("Declined");
-
-    // Wallet e taka ferot (Refund)
-    db.ref("users/" + safeUser + "/wallet").once("value", snap => {
-        let bal = snap.val() || 0;
-        db.ref("users/" + safeUser + "/wallet").set(bal + amount);
-    });
-    
-    db.ref("users/" + safeUser + "/notifications").push({
-        message: "Your withdrawal of ₹" + amount + " was DECLINED due to an invalid UPI ID. Money refunded to wallet.",
-        time: new Date().toLocaleString()
-    });
-
-    alert("Withdrawal Declined. ₹" + amount + " refunded to user.");
- }
-
-
  function renderAdminDeposits() {
     db.ref("deposit_requests").on("value", snap => {
         let html = ""; let hasReq = false;
@@ -2706,85 +2812,76 @@ function adminCancelMatch(key) {
     });
  }
 
+ function approveWithdraw(reqId, userEmail) {
+    let safeUser = safeKey(userEmail);
+    db.ref("users/" + safeUser + "/history/" + reqId + "/status").set("Success"); 
+    // 🟢 DATA SAVER: Approve korar por global queue theke delete kore dao jate admin panel halka thake
+    db.ref("withdraw_requests/" + reqId).remove().then(() => alert("Withdrawal marked as Success & Cleared from Panel!"));
+ }
+
+ function declineWithdraw(reqId, userEmail, amount) {
+    if(!confirm("Decline korle ei takata player-er wallet e ferot chole jabe. Tumi ki sure?")) return;
+    let safeUser = safeKey(userEmail);
+
+    db.ref("users/" + safeUser + "/history/" + reqId + "/status").set("Declined");
+    db.ref("users/" + safeUser + "/wallet").once("value", snap => {
+        let bal = snap.val() || 0;
+        db.ref("users/" + safeUser + "/wallet").set(bal + amount);
+    });
+    db.ref("users/" + safeUser + "/notifications").push({ message: "Your withdrawal of ₹" + amount + " was DECLINED due to an invalid UPI ID. Money refunded to wallet.", time: new Date().toLocaleString() });
+
+    // 🟢 DATA SAVER: Decline korar por queue theke remove
+    db.ref("withdraw_requests/" + reqId).remove().then(() => alert("Withdrawal Declined. ₹" + amount + " refunded to user."));
+ }
+
  function approveDeposit(reqId, userEmail, amount) {
     let safeUser = safeKey(userEmail);
-    db.ref("deposit_requests/" + reqId + "/status").set("Success"); 
     
-    // User er data check kora hocche
     db.ref("users/" + safeUser).once("value", snap => {
         let userData = snap.val() || {};
         let bal = userData.wallet || 0;
         let finalAmount = amount;
         let bonus = 0;
 
-        // 🔥 FIRST DEPOSIT LOGIC (Bonus & Referral Trigger) 🔥
         if(!userData.firstDepositDone) {
-            // Mark kore dewa holo jate dwitiyo bar ei loop e na dhoke
             db.ref("users/" + safeUser + "/firstDepositDone").set(true);
-
-            // 1. Welcome Bonus (Jodi 100 er beshi add kore)
-            if(amount >= 100) {
-                bonus = 20; 
-                finalAmount = amount + bonus;
-            }
-
-            // 2. REFERRAL MONEY ADD (Shudhu 1st Deposit e bondhu taka pabe)
+            if(amount >= 100) { bonus = 20; finalAmount = amount + bonus; }
             if(userData.referredBy) {
                 let referrerKey = userData.referredBy;
                 db.ref("users/" + referrerKey + "/wallet").once("value", refSnap => {
-                    let refBal = refSnap.val() || 0;
-                    db.ref("users/" + referrerKey + "/wallet").set(refBal + 10); // Bondhur 10 taka
-                    db.ref("users/" + referrerKey + "/history").push({
-                        amount: 10, type: "Referral Bonus (Friend Deposited)", status: "Success", time: new Date().toLocaleString(), reqId: Date.now()
-                    });
+                    db.ref("users/" + referrerKey + "/wallet").set((refSnap.val() || 0) + 10); 
+                    db.ref("users/" + referrerKey + "/history").push({ amount: 10, type: "Referral Bonus (Friend Deposited)", status: "Success", time: new Date().toLocaleString(), reqId: Date.now() });
                 });
-                // Taka dewar por tag delete kore dewa holo
                 db.ref("users/" + safeUser + "/referredBy").remove();
             }
         }
 
-        // Taka add kora (Main amount + Bonus jodi thake)
         db.ref("users/" + safeUser + "/wallet").set(bal + finalAmount);
         db.ref("users/" + safeUser + "/history/" + reqId + "/status").set("Success"); 
         
-        // Notification pathano
         if(bonus > 0) {
-            db.ref("users/" + safeUser + "/notifications").push({
-                message: "🎉 Deposit ₹" + amount + " Successful! You got ₹" + bonus + " EXTRA First Deposit Bonus!",
-                time: new Date().toLocaleString()
-            });
-            // Bonus er alada history
-            db.ref("users/" + safeUser + "/history").push({
-                amount: bonus, type: "Welcome Bonus 🎁", status: "Success", time: new Date().toLocaleString(), reqId: Date.now()
-            });
+            db.ref("users/" + safeUser + "/notifications").push({ message: "🎉 Deposit ₹" + amount + " Successful! You got ₹" + bonus + " EXTRA First Deposit Bonus!", time: new Date().toLocaleString() });
+            db.ref("users/" + safeUser + "/history").push({ amount: bonus, type: "Welcome Bonus 🎁", status: "Success", time: new Date().toLocaleString(), reqId: Date.now() });
         } else {
-            db.ref("users/" + safeUser + "/notifications").push({
-                message: "Your deposit of ₹" + amount + " was successful.",
-                time: new Date().toLocaleString()
-            });
+            db.ref("users/" + safeUser + "/notifications").push({ message: "Your deposit of ₹" + amount + " was successful.", time: new Date().toLocaleString() });
         }
+
+        // 🟢 DATA SAVER: Approve korar por global queue theke delete
+        db.ref("deposit_requests/" + reqId).remove().then(() => alert("Deposit Approved! Added ₹" + amount + " to " + userEmail));
     });
-
-    alert("Deposit Approved! Added ₹" + amount + " to " + userEmail);
  }
-
-
 
  function declineDeposit(reqId, userEmail) {
     if(!confirm("Are you sure you want to decline this invalid payment?")) return;
     let safeUser = safeKey(userEmail);
     
-    db.ref("deposit_requests/" + reqId + "/status").set("Declined"); 
     db.ref("users/" + safeUser + "/history/" + reqId + "/status").set("Declined"); 
-    
-    // Notification to user
-    db.ref("users/" + safeUser + "/notifications").push({
-        message: "Your recent deposit request was DECLINED due to invalid UTR.",
-        time: new Date().toLocaleString()
-    });
+    db.ref("users/" + safeUser + "/notifications").push({ message: "Your recent deposit request was DECLINED due to invalid UTR.", time: new Date().toLocaleString() });
 
-    alert("Deposit Declined successfully!");
+    // 🟢 DATA SAVER: Decline korar por global queue theke delete
+    db.ref("deposit_requests/" + reqId).remove().then(() => alert("Deposit Declined & Cleared from Panel!"));
  }
+
 
  // 🏆 GLOBAL RANK SYSTEM
  function getPlayerRank(earnings) {
@@ -3250,7 +3347,9 @@ function adminCancelMatch(key) {
  }
 
  
- checkLogin(); createAmountTabs(); createModeTabs();
+loadSettings();
+checkLogin();
+
  
  // ====== ADMIN TOURNAMENT FUNCTIONS ======
  function renderAdminTournaments(){
@@ -3275,107 +3374,11 @@ function adminCancelMatch(key) {
     renderAdminAmounts();
  }
 
- function saveTimeSettings(){
-    let interval = parseInt(document.getElementById("adminTimeInput").value);
-    let start = parseInt(document.getElementById("adminStartInput").value);
-    let end = parseInt(document.getElementById("adminEndInput").value);
-
-    if(interval < 5) return alert("Minimum 5 minutes gap required!");
-    if(start >= end) return alert("Start time must be less than End time!");
-
-    // Save sobkichhu eksathe
-    db.ref("settings").update({
-        interval: interval,
-        startTime: start,
-        endTime: end
-    });
-    
-    alert("Time Settings Updated! Matches will run from " + start + ":00 to " + end + ":00");
- }
 
 
 
 
- function toggleMode(modeKey){
-    let currentStatus = tournamentSettings.hiddenModes[modeKey];
-    // Toggle (True thakle False, False thakle True)
-    db.ref("settings/hiddenModes/" + modeKey).set(!currentStatus);
-    // UI Auto update hoye jabe karon 'loadSettings' function on ache
- }
 
- function addNewMode(){
-    let label = document.getElementById("newModeLabel").value;
-    let type = document.getElementById("newModeType").value;
-    let slots = parseInt(document.getElementById("newModeSlots").value);
-
-    if(!label || !slots) return alert("Please fill all fields!");
-
-    // Unique Key banano (Ex: "6v6_tdm")
-    let key = label.toLowerCase().replace(/\s+/g, '_') + "_" + Math.floor(Math.random()*100);
-
-    let newModeObj = {
-        key: key,
-        label: label,
-        slots: slots,
-        type: type
-    };
-
-    // Current modes er sathe notun ta jog kora
-    let updatedModes = [...modes, newModeObj];
-    
-    // Server-e save kora
-    db.ref("settings/customModes").set(updatedModes);
-    
-    alert("New Mode Added Successfully! ✅");
-    
-    // Input clear kora
-    document.getElementById("newModeLabel").value = "";
-    document.getElementById("newModeSlots").value = "";
- }
-
- function resetModes(){
-    if(confirm("Are you sure? All custom modes will be deleted and reset to Default (1v1, 2v2, 4v4)!")){
-        db.ref("settings/customModes").remove();
-        alert("Modes Reset to Default!");
-        location.reload();
-    }
- }
-
- // ====== AMOUNT MANAGEMENT FUNCTIONS ======
- function renderAdminAmounts(){
-    let html = "";
-    entryAmounts.forEach(amt => {
-        let isHidden = tournamentSettings.hiddenAmounts[amt];
-        let color = isHidden ? '#555' : '#00d4ff'; // Grey if OFF, Blue if ON
-        let style = isHidden ? 'opacity:0.5; border:1px solid red;' : 'border:1px solid #00d4ff;';
-        
-        html += `<div onclick="toggleAmountState(${amt})" style="${style} color:#fff; padding:8px 12px; border-radius:6px; cursor:pointer; font-weight:bold;">
-            ₹${amt} ${isHidden ? '❌' : '✅'}
-        </div>`;
-    });
-    document.getElementById("adminAmountToggles").innerHTML = html;
- }
-
- function toggleAmountState(amt){
-    let currentStatus = tournamentSettings.hiddenAmounts[amt];
-    // Toggle Status
-    db.ref("settings/hiddenAmounts/" + amt).set(!currentStatus);
- }
-
- function addNewAmount(){
-    let val = parseInt(document.getElementById("newAmountInput").value);
-    if(!val) return alert("Please enter a valid amount!");
-    
-    if(entryAmounts.includes(val)) return alert("This amount already exists!");
-
-    let updatedAmounts = [...entryAmounts, val];
-    // Sort choto theke boro
-    updatedAmounts.sort((a,b) => a - b);
-
-    db.ref("settings/customAmounts").set(updatedAmounts);
-    alert("New Amount ₹" + val + " Added!");
-    document.getElementById("newAmountInput").value = "";
- }
 
  // ====== NAME SAVE FUNCTION ======
  function savePlayerName(){
@@ -4242,40 +4245,7 @@ function saveBioData() {
  }
 
  // 🔄 SYNC: Load Avatars
- function loadAllAvatars() {
-    db.ref("settings/avatars").on("value", snap => {
-        let adminHtml = "";
-        let userHtml = "";
-        
-        if(!snap.exists()) {
-            adminHtml = "<p class='empty'>No avatars in server.</p>";
-            userHtml = "<p class='empty'>Admin is adding new avatars...</p>";
-        } else {
-            snap.forEach(child => {
-                let key = child.key;
-                let data = child.val();
-                
-                // Admin UI: Jekhane delete option thakbe
-                adminHtml += `
-                <div style="text-align:center; background:#161a20; padding:10px; border-radius:12px; border:1px solid #333;">
-                    <img src="${data.url}" style="width:100%; border-radius:8px; height:80px; object-fit:cover;">
-                    <button onclick="adminDeleteAvatar('${key}')" style="background:none; border:none; color:#ff4444; font-size:12px; cursor:pointer; margin-top:5px;"><i class="fa-solid fa-trash"></i> Delete</button>
-                </div>`;
 
-                // User UI: Shudhu chobi selection er jonno
-                userHtml += `<img src="${data.url}" class="avatar-item" onclick="pickAvatar(this, '${data.url}')" style="width:60px; height:60px; border-radius:50%; border:3px solid transparent; cursor:pointer; object-fit:cover; margin:5px;">`;
-            });
-        }
-        
-        // Admin page-e update kora
-        let adminList = document.getElementById("adminAvatarList");
-        if(adminList) adminList.innerHTML = adminHtml;
-        
-        // User selection box-e update kora
-        let userPicker = document.getElementById("avatarPicker");
-        if(userPicker) userPicker.innerHTML = userHtml;
-    });
- }
 
 
 
@@ -4288,8 +4258,10 @@ function saveBioData() {
  }
 
  // 🔄 SYNC: Load Avatars (Updated for Links)
- function loadAllAvatars() {
-    db.ref("settings/avatars").on("value", snap => {
+// 🔄 SYNC: Load Avatars (Bandwidth Saver Fix)
+function loadAllAvatars() {
+    // 🔥 DATA SAVER: Changed .on to .once 
+    db.ref("settings/avatars").once("value", snap => {
         let adminHtml = "", userHtml = "";
         if(!snap.exists()) {
             adminHtml = "<p class='empty'>No avatars yet.</p>";
@@ -4298,34 +4270,7 @@ function saveBioData() {
             snap.forEach(child => {
                 let key = child.key;
                 let data = child.val();
-                
-                // Admin List with Trash icon
-                adminHtml += `
-                <div style="text-align:center; background:#161a20; padding:8px; border-radius:12px; border:1px solid #333;">
-                    <img src="${data.url}" style="width:100%; border-radius:8px; height:60px; object-fit:cover;">
-                    <button onclick="adminDeleteAvatar('${key}')" style="background:none; border:none; color:#ff4444; font-size:12px; cursor:pointer; margin-top:5px;"><i class="fa-solid fa-trash"></i></button>
-                </div>`;
-
-                // User Picker
-                userHtml += `<img src="${data.url}" class="avatar-item" onclick="pickAvatar(this, '${data.url}')" style="width:60px; height:60px; border-radius:50%; margin:5px; border:3px solid transparent; cursor:pointer; object-fit:cover;">`;
-            });
-        }
-        if(document.getElementById("adminAvatarList")) document.getElementById("adminAvatarList").innerHTML = adminHtml;
-        if(document.getElementById("avatarPicker")) document.getElementById("avatarPicker").innerHTML = userHtml;
-    });
- }
-
- // 🔄 SYNC: Load Avatars
- function loadAllAvatars() {
-    db.ref("settings/avatars").on("value", snap => {
-        let adminHtml = "", userHtml = "";
-        if(!snap.exists()) {
-            adminHtml = "<p class='empty'>No avatars yet.</p>";
-            userHtml = "<p class='empty'>Coming Soon...</p>";
-        } else {
-            snap.forEach(child => {
-                let key = child.key;
-                let url = child.val().url;
+                let url = data.url || data; // Safety check
                 
                 // Admin List: Display image correctly
                 adminHtml += `
@@ -4338,10 +4283,15 @@ function saveBioData() {
                 userHtml += `<img src="${url}" class="avatar-item" onclick="pickAvatar(this, '${url}')" style="width:60px; height:60px; border-radius:50%; margin:5px; border:3px solid transparent; cursor:pointer; object-fit:cover;">`;
             });
         }
-        if(document.getElementById("adminAvatarList")) document.getElementById("adminAvatarList").innerHTML = adminHtml;
-        if(document.getElementById("avatarPicker")) document.getElementById("avatarPicker").innerHTML = userHtml;
+        
+        let adminList = document.getElementById("adminAvatarList");
+        if(adminList) adminList.innerHTML = adminHtml;
+        
+        let userPicker = document.getElementById("avatarPicker");
+        if(userPicker) userPicker.innerHTML = userHtml;
     });
- }
+}
+
 
 // --- FRIEND SYSTEM CORE ---
 
@@ -4561,54 +4511,7 @@ function submitWish() {
     });
 }
 
-function loadWishes() {
-    db.ref("wishes").on("value", snap => {
-        let html = "";
-        let wishes = [];
-        let myEmail = localStorage.getItem("loggedUser");
-        let isAdmin = (myEmail === "admin@gmail.com");
 
-        snap.forEach(child => { wishes.push({key: child.key, data: child.val()}); });
-        
-        wishes.reverse().forEach(w => {
-            let isOwner = (w.data.email === myEmail || isAdmin);
-            let statusText = w.data.status === "Done" ? `<span style="background:#00ff88; color:#000; font-size:9px; padding:2px 6px; border-radius:10px; font-weight:bold; margin-left:10px;">DONE ✅</span>` : `<span style="background:#333; color:#aaa; font-size:9px; padding:2px 6px; border-radius:10px; font-weight:bold; margin-left:10px;">PENDING...</span>`;
-
-            let repliesHtml = "";
-            if(w.data.replies) {
-                Object.values(w.data.replies).forEach(r => {
-                    repliesHtml += `<div style="font-size:11px; color:#ddd; background:rgba(255,255,255,0.05); padding:5px 8px; border-radius:5px; margin-top:5px; border-left:2px solid #ffcc00;">
-                        <b style="color:#ffcc00;">${r.name}:</b> ${r.text}
-                    </div>`;
-                });
-            }
-
-            html += `<div class="card" style="border-left:4px solid #ffcc00; background:#111; position:relative;">
-                <div style="display:flex; align-items:center; gap:10px; margin-bottom:8px;">
-                    <img src="${w.data.avatar}" style="width:30px; height:30px; border-radius:50%; border:1px solid #ffcc00;">
-                    <div>
-                        <div style="color:#fff; font-size:13px; font-weight:bold;">${w.data.name} ${statusText}</div>
-                        <div style="color:#666; font-size:9px;">${w.data.time}</div>
-                    </div>
-                </div>
-                
-                <div style="color:#eee; font-size:13px; margin-bottom:10px; border-bottom:1px dashed #222; padding-bottom:10px;">${w.data.text}</div>
-                
-                <div style="display:flex; gap:10px; margin-bottom:10px;">
-                    ${isAdmin && w.data.status !== "Done" ? `<button onclick="markWishDone('${w.key}')" style="font-size:10px; background:#00ff88; color:#000; border:none; border-radius:4px; padding:4px 8px; cursor:pointer; font-weight:bold;">Mark Done</button>` : ''}
-                    ${isOwner ? `<button onclick="deleteWish('${w.key}')" style="font-size:10px; background:#ff4444; color:#fff; border:none; border-radius:4px; padding:4px 8px; cursor:pointer; font-weight:bold;">Delete/Cancel</button>` : ''}
-                </div>
-
-                <div id="replies_${w.key}">${repliesHtml}</div>
-                <div style="display:flex; gap:5px; margin-top:10px;">
-                    <input type="text" id="replyInput_${w.key}" placeholder="Add a comment..." style="flex:1; background:#000; color:#fff; border:1px solid #333; border-radius:5px; padding:5px; font-size:11px;">
-                    <button onclick="replyToWish('${w.key}')" style="background:#ffcc00; border:none; border-radius:5px; padding:5px 10px; cursor:pointer;"><i class="fa-solid fa-paper-plane"></i></button>
-                </div>
-            </div>`;
-        });
-        document.getElementById("wishListContainer").innerHTML = html || "<div class='empty'>No wishes yet.</div>";
-    });
-}
 
 // উইশ ম্যানেজমেন্ট ফাংশন
 function markWishDone(id) {
@@ -4665,8 +4568,57 @@ function createPoll() {
     });
 }
 
+function loadWishes() {
+    // 🟢 DATA SAVER: limitToLast(30) bosiyechhi jate shudhu notun 30ta wish dekhay
+    db.ref("wishes").limitToLast(30).on("value", snap => {
+        let html = "";
+        let wishes = [];
+        let myEmail = localStorage.getItem("loggedUser");
+        let isAdmin = (myEmail === "admin@gmail.com");
+
+        snap.forEach(child => { wishes.push({key: child.key, data: child.val()}); });
+        
+        wishes.reverse().forEach(w => {
+            // ... (baki code same aachhe, shudhu opore limit lagano holo) ...
+            let isOwner = (w.data.email === myEmail || isAdmin);
+            let statusText = w.data.status === "Done" ? `<span style="background:#00ff88; color:#000; font-size:9px; padding:2px 6px; border-radius:10px; font-weight:bold; margin-left:10px;">DONE ✅</span>` : `<span style="background:#333; color:#aaa; font-size:9px; padding:2px 6px; border-radius:10px; font-weight:bold; margin-left:10px;">PENDING...</span>`;
+
+            let repliesHtml = "";
+            if(w.data.replies) {
+                Object.values(w.data.replies).forEach(r => {
+                    repliesHtml += `<div style="font-size:11px; color:#ddd; background:rgba(255,255,255,0.05); padding:5px 8px; border-radius:5px; margin-top:5px; border-left:2px solid #ffcc00;">
+                        <b style="color:#ffcc00;">${r.name}:</b> ${r.text}
+                    </div>`;
+                });
+            }
+
+            html += `<div class="card" style="border-left:4px solid #ffcc00; background:#111; position:relative;">
+                <div style="display:flex; align-items:center; gap:10px; margin-bottom:8px;">
+                    <img src="${w.data.avatar}" style="width:30px; height:30px; border-radius:50%; border:1px solid #ffcc00;">
+                    <div>
+                        <div style="color:#fff; font-size:13px; font-weight:bold;">${w.data.name} ${statusText}</div>
+                        <div style="color:#666; font-size:9px;">${w.data.time}</div>
+                    </div>
+                </div>
+                <div style="color:#eee; font-size:13px; margin-bottom:10px; border-bottom:1px dashed #222; padding-bottom:10px;">${w.data.text}</div>
+                <div style="display:flex; gap:10px; margin-bottom:10px;">
+                    ${isAdmin && w.data.status !== "Done" ? `<button onclick="markWishDone('${w.key}')" style="font-size:10px; background:#00ff88; color:#000; border:none; border-radius:4px; padding:4px 8px; cursor:pointer; font-weight:bold;">Mark Done</button>` : ''}
+                    ${isOwner ? `<button onclick="deleteWish('${w.key}')" style="font-size:10px; background:#ff4444; color:#fff; border:none; border-radius:4px; padding:4px 8px; cursor:pointer; font-weight:bold;">Delete/Cancel</button>` : ''}
+                </div>
+                <div id="replies_${w.key}">${repliesHtml}</div>
+                <div style="display:flex; gap:5px; margin-top:10px;">
+                    <input type="text" id="replyInput_${w.key}" placeholder="Add a comment..." style="flex:1; background:#000; color:#fff; border:1px solid #333; border-radius:5px; padding:5px; font-size:11px;">
+                    <button onclick="replyToWish('${w.key}')" style="background:#ffcc00; border:none; border-radius:5px; padding:5px 10px; cursor:pointer;"><i class="fa-solid fa-paper-plane"></i></button>
+                </div>
+            </div>`;
+        });
+        document.getElementById("wishListContainer").innerHTML = html || "<div class='empty'>No wishes yet.</div>";
+    });
+}
+
 function loadPolls() {
-    db.ref("polls").on("value", snap => {
+    // 🟢 DATA SAVER: limitToLast(20) bosiyechhi
+    db.ref("polls").limitToLast(20).on("value", snap => {
         let html = "";
         let now = Date.now();
         let myEmail = localStorage.getItem("loggedUser");
@@ -4675,12 +4627,7 @@ function loadPolls() {
         snap.forEach(child => {
             let id = child.key;
             let p = child.val();
-            
-            // ২৪ ঘণ্টার অটো ক্লিনআপ
-            if (now - p.timestamp > 24 * 60 * 60 * 1000) {
-                db.ref("polls/" + id).remove();
-                return;
-            }
+            if (now - p.timestamp > 24 * 60 * 60 * 1000) { db.ref("polls/" + id).remove(); return; }
 
             let voters = p.voters || {};
             let hasVoted = voters[mySafe] ? true : false;
@@ -4695,8 +4642,7 @@ function loadPolls() {
                 optionsHtml += `
                 <div style="margin-bottom:12px;">
                     <div style="display:flex; justify-content:space-between; font-size:12px; margin-bottom:4px;">
-                        <span style="color:#fff;">${opt}</span>
-                        <span style="color:#00ff88;">${percent}%</span>
+                        <span style="color:#fff;">${opt}</span><span style="color:#00ff88;">${percent}%</span>
                     </div>
                     <div style="height:10px; background:#222; border-radius:10px; overflow:hidden; position:relative;">
                         <div style="width:${percent}%; height:100%; background:linear-gradient(90deg, #00ff88, #00d4ff);"></div>
@@ -4715,6 +4661,7 @@ function loadPolls() {
         document.getElementById("pollListContainer").innerHTML = html || "<div class='empty'>No active polls. Create one!</div>";
     });
 }
+
 
 // পোল ডিলিট করার ফাংশন
 function deletePoll(id) {
@@ -4737,6 +4684,18 @@ function votePoll(pollId, optIdx) {
         db.ref("polls/" + pollId + "/votes/" + optIdx).set(currentVotes + 1);
     });
 }
+
+ // ==========================================
+// 🚀 APP STARTER ENGINE (Eita chhara app khulbe na)
+// ==========================================
+
+// 1. Firebase theke settings, time, r mode load korbe
+loadSettings(); 
+
+// 2. User login aachhe kina check korbe r UI dekhabe
+checkLogin(); 
+
+
 
 
 </script>
