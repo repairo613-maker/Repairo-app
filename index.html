@@ -2307,7 +2307,7 @@ function renderResultsPage() {
     if (user === "admin@gmail.com") {
         // 👑 SUPER ADMIN: Shob dekhte pabe
         [tUsers, tMatches, tTourn, tDep, tWith, tFin, tAva].forEach(t => { if(t) t.style.display = "flex"; });
-        document.getElementById("adminOnlyUpiManager").style.display = "block";
+        
         switchAdminTab('users'); // Default page
     } 
     else if (user === "pay@gmail.com") {
@@ -2826,7 +2826,7 @@ function adminCancelMatch(key) {
 
 
 
- function renderAdminDeposits() {
+function renderAdminDeposits() {
     db.ref("deposit_requests").on("value", snap => {
         let html = ""; let hasReq = false;
         snap.forEach(child => {
@@ -2836,7 +2836,14 @@ function adminCancelMatch(key) {
                 html += `<div class="card" style="margin-bottom:12px; border-left:3px solid #00d4ff;">
                     <div style="font-weight:bold; color:#fff; font-size:14px;">User: ${r.user}</div>
                     <div style="color:#00d4ff; font-weight:bold; margin:5px 0;">Amount: ₹${r.amount}</div>
-                    <div style="color:#aaa; font-size:13px; margin-bottom:10px;">UTR: <span style="color:#fff; user-select:all;">${r.utr}</span></div>
+                    <div style="color:#aaa; font-size:13px; margin-bottom:10px;">Player's UTR: <span id="utrText_${r.id}" style="color:#fff; user-select:all; font-weight:bold; letter-spacing:1px;">${r.utr}</span></div>
+                    
+                    <div style="background:#0a0c10; padding:10px; border-radius:8px; border:1px solid #333; margin-bottom:12px;">
+                        <div style="font-size:11px; color:#888; margin-bottom:5px;">Paste Bank UTR to Verify:</div>
+                        <input type="text" id="verifyUtrBox_${r.id}" onkeyup="checkUtrMatch(${r.id})" placeholder="Paste UTR here..." style="width:100%; padding:8px; background:#000; border:1px dashed #2e7dff; color:#fff; border-radius:5px; box-sizing:border-box;">
+                        <div id="utrStatus_${r.id}" style="font-size:13px; font-weight:bold; margin-top:8px; display:none; text-align:center; padding:5px; border-radius:4px;"></div>
+                    </div>
+
                     <div style="display:flex; gap:10px;">
                         <button onclick="approveDeposit(${r.id}, '${r.user}', ${r.amount})" class="card-btn" style="flex:1; background:linear-gradient(45deg, #00b09b, #96c93d); padding:8px; margin:0;"><i class="fa-solid fa-check"></i> Approve</button>
                         <button onclick="declineDeposit(${r.id}, '${r.user}')" class="card-btn" style="flex:1; background:linear-gradient(45deg, #ff0055, #990000); padding:8px; margin:0;"><i class="fa-solid fa-xmark"></i> Decline</button>
@@ -2846,7 +2853,33 @@ function adminCancelMatch(key) {
         });
         document.getElementById("depositRequestsListContainer").innerHTML = html || "<div class='empty'>No pending deposit requests.</div>";
     });
- }
+}
+
+// UTR Matching Checker Function
+function checkUtrMatch(reqId) {
+    let submittedUtr = document.getElementById("utrText_" + reqId).innerText.trim();
+    let typedUtr = document.getElementById("verifyUtrBox_" + reqId).value.trim();
+    let statusDiv = document.getElementById("utrStatus_" + reqId);
+
+    if(typedUtr === "") {
+        statusDiv.style.display = "none";
+        return;
+    }
+
+    statusDiv.style.display = "block";
+    if(submittedUtr === typedUtr) {
+        statusDiv.innerHTML = "<i class='fa-solid fa-circle-check'></i> MATCHING";
+        statusDiv.style.background = "rgba(0, 255, 0, 0.1)";
+        statusDiv.style.color = "#00ff00";
+        statusDiv.style.border = "1px solid #00ff00";
+    } else {
+        statusDiv.innerHTML = "<i class='fa-solid fa-circle-xmark'></i> NOT MATCH";
+        statusDiv.style.background = "rgba(255, 0, 85, 0.1)";
+        statusDiv.style.color = "#ff0055";
+        statusDiv.style.border = "1px solid #ff0055";
+    }
+}
+
 
  function approveWithdraw(reqId, userEmail) {
     let safeUser = safeKey(userEmail);
@@ -4893,11 +4926,59 @@ function deleteUpiFromSystem(dbKey) {
 // App khullar sathe sathei jate load hoy
 loadUpiDashboard();
 
+// ==========================================
+// 🎵 OFFICIAL APP BGM SYSTEM
+// ==========================================
+let isMuted = true; // Prothome mute thakbe browser rules er jonno
+
+function initMusic() {
+    const bgm = document.getElementById("appBgm");
+    const icon = document.getElementById("musicIcon");
+
+    // ⏳ 1 Second Delay por Play korar cheshta korbe
+    setTimeout(() => {
+        bgm.play().then(() => {
+            // Jodi play hoye jay (browser allow kore)
+            isMuted = false;
+            icon.className = "fa-solid fa-volume-high";
+            console.log("BGM Started!");
+        }).catch(err => {
+            // Browser auto-play block korle (Normal byapar)
+            console.log("Waiting for user interaction to start music...");
+        });
+    }, 1000);
+}
+
+function toggleMusic() {
+    const bgm = document.getElementById("appBgm");
+    const icon = document.getElementById("musicIcon");
+
+    if (bgm.paused) {
+        bgm.play();
+        icon.className = "fa-solid fa-volume-high";
+        isMuted = false;
+    } else {
+        bgm.pause();
+        icon.className = "fa-solid fa-volume-xmark";
+        isMuted = true;
+    }
+}
+
+// App khullay engine start koro
+initMusic();
 
 
 </script>
 
 
+<audio id="appBgm" loop>
+    <source src="fftbgm.mp3" type="audio/mpeg">
+
+</audio>
+
+<div id="musicToggleBtn" onclick="toggleMusic()" style="position: fixed; top: 15px; left: 15px; z-index: 10001; background: rgba(0,0,0,0.6); border: 1px solid #00d4ff; width: 35px; height: 35px; border-radius: 50%; display: flex; justify-content: center; align-items: center; cursor: pointer; color: #00d4ff; box-shadow: 0 0 10px rgba(0,212,255,0.3);">
+    <i id="musicIcon" class="fa-solid fa-volume-xmark"></i>
+</div>
 
 
 </body>
