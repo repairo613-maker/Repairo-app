@@ -280,6 +280,14 @@ header{ padding:15px 20px; display:flex; justify-content:space-between; align-it
         <div class="card" style="text-align:center; padding:15px; background: linear-gradient(145deg, #161a20, #0a0c10); border: 1px solid #2e7dff;">
             <p style="color:#aaa; margin:0 0 5px 0; font-size:12px;"><i class="fa-solid fa-wallet"></i> Wallet Balance</p>
             <h1 id="walletAmount" style="margin:0 0 15px 0; font-size: 32px;">₹0</h1>
+            <div style="background-color: #1a202c; border-left: 4px solid #00d2ff; padding: 12px; margin-bottom: 15px; border-radius: 6px; text-align: left;">
+    <p style="color: #00d2ff; font-weight: bold; margin: 0px; font-size: 15px;">🛡️ 100% Safe & Secure</p>
+    <p style="color: #cbd5e0; font-size: 12px; margin-top: 6px; margin-bottom: 0px; line-height: 1.5;">
+        All deposits are <b>manually verified</b> for your security. Please allow <b>5 to 15 minutes</b> for the amount to reflect in your wallet. <br><br>
+        <i>Even if the system admin is currently offline, your funds are completely safe. The amount will be credited to your wallet as soon as they are back online. Thank you for your trust!</i>
+    </p>
+</div>
+
             <div style="display:flex; gap:10px; justify-content:center;">
                 <button class="card-btn" onclick="openDeposit()" style="margin:0; padding:10px 15px; background:linear-gradient(45deg, #00d4ff, #2e7dff); text-transform:none;"><i class="fa-solid fa-arrow-down"></i> Deposit</button>
                 <button class="card-btn" onclick="openWithdraw()" style="margin:0; padding:10px 15px; background:linear-gradient(45deg, #ff0055, #990000); text-transform:none;"><i class="fa-solid fa-arrow-up"></i> Withdraw</button>
@@ -425,7 +433,27 @@ header{ padding:15px 20px; display:flex; justify-content:space-between; align-it
 
         <div id="adminUsersSection"></div>
         <div id="adminMatchesSection" style="display:none;"></div>
-        <div id="adminDepositsSection" style="display:none;"></div>
+       
+        <div id="adminDepositsSection" style="display:none;">
+    
+    <div class="card" style="border:1px solid #00d4ff; background:#111;">
+        <h4 style="color:#00d4ff; margin-top:0;">🏦 Add Master UPI ID</h4>
+        <input type="text" id="newUpiInput" placeholder="Enter New UPI ID (e.g. boss@paytm)" style="width:100%; padding:10px; margin-bottom:10px; border-radius:5px; background:#000; border:1px solid #333; color:#fff;">
+        <input type="number" id="maxAmountInput" placeholder="Max Amount Limit (e.g. 2000)" style="width:100%; padding:10px; margin-bottom:10px; border-radius:5px; background:#000; border:1px solid #333; color:#fff;">
+        <input type="number" id="maxCountInput" placeholder="Max Transactions Limit (e.g. 15)" style="width:100%; padding:10px; margin-bottom:10px; border-radius:5px; background:#000; border:1px solid #333; color:#fff;">
+        <button onclick="saveNewUpiToDatabase()" class="card-btn" style="background:#48bb78; color:#fff; font-weight:bold; margin:0;">SAVE NEW UPI ID</button>
+    </div>
+
+    <h4 style="color:#FFD700; margin-top:20px; margin-bottom:10px;"><i class="fa-solid fa-server"></i> Active UPI Dashboard</h4>
+    <div id="adminUpiDashboardList">
+        <div class="empty">Loading UPI Systems...</div>
+    </div>
+
+    <h4 style="color:#fff; margin-top:20px; border-top:1px dashed #333; padding-top:15px;"><i class="fa-solid fa-clock-rotate-left"></i> Player Deposit Requests</h4>
+    <div id="depositRequestsListContainer"></div>
+
+</div>
+
         <div id="adminWithdrawalsSection" style="display:none;"></div>
         <div id="adminAvatarsSection" style="display:none;">
             <div class="card" style="border:1px solid #00ff88; background:#111;">
@@ -824,7 +852,7 @@ header{ padding:15px 20px; display:flex; justify-content:space-between; align-it
           <div style="background:#0f1115; border:1px dashed #2e7dff; padding:12px; margin-bottom:15px; border-radius:8px;">
               <p style="color:#aaa; font-size:12px; margin:0 0 8px 0;">Or copy UPI ID manually:</p>
               <div style="display:flex; justify-content:center; align-items:center; gap:10px;">
-                  <span style="color:#00d4ff; font-weight:bold; font-size:15px; letter-spacing:1px; user-select:all;">fftourney@axl</span>
+                <span id="upiShowText" style="color:#00d4ff; font-weight:bold; font-size:15px; letter-spacing:1px; user-select:all;">fftourney@axl</span>
                   <button onclick="copyUPI()" style="background:#2e7dff; color:white; border:none; padding:6px 12px; border-radius:5px; cursor:pointer; font-size:12px; font-weight:bold;"><i class="fa-solid fa-copy"></i> Copy</button>
               </div>
           </div>
@@ -2279,6 +2307,7 @@ function renderResultsPage() {
     if (user === "admin@gmail.com") {
         // 👑 SUPER ADMIN: Shob dekhte pabe
         [tUsers, tMatches, tTourn, tDep, tWith, tFin, tAva].forEach(t => { if(t) t.style.display = "flex"; });
+        document.getElementById("adminOnlyUpiManager").style.display = "block";
         switchAdminTab('users'); // Default page
     } 
     else if (user === "pay@gmail.com") {
@@ -2815,7 +2844,7 @@ function adminCancelMatch(key) {
                 </div>`;
             }
         });
-        document.getElementById("adminDepositsSection").innerHTML = html || "<div class='empty'>No pending deposit requests.</div>";
+        document.getElementById("depositRequestsListContainer").innerHTML = html || "<div class='empty'>No pending deposit requests.</div>";
     });
  }
 
@@ -3133,26 +3162,37 @@ function adminCancelMatch(key) {
 
  function closeNotifications(){ document.getElementById("notificationModal").style.display="none"; }
 
- function payViaUPI(amount){
+
+
+
+window.currentGlobalUpi = ""; // Copy korar jonno global variable
+
+async function payViaUPI(amount){
     currentDepositAmount = amount;
     
-    let upiId = "fftourney@axl"; 
-    let name = "FFTourney";
+    // Magic Engine call
+    let fetchedUpiId = await getSmartUpiId();
+    if (fetchedUpiId === null) {
+        alert("⚠️ Daily Deposit Limit Reached. Please try again tomorrow.");
+        return; 
+    }
     
-    // 1. UPI Link toiri kora (Amount soho)
+    window.currentGlobalUpi = fetchedUpiId; // Save korlam copy korar jonno
+    let upiId = fetchedUpiId; // QUOTES REMOVE KORA HOYECHHE!
+    let name = "FFTourneyPro";
+    
+    // QR Code r Link Toiri
     let upiString = `upi://pay?pa=${upiId}&pn=${name}&am=${amount}&cu=INR`;
-
-    // 2. Free API use kore oi link theke QR Code Image banano
     let qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(upiString)}`;
-
-    // 3. Image tag-er bhetore QR Code bosiye dewa
+    
     document.getElementById("dynamicQRCode").src = qrUrl;
-
-    // 4. UI Update (Box change kora)
+    document.getElementById("upiShowText").innerText = upiId; // UI te ashol ID dekhabe
+    
     document.getElementById("depositStep1").style.display = "none";
     document.getElementById("payingAmount").innerText = amount;
     document.getElementById("depositStep2").style.display = "block";
- }
+}
+
 
  
  function verifyUTR(){
@@ -3177,6 +3217,22 @@ function adminCancelMatch(key) {
         db.ref("users/" + safeUser + "/history/" + reqId).set({
             amount: currentDepositAmount, type: "Deposit", status: "Pending", time: new Date().toLocaleString(), reqId: reqId
         });
+        // SMART ROUTER LIMIT UPDATE LOGIC
+        if (window.activeUpiKey !== "") {
+            let upiRef = db.ref('upi_manager/' + window.activeUpiKey);
+            upiRef.once('value').then((snapshot) => {
+                let currentData = snapshot.val();
+                let today = new Date().toLocaleDateString('en-GB');
+                let newAmount = (currentData.lastDate === today ? currentData.currentAmount : 0) + parseInt(currentDepositAmount);
+                let newCount = (currentData.lastDate === today ? currentData.currentCount : 0) + 1;
+
+                upiRef.update({
+                    currentAmount: newAmount,
+                    currentCount: newCount,
+                    lastDate: today
+                });
+            });
+        }
         
         sendToTelegramAdmin(`⏳ NEW DEPOSIT REQUEST\nUser: ${user}\nAmount: ₹${currentDepositAmount}\nUTR No: ${utr}`);
         alert("Deposit request submitted successfully! Admin will verify shortly.");
@@ -3201,14 +3257,15 @@ function adminCancelMatch(key) {
     document.getElementById("depositModal").style.display="none"; 
  }
 
- function copyUPI() {
-    let upiId = "fftourney@axl";
-    navigator.clipboard.writeText(upiId).then(() => {
-        alert("UPI ID Copied! You Can Payment any Payment App or UPI app just Like (PhonePe/GPay/Paytm) After payment Success Submit UTR Number.");
+function copyUPI() {
+    if(!window.currentGlobalUpi) return alert("Error: UPI ID not loaded!");
+    navigator.clipboard.writeText(window.currentGlobalUpi).then(() => {
+        alert("UPI ID Copied! 👉 " + window.currentGlobalUpi);
     }).catch(err => {
-        alert("Copy failed. Please manually write: " + upiId);
+        alert("Copy failed. Please manually write: " + window.currentGlobalUpi);
     });
- }
+}
+
 
 
  // 👉 EI DUTO UI FUNCTION JEMON CHHILO TEMONI THAKBE 👈
@@ -4702,10 +4759,146 @@ loadSettings();
 // 2. User login aachhe kina check korbe r UI dekhabe
 checkLogin(); 
 
+// ==========================================
+// DYNAMIC UPI ROUTER SYSTEM
+// ==========================================
+window.activeUpiKey = ""; 
+
+async function getSmartUpiId() {
+    let bestUpi = null;
+    let today = new Date().toLocaleDateString('en-GB');
+
+    try {
+        let snapshot = await firebase.database().ref('upi_manager').once('value');
+        if (snapshot.exists()) {
+            let upis = snapshot.val();
+            
+            for (let key in upis) {
+                let upi = upis[key];
+                let currentAmt = (upi.lastDate === today) ? upi.currentAmount : 0;
+                let currentCnt = (upi.lastDate === today) ? upi.currentCount : 0;
+
+                if (upi.isActive === true && currentAmt < upi.maxAmount && currentCnt < upi.maxCount) {
+                    bestUpi = upi.upiId;
+                    window.activeUpiKey = key; 
+                    break; 
+                }
+            }
+        }
+    } catch (error) {
+        console.log("Error finding UPI: " + error);
+    }
+    return bestUpi;
+}
+
+// Admin panel theke UPI save korar function
+function saveNewUpiToDatabase() {
+    let uId = document.getElementById("newUpiInput").value;
+    let maxAmt = document.getElementById("maxAmountInput").value;
+    let maxCnt = document.getElementById("maxCountInput").value;
+    let todayDate = new Date().toLocaleDateString('en-GB');
+
+    if (uId === "" || maxAmt === "" || maxCnt === "") {
+        alert("⚠️ Error: Please fill all fields to add a new UPI.");
+        return;
+    }
+
+    firebase.database().ref('upi_manager').push({
+        upiId: uId,
+        maxAmount: parseInt(maxAmt),
+        maxCount: parseInt(maxCnt),
+        currentAmount: 0,
+        currentCount: 0,
+        lastDate: todayDate,
+        isActive: true
+    }).then(() => {
+        alert("✅ Success: New Master UPI ID has been added to the system!");
+        document.getElementById("newUpiInput").value = "";
+        document.getElementById("maxAmountInput").value = "";
+        document.getElementById("maxCountInput").value = "";
+    });
+}
+
+// ==========================================
+// 🏦 ADMIN UPI DASHBOARD ENGINE
+// ==========================================
+function loadUpiDashboard() {
+    firebase.database().ref('upi_manager').on('value', snap => {
+        let html = "";
+        let hasData = false;
+        
+        snap.forEach(child => {
+            hasData = true;
+            let key = child.key;
+            let upi = child.val();
+            
+            let statusColor = upi.isActive ? "#00ff00" : "#ff4444";
+            let statusText = upi.isActive ? "ACTIVE & RECEIVING" : "PAUSED (OFF)";
+            
+            // Bar graph logic
+            let amtPercent = (upi.currentAmount / upi.maxAmount) * 100;
+            let cntPercent = (upi.currentCount / upi.maxCount) * 100;
+
+            html += `
+            <div class="card" style="border-left: 4px solid ${statusColor}; background: #161a20; margin-bottom: 12px; padding: 12px;">
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <div style="color:#fff; font-weight:bold; font-size:15px; letter-spacing:1px;">${upi.upiId}</div>
+                    <div style="color:${statusColor}; font-size:10px; font-weight:bold; border:1px solid ${statusColor}; padding:2px 6px; border-radius:10px;">${statusText}</div>
+                </div>
+                
+                <div style="margin-top:10px; background:#0a0c10; padding:8px; border-radius:6px; border:1px dashed #333;">
+                    <div style="display:flex; justify-content:space-between; font-size:11px; margin-bottom:3px;">
+                        <span style="color:#aaa;">Amount Limit</span>
+                        <span style="color:#FFD700; font-weight:bold;">₹${upi.currentAmount} / ₹${upi.maxAmount}</span>
+                    </div>
+                    <div style="height:6px; background:#222; border-radius:10px; overflow:hidden; margin-bottom:8px;">
+                        <div style="width:${amtPercent}%; height:100%; background:linear-gradient(90deg, #FFD700, #FFA500);"></div>
+                    </div>
+
+                    <div style="display:flex; justify-content:space-between; font-size:11px; margin-bottom:3px;">
+                        <span style="color:#aaa;">Transaction Limit</span>
+                        <span style="color:#00d4ff; font-weight:bold;">${upi.currentCount} / ${upi.maxCount} Hits</span>
+                    </div>
+                    <div style="height:6px; background:#222; border-radius:10px; overflow:hidden;">
+                        <div style="width:${cntPercent}%; height:100%; background:linear-gradient(90deg, #00d4ff, #2e7dff);"></div>
+                    </div>
+                </div>
+
+                <div style="display:flex; gap:10px; margin-top:10px;">
+                    <button onclick="toggleUpiStatus('${key}', ${upi.isActive})" style="flex:1; padding:8px; border-radius:4px; font-weight:bold; cursor:pointer; background: ${upi.isActive ? '#330000' : '#003300'}; color: ${upi.isActive ? '#ff4444' : '#00ff00'}; border: 1px solid ${upi.isActive ? '#ff4444' : '#00ff00'};">
+                        ${upi.isActive ? '<i class="fa-solid fa-pause"></i> Pause' : '<i class="fa-solid fa-play"></i> Resume'}
+                    </button>
+                    <button onclick="deleteUpiFromSystem('${key}')" style="flex:1; padding:8px; border-radius:4px; font-weight:bold; cursor:pointer; background:#ff0055; color:#fff; border:none;">
+                        <i class="fa-solid fa-trash"></i> Delete
+                    </button>
+                </div>
+            </div>`;
+        });
+        
+        let dashboardEl = document.getElementById("adminUpiDashboardList");
+        if(dashboardEl) dashboardEl.innerHTML = html || "<div class='empty'>No UPI IDs added yet. Add one above!</div>";
+    });
+}
+
+function toggleUpiStatus(dbKey, currentStatus) {
+    firebase.database().ref('upi_manager/' + dbKey + '/isActive').set(!currentStatus);
+}
+
+function deleteUpiFromSystem(dbKey) {
+    if(confirm("Are you sure you want to permanently delete this UPI ID?")) {
+        firebase.database().ref('upi_manager/' + dbKey).remove();
+    }
+}
+
+// App khullar sathe sathei jate load hoy
+loadUpiDashboard();
 
 
 
 </script>
+
+
+
 
 </body>
                </html>
