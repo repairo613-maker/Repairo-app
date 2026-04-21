@@ -146,7 +146,7 @@ header{ padding:15px 20px; display:flex; justify-content:space-between; align-it
         <div style="margin: 15px; padding: 15px; background: linear-gradient(135deg, #0055ff, #00d4ff); border-radius: 12px; text-align: center; box-shadow: 0 4px 15px rgba(0, 212, 255, 0.3);">
             <h3 style="margin: 0 0 8px 0; color: #fff; font-size: 16px;"><i class="fa-brands fa-android"></i> Download Official App</h3>
             <p style="margin: 0 0 12px 0; color: #e0f7fa; font-size: 12px;">Get the best gaming experience on your phone!</p>
-            <a href="fftourney.apk" download style="text-decoration: none;">
+            <a href="FFTourney.apk" download style="text-decoration: none;">
                 <button style="background: #0f1115; color: #00d4ff; border: 1px solid #00d4ff; padding: 10px 20px; border-radius: 8px; font-weight: bold; cursor: pointer; width: 100%; font-size: 14px;"><i class="fa-solid fa-download"></i> Download APK </button>
             </a>
         </div>
@@ -3719,7 +3719,12 @@ checkLogin();
     let msg = `🔥 Play Free Fire Tournaments & Win Real Cash! 💸\n\nUse my Referral Code: *${myCode}* to get instant rewards!\n\nDownload the App Now: ${appLink}`;
     
     let whatsappUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(msg)}`;
+    if (typeof window.AppInventor !== "undefined") {
+    window.AppInventor.setWebViewString(whatsappUrl);
+} else {
     window.open(whatsappUrl, '_blank');
+}
+
  }
  // ==========================================
  // 📊 PLAYER STATS & RANK LOGIC
@@ -5060,6 +5065,30 @@ db.ref("settings/rules").on("value", snap => {
 });
 
 
+ // ==========================================
+// 🌉 EXTERNAL APP BRIDGE (For Kodular)
+// Telegram, WhatsApp, YouTube, UPI shob ashol App e khulbe!
+// ==========================================
+document.addEventListener('click', function(e) {
+    let link = e.target.closest('a');
+    if (link && link.href) {
+        let url = link.href;
+        // Jodi link e ei nam gulo thake...
+        if (url.includes("t.me") || url.includes("whatsapp") || url.includes("youtube") || url.includes("instagram") || url.startsWith("upi://")) {
+            e.preventDefault(); // Normal khola bondho koro
+            
+            // Kodular ke signal pathao
+            if (typeof window.AppInventor !== "undefined") {
+                window.AppInventor.setWebViewString(url); 
+            } else {
+                window.open(url, '_blank'); // Browser er jonno backup
+            }
+        }
+    }
+});
+
+
+
 </script>
 
 
@@ -5071,6 +5100,11 @@ db.ref("settings/rules").on("value", snap => {
 <div id="musicToggleBtn" onclick="toggleMusic()" style="position: fixed; top: 15px; left: 15px; z-index: 10001; background: rgba(0,0,0,0.6); border: 1px solid #00d4ff; width: 35px; height: 35px; border-radius: 50%; display: flex; justify-content: center; align-items: center; cursor: pointer; color: #00d4ff; box-shadow: 0 0 10px rgba(0,212,255,0.3);">
     <i id="musicIcon" class="fa-solid fa-volume-xmark"></i>
 </div>
+
+
+
+
+
 
 
 </body>
