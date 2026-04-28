@@ -96,7 +96,200 @@ header{ padding:15px 20px; display:flex; justify-content:space-between; align-it
 .social-link-btn { display: none; align-items: center; justify-content: center; width: 35px; height: 35px; border-radius: 50%; color: #fff; text-decoration: none; font-size: 18px; transition: 0.3s; }
 .social-link-btn.insta { background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); }
 .social-link-btn.fb { background: #1877F2; }
-.fft-id-badge { background: #111; border: 1px dashed #00d4ff; color: #00d4ff; padding: 5px 15px; border-radius: 20px; font-weight: 900; letter-spacing: 2px; font-size: 14px; margin: 10px 0; display: inline-block; }
+.fft-id-badge { background: #111; border: 1px dashed #00d4ff; color: #00d4ff; padding: 5px 15px; border-radius: 20px; font-weight: 900; letter-spacing: 2px; font-size: 14px; margin: 10px 0; display: inline-block; }/* 🔥 PREMIUM TOURNAMENT DESIGN 🔥 */
+/* ⭐ FEATURED/PREMIUM MATCH DESIGN ⭐ */
+.featured-match-card {
+    background: linear-gradient(160deg, #1a140a, #0a0c10); /* Gold-Black Tint */
+    border-radius: 14px;
+    padding: 18px;
+    margin-bottom: 20px;
+    border: 2px solid #ffcc00; /* Gold Border */
+    box-shadow: 0 0 20px rgba(255, 204, 0, 0.15), inset 0 0 10px rgba(255, 204, 0, 0.05);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Animated Glow Line for Premium */
+.featured-match-card::before {
+    content: '';
+    position: absolute;
+    top: -50%; left: -50%; width: 200%; height: 200%;
+    background: conic-gradient(transparent, transparent, transparent, #ffcc00);
+    animation: rotateGlow 4s linear infinite;
+    z-index: 0; opacity: 0.2;
+}
+
+@keyframes rotateGlow { 100% { transform: rotate(360deg); } }
+
+.featured-match-card > * { position: relative; z-index: 1; }
+
+.premium-label {
+    background: #ffcc00; color: #000;
+    font-size: 10px; font-weight: 900;
+    padding: 3px 10px; border-radius: 4px;
+    text-transform: uppercase; letter-spacing: 1px;
+}
+
+
+
+/* ========================================= */
+/* 🎮 NORMAL MATCHES - ESPORTS GAMING VIBE 🎮 */
+/* ========================================= */
+.esports-match-card {
+    background: linear-gradient(160deg, #121722, #0a0c10);
+    border-radius: 14px;
+    padding: 18px;
+    margin-bottom: 20px;
+    border: 1px solid #1f2a3c;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6), inset 0 0 0 1px rgba(0, 212, 255, 0.05);
+    position: relative;
+    transition: all 0.3s ease;
+}
+.esports-match-card:hover {
+    border-color: #00d4ff;
+    box-shadow: 0 10px 30px rgba(0, 212, 255, 0.15), inset 0 0 15px rgba(0, 212, 255, 0.08);
+    transform: translateY(-3px);
+}
+.esports-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 18px;
+}
+.esports-title {
+    font-size: 18px;
+    font-weight: 900;
+    color: #fff;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+}
+/* Gaming Skewed Badge */
+.esports-prize-badge {
+    background: linear-gradient(90deg, #ff6a00, #ff0055);
+    color: #fff;
+    padding: 6px 14px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 900;
+    box-shadow: 0 4px 15px rgba(255, 0, 85, 0.4);
+    transform: skewX(-12deg); 
+}
+.esports-prize-badge span {
+    display: inline-block;
+    transform: skewX(12deg); /* text ke shoja rakhar jonno */
+    letter-spacing: 0.5px;
+}
+/* 3-Column Info Grid */
+.esports-details-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-bottom: 18px;
+}
+.esports-detail-box {
+    background: rgba(20, 26, 36, 0.7);
+    border: 1px solid rgba(46, 125, 255, 0.2);
+    border-radius: 8px;
+    padding: 10px 5px;
+    text-align: center;
+}
+.esports-detail-label {
+    font-size: 10px;
+    color: #8892b0;
+    text-transform: uppercase;
+    font-weight: bold;
+    letter-spacing: 0.5px;
+    margin-bottom: 4px;
+}
+.esports-detail-value {
+    font-size: 14px;
+    font-weight: 900;
+    color: #fff;
+}
+.esports-detail-value.highlight-blue { color: #00d4ff; text-shadow: 0 0 8px rgba(0, 212, 255, 0.4); }
+.esports-detail-value.highlight-yellow { color: #ffcc00; text-shadow: 0 0 8px rgba(255, 204, 0, 0.4); }
+
+.esports-btn {
+    width: 100%;
+    padding: 14px;
+    background: linear-gradient(90deg, #0055ff, #00d4ff);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: 0.3s;
+    box-shadow: 0 4px 15px rgba(0, 212, 255, 0.3);
+}
+.esports-btn:disabled {
+    background: #1c222b;
+    color: #555;
+    box-shadow: none;
+    border: 1px solid #333;
+    cursor: not-allowed;
+}
+.esports-btn:not(:disabled):hover {
+    box-shadow: 0 6px 20px rgba(0, 212, 255, 0.6);
+    transform: scale(1.02);
+}
+
+/* ========================================= */
+/* 🎮 MY MATCHES PAGE - ESPORTS DETAILS 🎮 */
+/* ========================================= */
+.my-match-card {
+    background: linear-gradient(160deg, #161a20, #0a0c10);
+    border-radius: 12px;
+    padding: 18px;
+    margin-bottom: 18px;
+    border: 1px solid #232730;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+    position: relative;
+    overflow: hidden;
+}
+.my-match-card.normal { border-left: 4px solid #00d4ff; }
+.my-match-card.premium { border-left: 4px solid #ffcc00; background: linear-gradient(160deg, #1a140a, #0a0c10); }
+
+.my-match-badge {
+    position: absolute; top: 0; right: 0;
+    padding: 4px 15px;
+    font-size: 10px; font-weight: 900;
+    border-bottom-left-radius: 12px;
+    text-transform: uppercase; letter-spacing: 1px;
+}
+.my-match-badge.normal { background: #00d4ff; color: #000; box-shadow: -2px 2px 10px rgba(0, 212, 255, 0.3); }
+.my-match-badge.premium { background: #ffcc00; color: #000; box-shadow: -2px 2px 10px rgba(255, 204, 0, 0.3); }
+
+/* Room ID & Pass Display Box */
+.room-box {
+    background: rgba(0,0,0,0.6);
+    border: 1px dashed #333;
+    border-radius: 8px;
+    padding: 12px;
+    margin-top: 15px;
+    position: relative;
+}
+.room-box.normal { border-color: rgba(0, 212, 255, 0.3); }
+.room-box.premium { border-color: rgba(255, 204, 0, 0.4); background: rgba(255,204,0,0.05); }
+
+.copy-btn-esports {
+    background: #1c222b; border: 1px solid #333; color: #aaa;
+    padding: 6px 12px; border-radius: 6px; font-size: 11px;
+    font-weight: bold; cursor: pointer; transition: 0.2s;
+    display: flex; align-items: center; gap: 5px;
+    text-transform: uppercase;
+}
+.copy-btn-esports:hover, .copy-btn-esports:active { 
+    background: #2e7dff; border-color: #00d4ff; color:#fff; 
+    box-shadow: 0 0 10px rgba(0,212,255,0.5);
+}
+
 
 
 </style>
@@ -174,6 +367,7 @@ header{ padding:15px 20px; display:flex; justify-content:space-between; align-it
                 </div>
             </div>
         </div>
+
 
         <div class="tabs" id="amountTabs"></div>
         <div class="tabs" id="modeTabs"></div>
@@ -434,7 +628,39 @@ header{ padding:15px 20px; display:flex; justify-content:space-between; align-it
         </div>
 
         <div id="adminUsersSection"></div>
-        <div id="adminMatchesSection" style="display:none;"></div>
+        <div id="adminMatchesSection" style="display:none;">
+    <div class="card" style="border:2px solid #ffcc00; background: linear-gradient(145deg, #1a1a1a, #000); margin-bottom: 20px;">
+        <h4 style="color:#ffcc00; margin-top:0;"><i class="fa-solid fa-crown"></i> Create Custom Tournament</h4>
+        
+        <input type="text" id="custMatchTitle" placeholder="Match Title (Ex: Mega Sunday Free Pool)" style="width:100%; padding:10px; margin-bottom:10px; border-radius:5px; background:#111; color:#fff; border:1px solid #333; box-sizing: border-box;">
+        
+        <div style="display:flex; gap:10px; margin-bottom:10px;">
+            <input type="number" id="custMatchEntry" placeholder="Entry ₹ (0 for Free)" style="flex:1; padding:10px; border-radius:5px; background:#111; color:#fff; border:1px solid #333; box-sizing: border-box;">
+            <input type="number" id="custMatchPrize" placeholder="Win Prize ₹" style="flex:1; padding:10px; border-radius:5px; background:#111; color:#fff; border:1px solid #333; box-sizing: border-box;">
+        </div>
+        
+        <div style="display:flex; gap:10px; margin-bottom:10px;">
+            <input type="text" id="custMatchMode" placeholder="Mode (Ex: Full Map Squad)" style="flex:1; padding:10px; border-radius:5px; background:#111; color:#fff; border:1px solid #333; box-sizing: border-box;">
+            <input type="number" id="custMatchSlots" placeholder="Total Slots (Ex: 48)" style="flex:1; padding:10px; border-radius:5px; background:#111; color:#fff; border:1px solid #333; box-sizing: border-box;">
+        </div>
+        
+        <div style="margin-bottom:10px;">
+            <p style="color:#aaa; font-size:11px; margin:0 0 5px 0;">Select Date & Time (Match automatic vanish hobe ei timer por):</p>
+            <input type="datetime-local" id="custMatchTime" style="width:100%; padding:10px; border-radius:5px; background:#111; color:#fff; border:1px solid #333; color-scheme: dark; box-sizing: border-box;">
+        </div>
+        
+        <button onclick="adminCreateCustomMatch()" class="card-btn" style="background:linear-gradient(45deg, #FFD700, #FFA500); color:#000; font-weight:bold; margin:0; box-shadow: 0 0 15px rgba(255, 204, 0, 0.4);">🚀 PUBLISH TOURNAMENT</button>
+    </div>
+
+    <h4 style="color:#ffcc00;"><i class="fa-solid fa-star"></i> Live Custom Matches</h4>
+    <div id="adminPremiumMatchesList"></div>
+    
+    <hr style="border-color:#333; margin:20px 0;">
+    
+    <h4 style="color:#00d4ff;"><i class="fa-solid fa-gamepad"></i> Live Normal Matches</h4>
+    <div id="adminNormalMatchesList"></div>
+</div>
+
        
         <div id="adminDepositsSection" style="display:none;">
     
@@ -1075,7 +1301,7 @@ header{ padding:15px 20px; display:flex; justify-content:space-between; align-it
     {key:"4v4_hs", label:"4v4 CS Headshot", slots:8, type:"Squad"}
  ];
  
- 
+let activeAmount = "featured";
  // =================================================
  // ==========================================
  // 📱 UI TOGGLE FUNCTION (For Compact Account Page)
@@ -1126,8 +1352,8 @@ header{ padding:15px 20px; display:flex; justify-content:space-between; align-it
  }
 
 
- let activeAmount=10;
  let activeMode="1v1_cs";
+
 
 
  function saveTimeSettings(){
@@ -1474,16 +1700,18 @@ function showSignup(){
  }
 
 
- function createAmountTabs(){
-    let html=""; 
-    entryAmounts.forEach(a=>{ 
-        // Admin jodi amount OFF kore rakhe, tobe dekhabe na
+function createAmountTabs(){
+    // Prothome "Special" tab-ta toiri korlam
+    let html = `<div class="tab ${activeAmount === 'featured' ? 'active' : ''}" onclick="selectAmount('featured')"><i class="fa-solid fa-star" style="color:#ffcc00;"></i> Special</div>`; 
+    
+    entryAmounts.forEach(a => { 
         if(!tournamentSettings.hiddenAmounts[a]){
-            html+=`<div class="tab ${a==activeAmount?'active':''}" onclick="selectAmount(${a})">₹${a}</div>`; 
+            html += `<div class="tab ${a == activeAmount ? 'active' : ''}" onclick="selectAmount(${a})">₹${a}</div>`; 
         }
     });
-    document.getElementById("amountTabs").innerHTML=html;
- }
+    document.getElementById("amountTabs").innerHTML = html;
+}
+
 
 
 
@@ -1531,46 +1759,92 @@ function showSignup(){
     h = h % 12; h = h ? h : 12; return (h<10?"0"+h:h)+":"+ (m<10?"0"+m:m) + " " + ampm;
  }
 
- function renderApp() {
+function renderApp() {
+    let appContainer = document.getElementById("app");
+    
+    // Jodi User "Special" Tab-e thake
+    if(activeAmount === "featured") {
+        document.getElementById("modeTabs").style.display = "none"; // Premium-e mode tab dorkar nei
+        renderPremiumMatchesUI();
+        return;
+    }
+
+    // Normal Match Logic (Jemon chhilo)
+    document.getElementById("modeTabs").style.display = "flex";
     let slots = getUpcomingSlots();
     if(slots.length == 0) return document.getElementById("app").innerHTML="<div class='empty'>No Upcoming Matches</div>";
     
     let html = "";
     let modeObj = modes.find(m => m.key == activeMode);
 
-    // Prothome shob match er loading box toiri korlam
+    // Ebar notun design-er loading box
     slots.forEach(time => {
         let key = activeAmount + "_" + activeMode + "_" + time;
-        html += `<div class="card" id="matchCard_${key}" style="text-align:center; padding:30px;"><i class="fa-solid fa-spinner fa-spin" style="font-size:24px; color:#2e7dff;"></i></div>`;
+        html += `<div class="esports-match-card" id="matchCard_${key}" style="text-align:center; padding:40px;"><i class="fa-solid fa-circle-notch fa-spin" style="font-size:30px; color:#00d4ff;"></i></div>`;
     });
     document.getElementById("app").innerHTML = html;
 
-    // Ebar Firebase theke Live data ene box gulote bosiye debo
+    // Firebase theke live data ene notun E-Sports design-e bosiye debo
     slots.forEach(time => {
         let key = activeAmount + "_" + activeMode + "_" + time;
-        let prize = Math.floor(activeAmount * 1.7);
+        let prize = Math.floor(activeAmount * 1.7); // Tumi 1.7 gun prize diyechhile (10 -> 17)
 
         db.ref("matches/" + key + "/players").on("value", (snap) => {
-            let playersCount = snap.numChildren(); // Kotojon join koreche
+            let playersCount = snap.numChildren();
             let percent = (playersCount / modeObj.slots) * 100;
             
             let btnDisabled = playersCount >= modeObj.slots ? 'disabled' : '';
-            let btnText = playersCount >= modeObj.slots ? 'SLOTS FULL' : 'JOIN NOW <i class="fa-solid fa-rocket" style="margin-left:8px;"></i>';
+            let btnText = playersCount >= modeObj.slots ? 'MATCH FULL' : 'JOIN BATTLE <i class="fa-solid fa-crosshairs" style="margin-left:8px;"></i>';
 
             let cardHtml = `
-                <div class="card-header"><span class="card-title">${modeObj.label}</span><span class="prize-tag"><i class="fa-solid fa-trophy"></i> Win ₹${prize}</span></div>
-                <div class="card-details-row"><div class="detail-item"><i class="fa-solid fa-ticket" style="color:#2e7dff"></i> Entry: <span class="entry-fee-highlight">₹${activeAmount}</span></div><div class="detail-item"><i class="fa-regular fa-clock"></i> ${formatTime(time)}</div></div>
-                <div class="progress-container"><div class="progress-info"><span>Joined: ${playersCount}/${modeObj.slots}</span><span>Type: ${modeObj.type}</span></div><div class="progress"><div class="progress-bar" style="width:${percent}%"></div></div></div>
-                <button class="card-btn" onclick="joinMatch('${key}',${modeObj.slots})" ${btnDisabled}>${btnText}</button>
+                <div class="esports-header">
+                    <div class="esports-title">
+                        <i class="fa-solid fa-gamepad" style="color:#00d4ff;"></i> ${modeObj.label}
+                    </div>
+                    <div class="esports-prize-badge">
+                        <span><i class="fa-solid fa-trophy"></i> WIN ₹${prize}</span>
+                    </div>
+                </div>
+                
+                <div class="esports-details-grid">
+                    <div class="esports-detail-box">
+                        <div class="esports-detail-label">Entry Fee</div>
+                        <div class="esports-detail-value highlight-blue">₹${activeAmount}</div>
+                    </div>
+                    <div class="esports-detail-box">
+                        <div class="esports-detail-label">Format</div>
+                        <div class="esports-detail-value">${modeObj.type}</div>
+                    </div>
+                    <div class="esports-detail-box">
+                        <div class="esports-detail-label">Start Time</div>
+                        <div class="esports-detail-value highlight-yellow">${formatTime(time)}</div>
+                    </div>
+                </div>
+                
+                <div class="progress-container" style="margin-bottom:18px;">
+                    <div class="progress-info" style="color:#aaa; font-weight:bold; font-size:12px;">
+                        <span><i class="fa-solid fa-users" style="color:#555; margin-right:4px;"></i> Players Joined</span>
+                        <span style="color:#fff;">${playersCount} / ${modeObj.slots}</span>
+                    </div>
+                    <div class="progress" style="background:#131822; height:10px; border-radius:10px; border:1px solid #1f2a3c;">
+                        <div class="progress-bar" style="width:${percent}%; background:linear-gradient(90deg, #00d4ff, #00ff88); box-shadow:0 0 10px rgba(0, 255, 136, 0.4);"></div>
+                    </div>
+                </div>
+                
+                <button class="esports-btn" onclick="joinMatch('${key}',${modeObj.slots})" ${btnDisabled}>${btnText}</button>
             `;
             
             let cardEl = document.getElementById("matchCard_" + key);
-            if(cardEl) cardEl.innerHTML = cardHtml;
-            // CSS fix korar jonno style remove kora
-            if(cardEl) { cardEl.style.textAlign = "left"; cardEl.style.padding = "16px"; }
+            if(cardEl) { 
+                cardEl.innerHTML = cardHtml;
+                // Clean up inline styles that were set during loading
+                cardEl.style.textAlign = "left"; 
+                cardEl.style.padding = "18px"; 
+            }
         });
     });
- }
+}
+
 
 function joinMatch(key, slots) {
     let user = localStorage.getItem("loggedUser");
@@ -1634,51 +1908,140 @@ function joinMatch(key, slots) {
 
  }
 
-
 function renderJoiningPage(){
     let userEmail = localStorage.getItem("loggedUser");
     if(!userEmail) return;
 
-    document.getElementById("joiningList").innerHTML = "<div class='empty'><i class='fa-solid fa-spinner fa-spin'></i> Loading Matches...</div>";
+    let container = document.getElementById("joiningList");
+    container.innerHTML = "<div class='empty'><i class='fa-solid fa-spinner fa-spin' style='font-size:24px; color:#00d4ff;'></i><br><br>Syncing Your Battles...</div>";
 
-    // 🔥 DATA SAVER: Changed .on to .once
+    let html = `
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+            <div style="font-size:12px; color:#aaa; font-weight:bold;"><i class="fa-solid fa-crosshairs" style="color:#00d4ff;"></i> Active Deployments</div>
+            <button onclick="renderJoiningPage()" class="card-btn" style="width:auto; padding:8px 15px; font-size:11px; background:linear-gradient(45deg, #00d4ff, #0055ff); color:#fff; margin:0; box-shadow:0 4px 15px rgba(0,212,255,0.4); text-transform:uppercase;"><i class="fa-solid fa-rotate-right"></i> Refresh Room</button>
+        </div>`; 
+    let hasMatches = false;
+
+    // 1. Fetch Normal Matches
     db.ref("matches").once("value", snap => {
-        // Notun: Room ID check korar Refresh Button
-        let html = `
-            <div style="text-align:right; margin-bottom:10px;">
-                <button onclick="renderJoiningPage()" class="card-btn" style="width:auto; padding:6px 12px; font-size:11px; background:#00d4ff; color:#000; margin:0; box-shadow:0 0 10px rgba(0,212,255,0.4);"><i class="fa-solid fa-rotate-right"></i> Refresh Room ID</button>
-            </div>`; 
-        let hasMatches = false;
-
         snap.forEach(childSnap => {
             let key = childSnap.key;
             let matchData = childSnap.val();
             let players = matchData.players ? Object.values(matchData.players) : [];
             let myEntry = players.find(p => p.email === userEmail);
-
+            
             if(myEntry) {
                 hasMatches = true;
-                let roomData = matchData.room || {};
-                let roomHtml = (roomData.id) ? 
-                    `<div style="margin-top:10px; padding:10px; background:#111; border-radius:8px; border:1px solid #00d4ff;">
-                        <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px dashed #333; padding-bottom:5px; margin-bottom:5px;">
-                            <div style="color:#00d4ff; font-weight:bold; font-size:14px;">Room ID: <span style="color:#fff;">${roomData.id}</span></div>
-                            <button onclick="copyText('${roomData.id}', 'Room ID')" style="background:#2e7dff; color:#fff; border:none; padding:4px 10px; border-radius:4px; font-size:11px; cursor:pointer; font-weight:bold;"><i class="fa-solid fa-copy"></i> Copy</button>
-                        </div>
-                        <div style="display:flex; justify-content:space-between; align-items:center;">
-                            <div style="color:#ffcc00; font-weight:bold; font-size:14px;">Pass: <span style="color:#fff;">${roomData.pass}</span></div>
-                            <button onclick="copyText('${roomData.pass}', 'Password')" style="background:#ffcc00; color:#000; border:none; padding:4px 10px; border-radius:4px; font-size:11px; font-weight:bold; cursor:pointer;"><i class="fa-solid fa-copy"></i> Copy</button>
-                        </div>
-                    </div>` : 
-                    `<div style="font-size:12px; color:#aaa; margin-top:5px;">Room ID/Pass will be shared here 10-15 mins before start. (Click Refresh to check)</div>`;
+                
+                // 🛠️ BUG FIXED: Exact Mode Name Extraction Logic
+                let timeParts = key.split("_"); 
+                let entryFee = parseInt(timeParts[0]);
+                let matchTime = parseInt(timeParts[timeParts.length - 1]);
+                let winPrize = Math.floor(entryFee * 1.7);
+                
+                // Majhkhaner puro ongsho tuku ber kora hochhe (jemon: 1v1_cs ba 4v4_hs)
+                let modeKey = key.substring(key.indexOf("_") + 1, key.lastIndexOf("_"));
+                // Settings er asol label er sathe melano hochhe
+                let modeObj = modes.find(m => m.key === modeKey);
+                let modeStr = modeObj ? modeObj.label : modeKey.toUpperCase().replace(/_/g, ' ');
 
-                html += `<div class="card"><div class="card-title" style="color:#2e7dff">Upcoming Match</div><div class="card-time">Time: ${formatTime(myEntry.joinedTime)}</div>${roomHtml}</div>`;
+                let matchTimeStr = formatTime(matchTime);
+
+                let roomHtml = buildRoomHtml(matchData.room || {}, 'normal');
+                
+                html += `
+                <div class="my-match-card normal">
+                    <div class="my-match-badge normal">NORMAL MATCH</div>
+                    <div style="font-size:18px; font-weight:900; color:#fff; margin-bottom:6px; letter-spacing:1px; text-shadow:0 0 5px rgba(255,255,255,0.2);">${modeStr}</div>
+                    
+                    <div style="display:flex; flex-wrap:wrap; gap:10px; font-size:11px; color:#888; font-weight:bold; margin-bottom:5px;">
+                        <span style="background:#111; padding:4px 8px; border-radius:4px; border:1px solid #222;"><i class="fa-regular fa-clock" style="color:#00d4ff;"></i> ${matchTimeStr}</span>
+                        <span style="background:#111; padding:4px 8px; border-radius:4px; border:1px solid #222;"><i class="fa-solid fa-ticket" style="color:#00d4ff;"></i> Entry: ₹${entryFee}</span>
+                        <span style="background:#111; padding:4px 8px; border-radius:4px; border:1px solid #222; color:#FFD700;"><i class="fa-solid fa-trophy"></i> Win: ₹${winPrize}</span>
+                    </div>
+                    ${roomHtml}
+                </div>`;
             }
         });
-        if(!hasMatches) html = "<div class='empty'>You haven't joined any match.</div>";
-        document.getElementById("joiningList").innerHTML = html;
+        
+        // 2. Fetch Premium Matches
+        db.ref("premium_matches").once("value", premSnap => {
+            premSnap.forEach(childSnap => {
+                let matchData = childSnap.val();
+                let players = matchData.players ? Object.values(matchData.players) : [];
+                let myEntry = players.find(p => p.email === userEmail);
+
+                if(myEntry) {
+                    hasMatches = true;
+                    let roomHtml = buildRoomHtml(matchData.room || {}, 'premium');
+                    let entryText = matchData.entryFee === 0 ? "FREE" : `₹${matchData.entryFee}`;
+
+                    html += `
+                    <div class="my-match-card premium">
+                        <div class="my-match-badge premium"><i class="fa-solid fa-star fa-spin"></i> MEGA EVENT</div>
+                        <div style="font-size:18px; font-weight:900; color:#ffcc00; margin-bottom:6px; letter-spacing:1px; text-shadow:0 0 10px rgba(255,204,0,0.5);">${matchData.title}</div>
+                        
+                        <div style="display:flex; flex-wrap:wrap; gap:10px; font-size:11px; color:#aaa; font-weight:bold; margin-bottom:5px;">
+                            <span style="background:#1a140a; padding:4px 8px; border-radius:4px; border:1px solid #443300;"><i class="fa-regular fa-clock" style="color:#ffcc00;"></i> ${matchData.displayTime}</span>
+                            <span style="background:#1a140a; padding:4px 8px; border-radius:4px; border:1px solid #443300;"><i class="fa-solid fa-shield-halved" style="color:#ffcc00;"></i> Mode: ${matchData.mode}</span>
+                            <span style="background:#1a140a; padding:4px 8px; border-radius:4px; border:1px solid #443300;"><i class="fa-solid fa-ticket" style="color:#ff0055;"></i> Entry: ${entryText}</span>
+                        </div>
+                        ${roomHtml}
+                    </div>`;
+                }
+            });
+            
+            if(!hasMatches) {
+                html += `
+                <div class='empty' style='margin-top:40px;'>
+                    <i class="fa-solid fa-ghost" style="font-size:50px; color:#222; margin-bottom:15px;"></i><br>
+                    No Active Deployments Found.<br>
+                    <span style="font-size:11px; color:#555; display:block; margin-top:5px;">Join a match from the home screen to see it here!</span>
+                </div>`;
+            }
+            container.innerHTML = html;
+        });
     });
 }
+
+
+function buildRoomHtml(roomData, type) {
+    let color = type === 'premium' ? '#ffcc00' : '#00d4ff';
+    
+    if(roomData.id) {
+        return `
+        <div class="room-box ${type}">
+            <div style="font-size:10px; color:#888; text-transform:uppercase; margin-bottom:10px; font-weight:bold; letter-spacing:1px;">
+                <i class="fa-solid fa-door-open" style="color:${color};"></i> Room Intelligence Received
+            </div>
+            
+            <div style="display:flex; justify-content:space-between; align-items:center; background:#000; padding:10px 12px; border-radius:6px; border:1px solid #222; margin-bottom:8px;">
+                <div>
+                    <div style="font-size:9px; color:#666; font-weight:bold; margin-bottom:2px;">ROOM ID</div>
+                    <div style="font-size:16px; font-weight:900; color:#fff; letter-spacing:1px; font-family:monospace;">${roomData.id}</div>
+                </div>
+                <button onclick="copyText('${roomData.id}', 'Room ID')" class="copy-btn-esports"><i class="fa-regular fa-copy"></i> COPY</button>
+            </div>
+            
+            <div style="display:flex; justify-content:space-between; align-items:center; background:#000; padding:10px 12px; border-radius:6px; border:1px solid #222;">
+                <div>
+                    <div style="font-size:9px; color:#666; font-weight:bold; margin-bottom:2px;">PASSWORD</div>
+                    <div style="font-size:16px; font-weight:900; color:#fff; letter-spacing:1px; font-family:monospace;">${roomData.pass}</div>
+                </div>
+                <button onclick="copyText('${roomData.pass}', 'Password')" class="copy-btn-esports"><i class="fa-regular fa-copy"></i> COPY</button>
+            </div>
+        </div>`;
+    } else {
+        return `
+        <div class="room-box ${type}" style="text-align:center; padding:25px 15px;">
+            <i class="fa-solid fa-lock" style="font-size:24px; color:#333; margin-bottom:10px;"></i>
+            <div style="font-size:13px; color:#ccc; font-weight:bold;">Room Intelligence Hidden</div>
+            <div style="font-size:10px; color:#666; margin-top:6px; line-height:1.5;">ID & Password will be revealed here 10-15 mins before the match starts.<br>Click the <b>Refresh</b> button above to check.</div>
+        </div>`;
+    }
+}
+
+
 
 
 
@@ -2625,7 +2988,8 @@ function renderResultsPage() {
     });
  }
 
- function renderAdminMatches() {
+function renderAdminMatches() {
+    // 1. NORMAL MATCHES LOAD
     db.ref("matches").on("value", snap => {
         let html = ""; let hasMatches = false;
         snap.forEach(childSnap => {
@@ -2646,7 +3010,7 @@ function renderResultsPage() {
                 players.forEach(p => { winnerOptions += `<option value="${p.email}">${p.name} (${p.email})</option>`; });
 
                 html += `<div class="card" style="margin-bottom:12px;">
-                    <div style="font-weight:bold; color:#ffcc00; font-size:15px; margin-bottom:5px;">Time: ${formatTime(parseInt(time))} | Mode: ${timeParts[1].toUpperCase()}</div>
+                    <div style="font-weight:bold; color:#00d4ff; font-size:15px; margin-bottom:5px;">Time: ${formatTime(parseInt(time))} | Mode: ${timeParts[1].toUpperCase()}</div>
                     <div style="color:#aaa; font-size:13px; margin-bottom:10px;">Total Players: ${players.length}</div>
                     
                     <input type="text" id="roomid_${key}" placeholder="Room ID" value="${roomData.id}" style="width:100%; margin-bottom:5px; padding:8px; border-radius:5px; background:#111; color:#fff; border:1px solid #333; box-sizing:border-box;">
@@ -2663,10 +3027,58 @@ function renderResultsPage() {
                 </div>`;
             }
         });
-        if(!hasMatches) html = "<div class='empty'>No active matches found.</div>";
-        document.getElementById("adminMatchesSection").innerHTML = html;
+        if(!hasMatches) html = "<div class='empty'>No active normal matches found.</div>";
+        document.getElementById("adminNormalMatchesList").innerHTML = html; // Fixed targeting
     });
- }
+
+    // 2. PREMIUM MATCHES LOAD (New!)
+    db.ref("premium_matches").on("value", snap => {
+        let html = ""; let hasMatches = false;
+        snap.forEach(childSnap => {
+            let key = childSnap.key;
+            let matchData = childSnap.val();
+            
+            let playersCount = matchData.players ? Object.keys(matchData.players).length : 0;
+            let roomData = matchData.room || {id:"", pass:""};
+            let winPrize = matchData.prize;
+
+            html += `<div class="card" style="margin-bottom:12px; border-left:3px solid #ffcc00;">
+                <div style="font-weight:bold; color:#ffcc00; font-size:15px; margin-bottom:5px;">Mega Match: ${matchData.title}</div>
+                <div style="color:#aaa; font-size:13px; margin-bottom:10px;">Total Players: ${playersCount}/${matchData.slots} | Entry: ₹${matchData.entryFee}</div>
+                
+                <input type="text" id="roomid_prem_${key}" placeholder="Room ID" value="${roomData.id}" style="width:100%; margin-bottom:5px; padding:8px; border-radius:5px; background:#111; color:#fff; border:1px solid #333; box-sizing:border-box;">
+                <input type="text" id="roompass_prem_${key}" placeholder="Password" value="${roomData.pass}" style="width:100%; margin-bottom:10px; padding:8px; border-radius:5px; background:#111; color:#fff; border:1px solid #333; box-sizing:border-box;">
+                <button onclick="adminSetPremiumRoom('${key}')" class="card-btn" style="padding:8px; margin:0 0 15px 0; background:#2e7dff;">Update Room</button>
+                
+                <hr style="border-color:#333;">`;
+
+            if (matchData.players) {
+                hasMatches = true;
+                let players = Object.values(matchData.players);
+                let winnerOptions = "";
+                players.forEach(p => { winnerOptions += `<option value="${p.email}">${p.name} (${p.email})</option>`; });
+
+                html += `
+                <h4 style="margin:10px 0; font-size:14px; color:#FFD700;">Declare Winners (Prize: ₹${winPrize})</h4>
+                <select id="winSelect_prem_${key}" multiple style="width:100%; background:#111; color:#fff; border:1px solid #333; padding:5px; border-radius:5px; height:80px;">${winnerOptions}</select>
+                
+                <button onclick="adminDeclarePremiumWinners('${key}', ${winPrize})" class="card-btn" style="padding:10px; background:linear-gradient(45deg, #FFD700, #FFA500); color:#000; margin-bottom:10px;">Declare & Pay Winners</button>
+                
+                <button onclick="adminCancelPremiumMatch('${key}')" class="card-btn" style="padding:10px; background:linear-gradient(45deg, #ff0055, #990000); color:#fff; margin-top:0;"><i class="fa-solid fa-ban"></i> Cancel Match & Refund</button>
+                </div>`;
+            } else {
+                hasMatches = true;
+                html += `
+                <div style="color:#ff4444; font-size:12px; margin-bottom:10px;">No players have joined yet.</div>
+                <button onclick="adminDeleteEmptyPremium('${key}')" class="card-btn" style="padding:10px; background:#ff0055; color:#fff; margin-top:0;"><i class="fa-solid fa-trash"></i> Delete Tournament</button>
+                </div>`;
+            }
+        });
+        if(!hasMatches) html = "<div class='empty'>No active premium matches.</div>";
+        document.getElementById("adminPremiumMatchesList").innerHTML = html;
+    });
+}
+
 
 
 
@@ -5088,6 +5500,260 @@ document.addEventListener('click', function(e) {
 });
 
 
+function adminCreateCustomMatch() {
+    let title = document.getElementById("custMatchTitle").value.trim();
+    let entry = parseInt(document.getElementById("custMatchEntry").value);
+    let prize = parseInt(document.getElementById("custMatchPrize").value);
+    let mode = document.getElementById("custMatchMode").value.trim();
+    let slots = parseInt(document.getElementById("custMatchSlots").value);
+    let timeStr = document.getElementById("custMatchTime").value;
+
+    if(!title || isNaN(entry) || isNaN(prize) || !mode || isNaN(slots) || !timeStr) {
+        return alert("Please fill all details correctly!");
+    }
+
+    let matchTimeMs = new Date(timeStr).getTime();
+    if(matchTimeMs <= Date.now()) return alert("Match time must be in the future!");
+
+    let matchId = "PREM_" + Date.now(); // Unique ID
+
+    db.ref("premium_matches/" + matchId).set({
+        id: matchId,
+        title: title,
+        entryFee: entry,
+        prize: prize,
+        mode: mode,
+        slots: slots,
+        matchTimeMs: matchTimeMs,
+        displayTime: new Date(timeStr).toLocaleString('en-IN', {day:'2-digit', month:'short', hour:'2-digit', minute:'2-digit', hour12:true}),
+        createdAt: Date.now()
+    }).then(() => {
+        alert("✅ Premium Tournament Published Successfully!");
+        document.getElementById("custMatchTitle").value = "";
+        document.getElementById("custMatchEntry").value = "";
+        document.getElementById("custMatchPrize").value = "";
+        document.getElementById("custMatchMode").value = "";
+        document.getElementById("custMatchSlots").value = "";
+        document.getElementById("custMatchTime").value = "";
+    });
+}
+
+
+
+function joinPremiumMatch(matchId, slots, fee) {
+    let user = localStorage.getItem("loggedUser");
+    if(!user) return alert("Please Login first!");
+    let safeUser = safeKey(user);
+
+    db.ref("users/" + safeUser).once("value").then((snap) => {
+        let userData = snap.val() || {};
+        let balance = userData.wallet || 0;
+        
+        // Fee jodi 0 na hoy tahole balance check korbo
+        if(fee > 0 && balance < fee) return alert("Insufficient Balance! Please Add Money.");
+
+        db.ref("premium_matches/" + matchId + "/players").once("value").then((playersSnap) => {
+            let players = [];
+            playersSnap.forEach(child => { players.push(child.val()); });
+
+            if(players.find(p => p.email === user)) return alert("You already joined this match!");
+            if(players.length >= slots) return alert("Sorry, Slots are full!");
+
+            let name = prompt("Enter exactly your Free Fire Name:");
+            if(!name || name.trim() === "") return alert("Joining canceled. Name required.");
+
+            let uid = prompt("Enter exactly your Free Fire UID (Number):");
+            if(!uid || uid.trim() === "") return alert("Joining canceled. UID required.");
+
+            // Taka kata logic
+            if(fee > 0) {
+                updateWallet(-fee, "Premium Tourney Entry");
+            }
+
+            db.ref("premium_matches/" + matchId + "/players").push({
+                name: name.trim(),
+                uid: uid.trim(),
+                email: user,
+                joinedTime: Date.now()
+            });
+
+            sendToTelegramAdmin(`👑 PREMIUM MATCH JOIN\nUser: ${user}\nFF Name: ${name}\nUID: ${uid}\nFee: ₹${fee}`);
+            alert("Premium Tournament Joined Successfully! 🎉 Check 'My Match' page for Room ID later.");
+        });
+    });
+}
+
+// --- ADMIN PREMIUM MATCH CONTROLS ---
+
+function adminSetPremiumRoom(key) {
+    let id = document.getElementById("roomid_prem_"+key).value; 
+    let pass = document.getElementById("roompass_prem_"+key).value;
+    db.ref("premium_matches/" + key + "/room").set({id, pass}); 
+    alert("Premium Room Details Updated!");
+}
+
+function adminDeleteEmptyPremium(key) {
+    if(confirm("Delete this tournament? (No one has joined yet)")) {
+        db.ref("premium_matches/" + key).remove();
+        alert("Tournament Deleted.");
+    }
+}
+
+function adminCancelPremiumMatch(key) {
+    if(!confirm("Cancel & Refund all players for this Mega Match?")) return;
+
+    db.ref("premium_matches/" + key).once("value", snap => {
+        let matchData = snap.val();
+        if(!matchData || !matchData.players) {
+            db.ref("premium_matches/" + key).remove();
+            return alert("Match deleted.");
+        }
+
+        let players = Object.values(matchData.players);
+        let allEmails = players.map(p => p.email);
+        let entryFee = matchData.entryFee || 0;
+
+        // Taka ferot dewa
+        if(entryFee > 0) {
+            players.forEach(p => {
+                let safeEmail = safeKey(p.email);
+                db.ref("users/" + safeEmail + "/wallet").once("value", wSnap => db.ref("users/" + safeEmail + "/wallet").set((wSnap.val() || 0) + entryFee));
+                db.ref("users/" + safeEmail + "/history").push({ amount: entryFee, type: "Premium Match Canceled (Refund)", status: "Success", time: new Date().toLocaleString() });
+            });
+        }
+
+        db.ref("results/" + key).set({
+            message: "⚠️ Mega Match: " + matchData.title + " was CANCELED by the Admin. \nEntry fees (₹" + entryFee + ") have been refunded.",
+            date: new Date().toLocaleDateString('en-IN'),
+            timestamp: Date.now(),
+            matchTitle: matchData.title,
+            participantEmails: allEmails
+        }).then(() => {
+            db.ref("premium_matches/" + key).remove().then(() => alert("Premium Match Canceled & Refunded Successfully!"));
+        });
+    });
+}
+
+function adminDeclarePremiumWinners(key, prize) {
+    let select = document.getElementById("winSelect_prem_"+key);
+    let selectedWinners = Array.from(select.selectedOptions).map(option => option.value);
+    if(selectedWinners.length === 0) return alert("Please select at least one winner!");
+
+    db.ref("premium_matches/" + key).once("value", snap => {
+        let matchData = snap.val();
+        if(!matchData) return alert("Match not found!");
+
+        let players = Object.values(matchData.players || {});
+        let allEmails = players.map(p => p.email); 
+        let winnerDisplay = [];
+        let timestampNow = Date.now();
+
+        selectedWinners.forEach(email => {
+            let safeEmail = safeKey(email);
+            let userRef = db.ref("users/" + safeEmail);
+            
+            userRef.child("wallet").transaction(current => (current || 0) + prize);
+            userRef.child("rankScore").transaction(current => (current || 0) + prize);
+
+            // History te save kora
+            userRef.child("history").push().set({ 
+                amount: prize, 
+                type: "Match Win 🏆", 
+                status: "Success", 
+                time: new Date().toLocaleString(),
+                reqId: timestampNow 
+            });
+
+            let playerObj = players.find(p => p.email === email);
+            let displayN = playerObj ? `${playerObj.name} (UID: ${playerObj.uid || '----'})` : email;
+            winnerDisplay.push("🏆 " + displayN + " (Won ₹" + prize + ")");
+        }); 
+
+        db.ref("results/" + key).set({
+            message: "Mega Match Winners:\n" + winnerDisplay.join("\n"),
+            date: new Date().toLocaleDateString('en-IN'),
+            timestamp: timestampNow,
+            matchTitle: matchData.title,
+            winnerEmails: selectedWinners,
+            participantEmails: allEmails
+        }).then(() => {
+            db.ref("premium_matches/" + key).remove().then(() => {
+                alert("Premium Match Success! Prize distributed & removed! 🎯");
+            });
+        });
+    });
+}
+
+function renderPremiumMatchesUI() {
+    let appContainer = document.getElementById("app");
+    appContainer.innerHTML = "<div class='empty'><i class='fa-solid fa-spinner fa-spin'></i> Scanning for Mega Events...</div>";
+
+    db.ref("premium_matches").on("value", snap => {
+        if(activeAmount !== "featured") return; // Security: Jodi user tab change kore fele
+
+        let html = "";
+        let now = Date.now();
+        let hasMatches = false;
+
+        snap.forEach(child => {
+            let m = child.val();
+            if (now > m.matchTimeMs) return; // Time par hoye gele vanish
+
+            hasMatches = true;
+            let playersCount = m.players ? Object.keys(m.players).length : 0;
+            let percent = (playersCount / m.slots) * 100;
+            let btnDisabled = playersCount >= m.slots ? 'disabled' : '';
+            
+            let entryText = m.entryFee === 0 ? "FREE" : `₹${m.entryFee}`;
+            let entryColor = m.entryFee === 0 ? "#00ff88" : "#00d4ff";
+
+            html += `
+            <div class="featured-match-card">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+                    <span class="premium-label">Mega Tournament</span>
+                    <div style="color:#ffcc00; font-weight:bold; font-size:12px;"><i class="fa-regular fa-clock"></i> ${m.displayTime}</div>
+                </div>
+                
+                <div style="font-size:20px; font-weight:900; color:#fff; margin-bottom:5px;">${m.title}</div>
+                <div style="color:#aaa; font-size:12px; margin-bottom:18px;"><i class="fa-solid fa-shield-halved"></i> Mode: ${m.mode}</div>
+
+                <div class="esports-details-grid">
+                    <div class="esports-detail-box" style="border-color:rgba(255,204,0,0.3);">
+                        <div class="esports-detail-label">Entry Fee</div>
+                        <div class="esports-detail-value" style="color:${entryColor};">${entryText}</div>
+                    </div>
+                    <div class="esports-detail-box" style="border-color:rgba(255,204,0,0.3);">
+                        <div class="esports-detail-label">Slots</div>
+                        <div class="esports-detail-value">${m.slots}</div>
+                    </div>
+                    <div class="esports-detail-box" style="border-color:rgba(255,204,0,0.3); background:rgba(255,204,0,0.1);">
+                        <div class="esports-detail-label">Prize Pool</div>
+                        <div class="esports-detail-value" style="color:#ffcc00;">₹${m.prize}</div>
+                    </div>
+                </div>
+
+                <div class="progress-container" style="margin-bottom:18px;">
+                    <div class="progress-info">
+                        <span style="color:#eee;">Joined: ${playersCount}/${m.slots}</span>
+                        <span style="color:#ffcc00;">${Math.round(percent)}% Full</span>
+                    </div>
+                    <div class="progress" style="background:#000; height:8px;">
+                        <div class="progress-bar" style="width:${percent}%; background:linear-gradient(90deg, #ffcc00, #ff8800);"></div>
+                    </div>
+                </div>
+
+                <button class="esports-btn" onclick="joinPremiumMatch('${m.id}', ${m.slots}, ${m.entryFee})" 
+                    style="background:linear-gradient(90deg, #ffcc00, #ff8800); color:#000;" ${btnDisabled}>
+                    ${playersCount >= m.slots ? 'SLOTS FULL' : 'ENTER BATTLEFIELD <i class="fa-solid fa-bolt"></i>'}
+                </button>
+            </div>`;
+        });
+
+        appContainer.innerHTML = hasMatches ? html : "<div class='empty'>No Premium Tournaments available right now. Check back later!</div>";
+    });
+}
+
+
 
 </script>
 
@@ -5108,4 +5774,4 @@ document.addEventListener('click', function(e) {
 
 
 </body>
-               </html>
+                   </html>
